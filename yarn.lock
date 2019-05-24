@@ -8088,6 +8088,11 @@ prelude-ls@~1.1.2:
   resolved "https://proget/npm/Production-npm/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
+prettier@1.16.3:
+  version "1.16.3"
+  resolved "https://proget/npm/Production-npm/prettier/-/prettier-1.16.3.tgz#8c62168453badef702f34b45b6ee899574a6a65d"
+  integrity sha1-jGIWhFO63vcC80tFtu6JlXSmpl0=
+
 pretty-bytes@^5.1.0:
   version "5.2.0"
   resolved "https://proget/npm/Production-npm/pretty-bytes/-/pretty-bytes-5.2.0.tgz#96c92c6e95a0b35059253fb33c03e260d40f5a1f"
@@ -8364,7 +8369,7 @@ react-dev-utils@^9.0.1:
     strip-ansi "5.2.0"
     text-table "0.2.0"
 
-react-dom@15.6.2:
+react-dom@^15.6.2:
   version "15.6.2"
   resolved "https://proget/npm/Production-npm/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
   integrity sha1-Qc+t9pO3V/rycIRDodH9WgK+9zA=
@@ -8449,7 +8454,7 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react@15.6.2:
+react@^15.6.2:
   version "15.6.2"
   resolved "https://proget/npm/Production-npm/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   integrity sha1-26BDSrQ5z+gvEI8PURZjkIF5qnI=
