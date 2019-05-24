@@ -1,21 +1,33 @@
 const apiUrl = 'http://mn2formlt0001d0:6080'
 const tokenKey = '__hydro_token__'
 
-const decodeJwt = (token) => {
-  var base64Url = token.split('.')[1]
-  var base64 = decodeURIComponent(
+function getToken() {
+  return window.localStorage.getItem(tokenKey)
+}
+
+function setToken(token) {
+  window.localStorage.setItem(tokenKey, token)
+}
+
+// https://stackoverflow.com/a/38552302
+function decodeJwt(token) {
+  const base64Url = token.split('.')[1]
+  const base64 = decodeURIComponent(
     atob(base64Url)
       .split('')
-      .map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      })
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
       .join(''),
   )
-
   return JSON.parse(base64)
 }
 
-const login = ({ username, password }) => {
+function isTokenValid(token) {
+  const { exp } = decodeJwt(token)
+  const now = Date.now() / 1000
+  return now < exp
+}
+
+function login({ username, password }) {
   const url = `${apiUrl}/login`
   const headers = { 'Content-Type': 'application/json' }
   const method = 'POST'
@@ -29,18 +41,17 @@ const login = ({ username, password }) => {
   window
     .fetch(url, config)
     .then((res) => res.json())
-    .then(({ token }) => {
-      window.localStorage.setItem(tokenKey, token)
-    })
+    .then(({ token }) => setToken(token))
 }
 
-const isLoggedIn = () => {
-  const token = window.localStorage.getItem(tokenKey)
-  console.log({ token })
-  const parsed = decodeJwt(token)
-  console.log({ parsed })
+function isLoggedIn() {
+  const token = getToken()
 
-  return true
+  if (!token) {
+    return false
+  }
+
+  return isTokenValid(token)
 }
 
 export { login, isLoggedIn }
