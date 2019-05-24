@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Pane, TextInputField, Button } from 'evergreen-ui'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')
@@ -11,24 +12,32 @@ const LoginForm = ({ onSubmit }) => {
     setPassword('')
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="username">Username</label>
-      <input
-        id="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+    <Pane display="flex" justifyContent="center">
+      <Pane width={300}>
+        <form onSubmit={handleSubmit}>
+          <TextInputField
+            id="username"
+            placeholder="Bet365 Username"
+            label="Bet365 Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <TextInputField
+            id="password"
+            placeholder="Password"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-      <button type="submit">Log In</button>
-    </form>
+          <Button type="submit" appearance="primary">
+            Log In
+          </Button>
+        </form>
+      </Pane>
+    </Pane>
   )
 }
 
