@@ -1,4 +1,5 @@
-const apiUrl = 'http://mn2formlt0001d0:6080'
+import client from './api-client'
+
 const tokenKey = '__hydro_token__'
 
 function getToken() {
@@ -28,20 +29,7 @@ function isTokenValid(token) {
 }
 
 function login({ username, password }) {
-  const url = `${apiUrl}/login`
-  const headers = { 'Content-Type': 'application/json' }
-  const method = 'POST'
-  const body = JSON.stringify({ username, password })
-  const config = {
-    method,
-    headers,
-    body,
-  }
-
-  window
-    .fetch(url, config)
-    .then((res) => res.json())
-    .then(({ token }) => setToken(token))
+  client('login', { username, password }).then(({ token }) => setToken(token))
 }
 
 function isLoggedIn() {
@@ -54,4 +42,4 @@ function isLoggedIn() {
   return isTokenValid(token)
 }
 
-export { login, isLoggedIn }
+export { login, isLoggedIn, getToken }
