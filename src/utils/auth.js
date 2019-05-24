@@ -29,16 +29,26 @@ function isTokenValid(token) {
 }
 
 function login({ username, password }) {
-  client('login', { username, password }).then(({ token }) => setToken(token))
+  client('login', { username, password }).then(({ token }) => {
+    setToken(token)
+    // the token is only valid for 5 minutes
+    // so we need to continually refresh it
+    refreshToken()
+  })
+}
+
+function refreshToken() {
+  const oneMinute = 60000
+  setInterval(() => {
+    client('p/refresh').then(({ token }) => setToken(token))
+  }, oneMinute)
 }
 
 function isLoggedIn() {
   const token = getToken()
-
   if (!token) {
     return false
   }
-
   return isTokenValid(token)
 }
 

@@ -21,11 +21,7 @@ function client(endpoint, body) {
     config.body = JSON.stringify(body)
   }
 
-  return window.fetch(`${apiUrl}/${endpoint}`, config).then((res) => {
-    console.log({ res })
-
-    return res.json()
-  })
+  return fetch(`${apiUrl}/${endpoint}`, config).then((res) => res.json())
 }
 
 export default client
