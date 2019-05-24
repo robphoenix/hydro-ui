@@ -11,6 +11,7 @@ const LoginForm = ({ onSubmit }) => {
     setUsername('')
     setPassword('')
   }
+
   return (
     <Pane display="flex" justifyContent="center">
       <Pane width={300}>
