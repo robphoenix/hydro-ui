@@ -1,9 +1,10 @@
 import React from 'react'
 
-import { isLoggedIn } from '../utils/auth'
+import { isLoggedIn, getDisplayName } from '../utils/auth'
 
 const AuthContext = React.createContext({
   isLoggedIn: false,
+  displayName: '',
 })
 
 function useAuth() {
@@ -16,7 +17,13 @@ function useAuth() {
 
 function AuthProvider(props) {
   const authenticatedUser = isLoggedIn()
-  return <AuthContext.Provider value={{ authenticatedUser }} {...props} />
+  const displayName = getDisplayName()
+  return (
+    <AuthContext.Provider
+      value={{ authenticatedUser, displayName }}
+      {...props}
+    />
+  )
 }
 
 export { useAuth, AuthProvider }

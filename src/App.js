@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm'
 import { useAuth } from './context/auth-context'
 
 function App() {
-  const { authenticatedUser } = useAuth()
+  const { authenticatedUser, displayName } = useAuth()
 
   return (
     <div>
@@ -18,7 +18,11 @@ function App() {
       >
         Hydro UI
       </Heading>
-      {authenticatedUser ? <div>Welcome!</div> : <LoginForm onSubmit={login} />}
+      {authenticatedUser ? (
+        <div>Welcome! {displayName}</div>
+      ) : (
+        <LoginForm onSubmit={login} />
+      )}
     </div>
   )
 }
