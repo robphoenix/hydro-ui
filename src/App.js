@@ -1,12 +1,12 @@
 import React from 'react'
 import { Heading, minorScale } from 'evergreen-ui'
 
-import LoginForm from './components/LoginForm'
 import { useAuth } from './context/auth-context'
 import AppAuthenticated from './components/AppAuthenticated'
+import AppNotAuthenticated from './components/AppNotAuthenticated'
 
 function App() {
-  const { isLoggedIn, displayName } = useAuth()
+  const { isLoggedIn } = useAuth()
   const authenticated = isLoggedIn()
 
   return (
@@ -19,7 +19,7 @@ function App() {
       >
         Hydro UI
       </Heading>
-      {authenticated ? <div>Welcome! {displayName}</div> : <AppAuthenticated />}
+      {authenticated ? <AppAuthenticated /> : <AppNotAuthenticated />}
     </div>
   )
 }

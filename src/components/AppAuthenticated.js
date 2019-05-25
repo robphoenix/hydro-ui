@@ -1,11 +1,10 @@
 import React from 'react'
 
 import { useAuth } from '../context/auth-context'
-import LoginForm from './LoginForm'
 
 const AppAuthenticated = () => {
-  const { login } = useAuth()
-  return <LoginForm onSubmit={login} />
+  const { displayName } = useAuth()
+  return <div>Welcome! {displayName()}</div>
 }
 
 export default AppAuthenticated

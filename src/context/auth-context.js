@@ -14,7 +14,7 @@ function useAuth() {
 
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
-  const displayName = auth.getDisplayName()
+  const displayName = () => auth.getDisplayName()
   const login = (form) => auth.login(form)
   return (
     <AuthContext.Provider
