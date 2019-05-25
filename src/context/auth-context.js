@@ -14,14 +14,10 @@ function useAuth() {
 
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
-  const displayName = () => auth.getDisplayName()
   const login = (form) => auth.login(form)
-  return (
-    <AuthContext.Provider
-      value={{ isLoggedIn, displayName, login }}
-      {...props}
-    />
-  )
+  const user = auth.getDecodedToken()
+
+  return <AuthContext.Provider value={{ isLoggedIn, login, user }} {...props} />
 }
 
 export { useAuth, AuthProvider }

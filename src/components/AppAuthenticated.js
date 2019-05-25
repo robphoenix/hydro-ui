@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { useAuth } from '../context/auth-context'
+import { useUser } from '../context/user-context'
 
 const AppAuthenticated = () => {
-  const { displayName } = useAuth()
-  return <div>Welcome! {displayName()}</div>
+  const user = useUser()
+  return <div>Hello {user ? user.displayName : 'World'}</div>
 }
 
 export default AppAuthenticated

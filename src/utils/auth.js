@@ -22,6 +22,11 @@ function decodeJwt(token) {
   return JSON.parse(base64)
 }
 
+function getDecodedToken() {
+  const token = getToken()
+  return token ? decodeJwt(token) : ''
+}
+
 function isTokenValid(token) {
   const { exp } = decodeJwt(token)
   const now = Date.now() / 1000
@@ -33,11 +38,11 @@ function login({ username, password }) {
     setToken(token)
     // the token is only valid for 5 minutes
     // so we need to continually refresh it
-    refreshToken()
+    initTokenRefreshInterval()
   })
 }
 
-function refreshToken() {
+function initTokenRefreshInterval() {
   // TODO: we need to make sure this is also started off when the app is
   // refreshed in the browser, not just on login
   const oneMinute = 60000
@@ -57,16 +62,10 @@ function isLoggedIn() {
   return isTokenValid(token)
 }
 
-// should probs change this to user,
-// returning a user object
-// and put it in a user.js file
-function getDisplayName() {
-  const token = getToken()
-  if (!token) {
-    return ''
-  }
-  const { displayName } = decodeJwt(token)
-  return displayName
+export {
+  login,
+  isLoggedIn,
+  getToken,
+  getDecodedToken,
+  initTokenRefreshInterval,
 }
-
-export { login, isLoggedIn, getToken, getDisplayName }
