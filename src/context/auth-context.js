@@ -1,11 +1,8 @@
 import React from 'react'
 
-import { isLoggedIn, getDisplayName } from '../utils/auth'
+import * as auth from '../utils/auth'
 
-const AuthContext = React.createContext({
-  isLoggedIn: false,
-  displayName: '',
-})
+const AuthContext = React.createContext()
 
 function useAuth() {
   const context = React.useContext(AuthContext)
@@ -16,11 +13,12 @@ function useAuth() {
 }
 
 function AuthProvider(props) {
-  const authenticatedUser = isLoggedIn()
-  const displayName = getDisplayName()
+  const isLoggedIn = () => auth.isLoggedIn()
+  const displayName = auth.getDisplayName()
+  const login = (form) => auth.login(form)
   return (
     <AuthContext.Provider
-      value={{ authenticatedUser, displayName }}
+      value={{ isLoggedIn, displayName, login }}
       {...props}
     />
   )

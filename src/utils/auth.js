@@ -38,8 +38,13 @@ function login({ username, password }) {
 }
 
 function refreshToken() {
+  // TODO: we need to make sure this is also started off when the app is
+  // refreshed in the browser, not just on login
   const oneMinute = 60000
   setInterval(() => {
+    console.log(Date.now().toString())
+    console.log('refresh')
+
     client('p/refresh').then(({ token }) => setToken(token))
   }, oneMinute)
 }
