@@ -15,9 +15,15 @@ function useAuth() {
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
   const login = (form) => auth.login(form)
+  const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
   const user = auth.getDecodedToken()
 
-  return <AuthContext.Provider value={{ isLoggedIn, login, user }} {...props} />
+  return (
+    <AuthContext.Provider
+      value={{ isLoggedIn, login, user, initTokenRefreshInterval }}
+      {...props}
+    />
+  )
 }
 
 export { useAuth, AuthProvider }

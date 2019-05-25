@@ -3,11 +3,11 @@ import client from './api-client'
 const tokenKey = '__hydro_token__'
 
 function getToken() {
-  return window.localStorage.getItem(tokenKey)
+  return localStorage.getItem(tokenKey)
 }
 
 function setToken(token) {
-  window.localStorage.setItem(tokenKey, token)
+  localStorage.setItem(tokenKey, token)
 }
 
 // https://stackoverflow.com/a/38552302
@@ -36,21 +36,24 @@ function isTokenValid(token) {
 function login({ username, password }) {
   client('login', { username, password }).then(({ token }) => {
     setToken(token)
-    // the token is only valid for 5 minutes
-    // so we need to continually refresh it
     initTokenRefreshInterval()
   })
 }
 
+// the token is only valid for 5 minutes
+// so we need to continually refresh it
 function initTokenRefreshInterval() {
-  // TODO: we need to make sure this is also started off when the app is
-  // refreshed in the browser, not just on login
-  const oneMinute = 60000
-  setInterval(() => {
-    console.log(Date.now().toString())
-    console.log('refresh')
-
-    client('p/refresh').then(({ token }) => setToken(token))
+  const oneSecond = 1000
+  const oneMinute = 60 * oneSecond
+  // TODO: deal with errors
+  const refreshInterval = setInterval(() => {
+    const validUser = isLoggedIn()
+    if (validUser) {
+      client('p/refresh').then(({ token }) => setToken(token))
+    } else {
+      // TODO: logout & remove token from localstorage
+      clearInterval(refreshInterval)
+    }
   }, oneMinute)
 }
 
