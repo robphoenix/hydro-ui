@@ -14,7 +14,7 @@ function useAuth() {
 
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
-  const login = (form) => auth.login(form)
+  const login = (form) => auth.login(form).then(() => window.location.reload())
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
   const user = auth.getDecodedToken()
 

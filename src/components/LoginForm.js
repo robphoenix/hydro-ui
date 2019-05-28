@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Pane,
-  TextInputField,
-  Button,
-  Heading,
-  minorScale,
-  majorScale,
-} from 'evergreen-ui'
+import { Pane, TextInputField, Button, Heading, majorScale } from 'evergreen-ui'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')

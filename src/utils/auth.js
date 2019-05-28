@@ -34,7 +34,7 @@ function isTokenValid(token) {
 }
 
 function login({ username, password }) {
-  client('login', { username, password }).then(({ token }) => {
+  return client('login', { username, password }).then(({ token }) => {
     setToken(token)
     initTokenRefreshInterval()
   })

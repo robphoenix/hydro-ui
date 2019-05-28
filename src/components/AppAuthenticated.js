@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react'
+import { Router } from '@reach/router'
 
-import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
+import MonitorsView from './MonitorsView'
 
 const AppAuthenticated = () => {
-  const user = useUser()
   const { initTokenRefreshInterval } = useAuth()
 
   useEffect(() => {
     initTokenRefreshInterval()
   }, [initTokenRefreshInterval])
 
-  return <div>Hello {user ? user.displayName : 'World'}</div>
+  return (
+    <Router>
+      <MonitorsView path="/monitors" />
+    </Router>
+  )
 }
 
 export default AppAuthenticated
