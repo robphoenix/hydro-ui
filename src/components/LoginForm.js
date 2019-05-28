@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
-import { Pane, TextInputField, Button, Heading, majorScale } from 'evergreen-ui'
+import {
+  Pane,
+  TextInputField,
+  Button,
+  Heading,
+  majorScale,
+  Alert,
+} from 'evergreen-ui'
+import { minorScale } from 'evergreen-ui/commonjs/scales'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onSubmit({ username, password })
+    onSubmit({ username, password }).catch((err) => {
+      setError(err.message)
+    })
     setUsername('')
     setPassword('')
   }
@@ -23,13 +34,21 @@ const LoginForm = ({ onSubmit }) => {
         >
           Hydro Login
         </Heading>
+
+        {error && (
+          <Alert intent="danger" title={error} marginBottom={minorScale(4)} />
+        )}
+
         <form onSubmit={handleSubmit}>
           <TextInputField
             id="username"
             placeholder="Bet365 Username"
             label="Bet365 Username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setError('')
+              setUsername(e.target.value)
+            }}
           />
 
           <TextInputField
@@ -38,7 +57,10 @@ const LoginForm = ({ onSubmit }) => {
             label="Password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setError('')
+              setPassword(e.target.value)
+            }}
           />
 
           <Button type="submit" appearance="primary">

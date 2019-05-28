@@ -4,7 +4,7 @@ import { Router, Redirect } from '@reach/router'
 import { useAuth } from '../context/auth-context'
 import MonitorsView from './MonitorsView'
 import NavBar from './NavBar'
-import { Pane, majorScale } from 'evergreen-ui'
+import { Pane } from 'evergreen-ui'
 
 const AppAuthenticated = () => {
   const { initTokenRefreshInterval } = useAuth()

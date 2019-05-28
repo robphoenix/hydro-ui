@@ -35,8 +35,10 @@ function isTokenValid(token) {
 
 function login({ username, password }) {
   return client('login', { username, password }).then(({ token }) => {
-    setToken(token)
-    initTokenRefreshInterval()
+    if (token) {
+      setToken(token)
+      initTokenRefreshInterval()
+    }
   })
 }
 
@@ -50,14 +52,13 @@ function logout() {
 function initTokenRefreshInterval() {
   const oneSecond = 1000
   const oneMinute = 60 * oneSecond
-  // TODO: deal with errors
   const refreshInterval = setInterval(() => {
     const validUser = isLoggedIn()
     if (validUser) {
       client('p/refresh').then(({ token }) => setToken(token))
     } else {
-      // TODO: logout & remove token from localstorage
       clearInterval(refreshInterval)
+      logout().then(() => window.location.reload())
     }
   }, oneMinute)
 }

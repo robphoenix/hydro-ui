@@ -1,8 +1,10 @@
+import axios from 'axios'
+
 import { getToken } from './auth'
 
 const apiUrl = 'http://mn2formlt0001d0:6080'
 
-function client(endpoint, body) {
+function client(endpoint, data) {
   const token = getToken()
   const headers = { 'Content-Type': 'application/json' }
 
@@ -10,18 +12,44 @@ function client(endpoint, body) {
     headers.Authorization = `Bearer ${token}`
   }
 
-  const config = {
-    method: body ? 'POST' : 'GET',
-    headers: {
-      ...headers,
-    },
-  }
+  const method = data ? 'post' : 'get'
+  const url = `${apiUrl}/${endpoint}`
 
-  if (body) {
-    config.body = JSON.stringify(body)
-  }
+  return axios({
+    method,
+    url,
+    data,
+  })
+    .then((response) => {
+      return response.data
+    })
+    .catch((err) => {
+      return Promise.reject(err)
+    })
 
-  return fetch(`${apiUrl}/${endpoint}`, config).then((res) => res.json())
+  // const config = {
+  //   method: body ? 'POST' : 'GET',
+  //   headers: {
+  //     ...headers,
+  //   },
+  // }
+
+  // if (body) {
+  //   config.body = JSON.stringify(body)
+  // }
+
+  // return fetch(`${apiUrl}/${endpoint}`, config)
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       console.log(`not ok`)
+  //       console.log(response.json())
+
+  //       throw new Error(`fffuucckk`)
+  //     } else {
+  //       return response.json()
+  //     }
+  //   })
+  //   .catch((err) => console.log(`fetch in err: ${err}`))
 }
 
 export default client
