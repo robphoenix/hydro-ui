@@ -64,7 +64,7 @@ function initTokenRefreshInterval() {
       clearInterval(refreshInterval)
       logout().then(() => window.location.reload())
     }
-  }, oneSecond)
+  }, oneMinute)
 }
 
 function isLoggedIn() {
