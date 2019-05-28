@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 import { Router, Redirect } from '@reach/router'
 
 import { useAuth } from '../context/auth-context'
-import MonitorsView from './MonitorsView'
+import ViewMonitors from './ViewMonitors'
 import NavBar from './NavBar'
 import { Pane } from 'evergreen-ui'
 
-const AppAuthenticated = () => {
+const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
 
   useEffect(() => {
@@ -18,11 +18,11 @@ const AppAuthenticated = () => {
       <NavBar />
 
       <Router>
-        <Redirect from="/" to="/monitors" />
-        <MonitorsView path="/monitors" />
+        <Redirect from="/" to="/monitors" noThrow />
+        <ViewMonitors path="/monitors" />
       </Router>
     </Pane>
   )
 }
 
-export default AppAuthenticated
+export default AuthenticatedApp

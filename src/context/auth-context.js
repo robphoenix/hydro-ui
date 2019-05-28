@@ -1,4 +1,5 @@
 import React from 'react'
+import { navigate } from '@reach/router'
 
 import * as auth from '../utils/auth'
 
@@ -12,19 +13,31 @@ function useAuth() {
   return context
 }
 
+function onAuthenticationChange(path) {
+  navigate(path)
+  window.location.reload()
+}
+
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
   const login = (form) =>
-    auth.login(form).then(() => {
-      window.location.reload()
-    })
+    auth.login(form).then(() => onAuthenticationChange(`/monitors`))
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
-  const logout = () => auth.logout().then(() => window.location.reload())
+  const logout = () =>
+    auth.logout().then(() => onAuthenticationChange(`/login`))
   const user = auth.getDecodedToken()
+  const token = auth.getToken()
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, login, user, initTokenRefreshInterval, logout }}
+      value={{
+        isLoggedIn,
+        login,
+        user,
+        initTokenRefreshInterval,
+        logout,
+        token,
+      }}
       {...props}
     />
   )

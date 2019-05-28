@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 
 import { useAuth } from './context/auth-context'
-import AppAuthenticated from './components/AppAuthenticated'
-import AppNotAuthenticated from './components/AppNotAuthenticated'
+import AuthenticatedApp from './components/AuthenticatedApp'
+import UnauthenticatedApp from './components/UnauthenticatedApp'
 
 function App() {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, token } = useAuth()
   const authenticated = isLoggedIn()
 
   axios.interceptors.response.use(
@@ -21,8 +21,17 @@ function App() {
     },
   )
 
+  axios.interceptors.request.use((config) => {
+    const headers = { 'Content-Type': 'application/json' }
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+    config.headers = headers
+    return config
+  })
+
   return (
-    <div>{authenticated ? <AppAuthenticated /> : <AppNotAuthenticated />}</div>
+    <div>{authenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}</div>
   )
 }
 

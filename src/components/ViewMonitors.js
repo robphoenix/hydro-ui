@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useUser } from '../context/user-context'
 
-const MonitorsView = () => {
+const ViewMonitors = () => {
   const user = useUser()
 
   return (
@@ -12,4 +12,4 @@ const MonitorsView = () => {
   )
 }
 
-export default MonitorsView
+export default ViewMonitors
