@@ -40,6 +40,11 @@ function login({ username, password }) {
   })
 }
 
+function logout() {
+  localStorage.removeItem(tokenKey)
+  return Promise.resolve()
+}
+
 // the token is only valid for 5 minutes
 // so we need to continually refresh it
 function initTokenRefreshInterval() {
@@ -71,4 +76,5 @@ export {
   getToken,
   getDecodedToken,
   initTokenRefreshInterval,
+  logout,
 }

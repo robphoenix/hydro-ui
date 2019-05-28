@@ -16,11 +16,12 @@ function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
   const login = (form) => auth.login(form).then(() => window.location.reload())
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
+  const logout = () => auth.logout().then(() => window.location.reload())
   const user = auth.getDecodedToken()
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, login, user, initTokenRefreshInterval }}
+      value={{ isLoggedIn, login, user, initTokenRefreshInterval, logout }}
       {...props}
     />
   )
