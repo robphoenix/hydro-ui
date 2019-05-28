@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Router, Redirect } from '@reach/router'
 
 import { useAuth } from '../context/auth-context'
-import ViewMonitors from './ViewMonitors'
+import ViewMonitors from '../pages/ViewMonitors'
 import NavBar from './NavBar'
 import { Pane } from 'evergreen-ui'
 

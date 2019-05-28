@@ -9,6 +9,7 @@ import {
 } from 'evergreen-ui'
 
 import client from '../utils/api-client'
+import Monitor from '../components/Monitor'
 
 const ViewMonitors = () => {
   const [monitors, setMonitors] = useState([])
@@ -34,20 +35,9 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
         <UnorderedList marginLeft={0} listStyle="none">
-          {monitors.map((monitor) => {
-            return (
-              <ListItem key={monitor.id}>
-                <Card
-                  border
-                  elevation={0}
-                  background="tint1"
-                  padding={minorScale(4)}
-                >
-                  {monitor.name}
-                </Card>
-              </ListItem>
-            )
-          })}
+          {monitors.map((monitor) => (
+            <Monitor monitor={monitor} />
+          ))}
         </UnorderedList>
       </Pane>
     </Pane>
