@@ -6,7 +6,7 @@ import AppAuthenticated from './components/AppAuthenticated'
 import AppNotAuthenticated from './components/AppNotAuthenticated'
 
 function App() {
-  const { isLoggedIn, logout } = useAuth()
+  const { isLoggedIn } = useAuth()
   const authenticated = isLoggedIn()
 
   axios.interceptors.response.use(
@@ -16,7 +16,6 @@ function App() {
     (error) => {
       const { status, data } = error.response
       if (status === 401) {
-        logout()
         return Promise.reject(data)
       }
     },

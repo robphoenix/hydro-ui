@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Pane,
   TextInputField,
   Button,
   Heading,
   majorScale,
+  minorScale,
+  Text,
   Alert,
 } from 'evergreen-ui'
-import { minorScale } from 'evergreen-ui/commonjs/scales'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [validForm, setValidForm] = useState(false)
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -23,6 +25,10 @@ const LoginForm = ({ onSubmit }) => {
     setPassword('')
   }
 
+  useEffect(() => {
+    setValidForm(username && password)
+  }, [username, password])
+
   return (
     <Pane display="flex" justifyContent="center">
       <Pane width={300}>
@@ -30,20 +36,22 @@ const LoginForm = ({ onSubmit }) => {
           is="h1"
           size={900}
           marginTop={majorScale(5)}
-          marginBottom={majorScale(6)}
+          marginBottom={minorScale(5)}
         >
           Hydro Login
         </Heading>
 
-        {error && (
-          <Alert intent="danger" title={error} marginBottom={minorScale(4)} />
-        )}
+        <Pane marginBottom={minorScale(6)}>
+          <Text as="p" size={500}>
+            Please enter your Bet365 credentials
+          </Text>
+        </Pane>
 
         <form onSubmit={handleSubmit}>
           <TextInputField
             id="username"
-            placeholder="Bet365 Username"
-            label="Bet365 Username"
+            placeholder="Username"
+            label="Username"
             value={username}
             onChange={(e) => {
               setError('')
@@ -63,10 +71,17 @@ const LoginForm = ({ onSubmit }) => {
             }}
           />
 
-          <Button type="submit" appearance="primary">
-            Log In
+          <Button
+            type="submit"
+            appearance="primary"
+            disabled={!validForm}
+            // TODO: move this margin bottom onto the form
+            marginBottom={minorScale(4)}
+          >
+            LOG IN
           </Button>
         </form>
+        {error && <Alert intent="danger" title={error} />}
       </Pane>
     </Pane>
   )

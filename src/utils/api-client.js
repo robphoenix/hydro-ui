@@ -19,6 +19,7 @@ function client(endpoint, data) {
     method,
     url,
     data,
+    headers,
   })
     .then((response) => {
       return response.data

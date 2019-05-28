@@ -51,6 +51,10 @@ function logout() {
 // so we need to continually refresh it
 function initTokenRefreshInterval() {
   const oneSecond = 1000
+  // we'll refresh it every minute
+  // though this does mean if a user's token becomes invalid or is deleted from
+  // localstorage then an unauthenticated user will be logged in for up to a
+  // minute
   const oneMinute = 60 * oneSecond
   const refreshInterval = setInterval(() => {
     const validUser = isLoggedIn()

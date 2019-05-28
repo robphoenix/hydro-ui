@@ -19,7 +19,7 @@ function AuthProvider(props) {
       window.location.reload()
     })
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
-  const logout = () => auth.logout() // .then(() => window.location.reload())
+  const logout = () => auth.logout().then(() => window.location.reload())
   const user = auth.getDecodedToken()
 
   return (
