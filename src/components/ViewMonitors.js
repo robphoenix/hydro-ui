@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
+import {
+  Pane,
+  Heading,
+  UnorderedList,
+  ListItem,
+  Card,
+  minorScale,
+} from 'evergreen-ui'
+
 import client from '../utils/api-client'
 
-import { useUser } from '../context/user-context'
-
 const ViewMonitors = () => {
-  const user = useUser()
   const [monitors, setMonitors] = useState([])
 
   useEffect(() => {
@@ -16,10 +22,35 @@ const ViewMonitors = () => {
   }, [])
 
   return (
-    <div>
-      <div>Hello {user ? user.displayName : 'World'}</div>
-      <p>{monitors[0] && monitors[0].name}</p>
-    </div>
+    <Pane display="flex" justifyContent="center">
+      <Pane width="75%">
+        <Heading
+          is="h2"
+          size={700}
+          marginTop="default"
+          marginBottom={minorScale(6)}
+          marginLeft={minorScale(4)}
+        >
+          Monitors
+        </Heading>
+        <UnorderedList marginLeft={0} listStyle="none">
+          {monitors.map((monitor) => {
+            return (
+              <ListItem key={monitor.id}>
+                <Card
+                  border
+                  elevation={0}
+                  background="tint1"
+                  padding={minorScale(4)}
+                >
+                  {monitor.name}
+                </Card>
+              </ListItem>
+            )
+          })}
+        </UnorderedList>
+      </Pane>
+    </Pane>
   )
 }
 
