@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { Pane, TextInputField, Button } from 'evergreen-ui'
+import {
+  Pane,
+  TextInputField,
+  Button,
+  Heading,
+  minorScale,
+  majorScale,
+} from 'evergreen-ui'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')
@@ -15,6 +22,14 @@ const LoginForm = ({ onSubmit }) => {
   return (
     <Pane display="flex" justifyContent="center">
       <Pane width={300}>
+        <Heading
+          is="h1"
+          size={900}
+          marginTop={majorScale(5)}
+          marginBottom={majorScale(6)}
+        >
+          Hydro Login
+        </Heading>
         <form onSubmit={handleSubmit}>
           <TextInputField
             id="username"
