@@ -13,13 +13,13 @@ const NavBar = () => {
     <Pane
       display="flex"
       alignItems="center"
-      paddingLeft={majorScale(4)}
-      paddingRight={majorScale(4)}
+      paddingX={majorScale(4)}
       elevation={1}
       position="sticky"
       top="0"
       width="100%"
       height={majorScale(11)}
+      backgroundColor="white"
     >
       <Logo height="40px" />
       <Heading is="h1" size={700} marginLeft={majorScale(2)}>

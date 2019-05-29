@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Pane, Heading, UnorderedList, majorScale } from 'evergreen-ui'
+import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import client from '../utils/api-client'
-import Monitor from '../components/Monitor'
+import MonitorsTable from '../components/MonitorsTable'
 
 const ViewMonitors = () => {
   const [monitors, setMonitors] = useState([])
@@ -27,6 +27,8 @@ const ViewMonitors = () => {
         >
           Monitors
         </Heading>
+
+        <MonitorsTable monitors={monitors} />
       </Pane>
     </Pane>
   )
