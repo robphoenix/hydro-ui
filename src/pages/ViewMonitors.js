@@ -27,11 +27,6 @@ const ViewMonitors = () => {
         >
           Monitors
         </Heading>
-        <UnorderedList marginLeft={0} listStyle="none">
-          {monitors.map((monitor) => (
-            <Monitor key={monitor.id} monitor={monitor} />
-          ))}
-        </UnorderedList>
       </Pane>
     </Pane>
   )

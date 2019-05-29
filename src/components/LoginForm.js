@@ -20,6 +20,7 @@ const LoginForm = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <TextInputField
+        autoFocus
         placeholder="Username"
         label="Username"
         value={username}
