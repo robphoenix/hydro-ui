@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextInputField, Button, minorScale, Alert } from 'evergreen-ui'
+import { TextInputField, Button, majorScale, Alert } from 'evergreen-ui'
 
 const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState('')
@@ -62,7 +62,7 @@ const LoginForm = ({ onSubmit }) => {
         LOG IN
       </Button>
       {error && (
-        <Alert intent="danger" title={error} marginTop={minorScale(4)} />
+        <Alert intent="danger" title={error} marginTop={majorScale(4)} />
       )}
     </form>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pane, Heading, minorScale, Button } from 'evergreen-ui'
+import { Pane, Heading, Button, majorScale } from 'evergreen-ui'
 
 import Logo from './Logo'
 import { useUser } from '../context/user-context'
@@ -13,23 +13,20 @@ const NavBar = () => {
     <Pane
       display="flex"
       alignItems="center"
-      padding={minorScale(3)}
+      paddingLeft={majorScale(4)}
+      paddingRight={majorScale(4)}
       elevation={1}
       position="sticky"
       top="0"
       width="100%"
+      height={majorScale(11)}
     >
       <Logo height="40px" />
-      <Heading is="h1" size={700} marginLeft={minorScale(2)}>
+      <Heading is="h1" size={700} marginLeft={majorScale(2)}>
         HYDRO
       </Heading>
       <Pane is="nav" display="flex" width="100%">
-        <Button
-          appearance="minimal"
-          marginRight={minorScale(4)}
-          marginLeft="auto"
-          onClick={() => logout()}
-        >
+        <Button appearance="minimal" marginLeft="auto" onClick={() => logout()}>
           Log Out {user.displayName}
         </Button>
       </Pane>

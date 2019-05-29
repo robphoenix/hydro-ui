@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pane, Heading, UnorderedList, minorScale } from 'evergreen-ui'
+import { Pane, Heading, UnorderedList, majorScale } from 'evergreen-ui'
 
 import client from '../utils/api-client'
 import Monitor from '../components/Monitor'
@@ -22,8 +22,8 @@ const ViewMonitors = () => {
           is="h2"
           size={700}
           marginTop="default"
-          marginBottom={minorScale(6)}
-          marginLeft={minorScale(4)}
+          marginBottom={majorScale(3)}
+          marginLeft={majorScale(2)}
         >
           Monitors
         </Heading>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pane, Heading, majorScale, minorScale, Text } from 'evergreen-ui'
+import { Pane, Heading, majorScale, Text } from 'evergreen-ui'
 
 import { useAuth } from '../context/auth-context'
 import LoginForm from '../components/LoginForm'
@@ -10,15 +10,15 @@ const Login = () => {
   return (
     <Pane display="flex" justifyContent="center" marginTop={majorScale(5)}>
       <Pane width={300}>
-        <Pane display="flex" alignItems="center" marginBottom={minorScale(6)}>
+        <Pane display="flex" alignItems="center" marginBottom={majorScale(3)}>
           <Logo height="48px" />
-          <Heading is="h1" size={800} marginLeft={minorScale(2)}>
+          <Heading is="h1" size={800} marginLeft={majorScale(1)}>
             HYDRO
           </Heading>
         </Pane>
 
-        <Pane marginBottom={minorScale(6)}>
-          <Heading is="h2" size={700} marginBottom={minorScale(2)}>
+        <Pane marginBottom={majorScale(4)}>
+          <Heading is="h2" size={700} marginBottom={majorScale(2)}>
             Login
           </Heading>
           <Text as="p" size={500}>
