@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Pane,
-  Heading,
-  UnorderedList,
-  ListItem,
-  Card,
-  minorScale,
-} from 'evergreen-ui'
+import { Pane, Heading, UnorderedList, minorScale } from 'evergreen-ui'
 
 import client from '../utils/api-client'
 import Monitor from '../components/Monitor'
@@ -36,7 +29,7 @@ const ViewMonitors = () => {
         </Heading>
         <UnorderedList marginLeft={0} listStyle="none">
           {monitors.map((monitor) => (
-            <Monitor monitor={monitor} />
+            <Monitor key={monitor.id} monitor={monitor} />
           ))}
         </UnorderedList>
       </Pane>
