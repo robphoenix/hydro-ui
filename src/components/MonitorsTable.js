@@ -13,6 +13,8 @@ import {
   Icon,
   toaster,
 } from 'evergreen-ui'
+import MonitorNameCell from './MonitorNameCell'
+import ViewEplQueryCell from './ViewEplQueryCell'
 
 const MonitorsTable = ({ monitors }) => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -40,16 +42,6 @@ const MonitorsTable = ({ monitors }) => {
     })
   }
 
-  const copyToClipboard = (monitor) => {
-    document.addEventListener('copy', (e) => {
-      e.clipboardData.setData('text/plain', monitor.query)
-      e.preventDefault()
-      document.removeEventListener('copy', null)
-    })
-    document.execCommand('copy')
-    toaster.success(`Copied query from monitor ${monitor.name}`)
-  }
-
   const tableItems = filter(monitors)
 
   return (
@@ -73,43 +65,10 @@ const MonitorsTable = ({ monitors }) => {
           {tableItems.map((monitor) => (
             <Table.Row key={monitor.id} height="auto" padding={majorScale(3)}>
               <Table.Cell>
-                <Pane display="flex" flexDirection="column">
-                  <Heading size={600}>{monitor.name}</Heading>
-                  <Text size={500}>{monitor.description}</Text>
-                </Pane>
+                <MonitorNameCell monitor={monitor} />
               </Table.Cell>
               <Table.Cell>
-                <Popover
-                  content={({ close }) => (
-                    <Pane
-                      width="auto"
-                      height="auto"
-                      padding={majorScale(4)}
-                      background="tint1"
-                      display="flex"
-                    >
-                      <Pre maxWidth={600} whiteSpace="pre-wrap">
-                        <Code appearance="minimal" size={500}>
-                          {monitor.query}
-                        </Code>
-                      </Pre>
-                      <Pane display="flex" alignItems="flex-end">
-                        <Icon
-                          icon="duplicate"
-                          color="success"
-                          cursor="pointer"
-                          onClick={() => {
-                            copyToClipboard(monitor)
-                            close()
-                          }}
-                          marginLeft={majorScale(2)}
-                        />
-                      </Pane>
-                    </Pane>
-                  )}
-                >
-                  <Button appearance="primary">View EPL Query</Button>
-                </Popover>
+                <ViewEplQueryCell monitor={monitor} />
               </Table.Cell>
             </Table.Row>
           ))}
