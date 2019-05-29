@@ -10,16 +10,9 @@ import {
   Button,
 } from 'evergreen-ui'
 
-const ViewEplQueryCell = ({ monitor }) => {
-  const copyToClipboard = (query) => {
-    document.addEventListener('copy', (e) => {
-      e.clipboardData.setData('text/plain', query)
-      e.preventDefault()
-      document.removeEventListener('copy', null)
-    })
-    document.execCommand('copy')
-  }
+import copy from '../utils/copy-to-clipboard'
 
+const ViewEplQueryCell = ({ monitor }) => {
   return (
     <Popover
       content={({ close }) => (
@@ -41,7 +34,7 @@ const ViewEplQueryCell = ({ monitor }) => {
               color="success"
               cursor="pointer"
               onClick={() => {
-                copyToClipboard(monitor.query)
+                copy(monitor.query)
                 toaster.success(`Copied query from monitor ${monitor.name}`)
                 close()
               }}
