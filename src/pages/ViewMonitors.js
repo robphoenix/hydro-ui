@@ -28,7 +28,7 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
 
-        <MonitorsTable monitors={monitors} />
+        {monitors && <MonitorsTable monitors={monitors} />}
       </Pane>
     </Pane>
   )
