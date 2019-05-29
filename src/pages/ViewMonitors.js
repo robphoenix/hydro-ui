@@ -23,12 +23,11 @@ const ViewMonitors = () => {
           size={700}
           marginTop="default"
           marginBottom={majorScale(3)}
-          marginLeft={majorScale(2)}
         >
           Monitors
         </Heading>
 
-        {monitors && <MonitorsTable monitors={monitors} />}
+        <MonitorsTable monitors={monitors} />
       </Pane>
     </Pane>
   )
