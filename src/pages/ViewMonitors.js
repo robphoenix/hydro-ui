@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
-import client from '../utils/api-client'
+import { getMonitors } from '../utils/monitors-client'
 import MonitorsTable from '../components/MonitorsTable'
 
 const ViewMonitors = () => {
   const [monitors, setMonitors] = useState([])
 
   useEffect(() => {
-    async function fetchData() {
-      const monitors = await client(`/p/monitors`)
-      setMonitors(monitors)
-    }
-    fetchData()
+    getMonitors(setMonitors)
   }, [])
 
   return (
