@@ -1,4 +1,4 @@
-import client from './api-client'
+import { get, post } from '../utils/api-client'
 
 const tokenKey = '__hydro_token__'
 
@@ -34,7 +34,7 @@ function isTokenValid(token) {
 }
 
 function login({ username, password }) {
-  return client('login', { username, password }).then(({ token }) => {
+  return post(`login`, { username, password }).then(({ token }) => {
     if (token) {
       setToken(token)
       initTokenRefreshInterval()
@@ -58,11 +58,16 @@ function initTokenRefreshInterval() {
   const oneMinute = 60 * oneSecond
   const refreshInterval = setInterval(() => {
     const validUser = isLoggedIn()
+    console.log({ validUser })
+
     if (validUser) {
-      client('p/refresh').then(({ token }) => setToken(token))
+      console.log(`refresh`)
+
+      get(`p/refresh`).then(({ token }) => setToken(token))
     } else {
       clearInterval(refreshInterval)
       logout().then(() => window.location.reload())
+      console.log(`logout`)
     }
   }, oneMinute)
 }

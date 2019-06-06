@@ -2,8 +2,7 @@ import axios from 'axios'
 
 const apiUrl = 'http://mn2formlt0001d0:6080'
 
-function client(endpoint, data) {
-  const method = data ? 'post' : 'get'
+const client = (method, endpoint, data) => {
   const url = `${apiUrl}/${endpoint}`
 
   return axios({
@@ -19,4 +18,12 @@ function client(endpoint, data) {
     })
 }
 
-export default client
+const get = (endpoint) => {
+  return client(`GET`, endpoint)
+}
+
+const post = (endpoint, data) => {
+  return client(`POST`, endpoint, data)
+}
+
+export { get, post }

@@ -1,11 +1,11 @@
-import client from './api-client'
+import { get } from './api-client'
 
-const get = (endpoint) => {
-  return client(`/p/${endpoint}`)
+const p = (endpoint) => {
+  return `/p/${endpoint}`
 }
 
 const getMonitors = (handleResponse) => {
-  return get(`monitors`)
+  return get(p(`monitors`))
     .then((monitors) => handleResponse(monitors))
     .catch((error) => console.log({ error }))
 }
