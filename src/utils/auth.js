@@ -60,35 +60,17 @@ function initTokenRefreshInterval() {
   const oneMinute = 60 * oneSecond
   const refreshInterval = setInterval(() => {
     const validUser = isLoggedIn()
-    console.log({ validUser })
-
     if (validUser) {
-      console.log(`refresh`)
-      console.log(`finish=================================`)
-
       get(`p/refresh`).then(({ token }) => setToken(token))
     } else {
       clearInterval(refreshInterval)
       logout().then(() => window.location.reload())
-      console.log(`logout`)
-      console.log(`finish=================================`)
     }
   }, oneMinute)
 }
 
 function isLoggedIn() {
   const token = getToken()
-  console.log(`start==================================`)
-  console.log({ token })
-  const currentdate = new Date()
-  const time =
-    currentdate.getHours() +
-    ':' +
-    currentdate.getMinutes() +
-    ':' +
-    currentdate.getSeconds()
-  console.log({ time })
-
   if (!token) {
     return false
   }

@@ -1,5 +1,14 @@
 import React from 'react'
-import { Pane, Heading, Button, majorScale } from 'evergreen-ui'
+import {
+  Pane,
+  Heading,
+  Button,
+  majorScale,
+  Popover,
+  Position,
+  Menu,
+  Text,
+} from 'evergreen-ui'
 
 import Logo from './Logo'
 import { useUser } from '../context/user-context'
@@ -26,8 +35,32 @@ const NavBar = () => {
         HYDRO
       </Heading>
       <Pane is="nav" display="flex" width="100%">
+        <Popover
+          position={Position.BOTTOM_LEFT}
+          content={
+            <Menu>
+              <Menu.Group>
+                <Menu.Item onSelect={() => {}}>View Monitors</Menu.Item>
+                <Menu.Item onSelect={() => {}}>Add New Monitor</Menu.Item>
+                <Menu.Item onSelect={() => {}}>View Feed Types</Menu.Item>
+              </Menu.Group>
+            </Menu>
+          }
+        >
+          <Button
+            appearance="minimal"
+            iconAfter="caret-down"
+            marginLeft={majorScale(4)}
+            color="muted"
+          >
+            <Text size={500} textTransform="uppercase" letterSpacing="0.4px">
+              Monitors
+            </Text>
+          </Button>
+        </Popover>
+
         <Button appearance="minimal" marginLeft="auto" onClick={() => logout()}>
-          Log Out {user.displayName}
+          <Text>Log Out {user.displayName}</Text>
         </Button>
       </Pane>
     </Pane>

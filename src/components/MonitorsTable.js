@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Pane, majorScale, SegmentedControl } from 'evergreen-ui'
+import { Table, Pane, majorScale, SegmentedControl, Avatar } from 'evergreen-ui'
 
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
@@ -52,7 +52,7 @@ const MonitorsTable = ({ monitors }) => {
           />
           <Table.HeaderCell />
         </Table.Head>
-        <Table.Body height={580}>
+        <Table.Body height={700}>
           {tableItems.map((monitor) => (
             <Table.Row key={monitor.id} height="auto" padding={majorScale(3)}>
               <Table.Cell>
@@ -61,7 +61,7 @@ const MonitorsTable = ({ monitors }) => {
               <Table.Cell>
                 <ViewEplQueryCell monitor={monitor} />
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell justifyContent="flex-end">
                 <MonitorMenuCell monitor={monitor} />
               </Table.Cell>
             </Table.Row>
