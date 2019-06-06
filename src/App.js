@@ -9,6 +9,7 @@ function App() {
   const { isLoggedIn, token } = useAuth()
   const authenticated = isLoggedIn()
 
+  // TODO: move into own file
   axios.interceptors.response.use(
     (response) => {
       return response

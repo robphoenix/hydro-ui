@@ -1,13 +1,16 @@
-import { get } from './api-client'
+import { get, put } from './api-client'
 
-const p = (endpoint) => {
-  return `/p/${endpoint}`
+const monitorsUrl = (endpoint = ``) => {
+  return `p/monitors${endpoint}`
 }
 
-const getMonitors = (handleResponse) => {
-  return get(p(`monitors`))
-    .then((monitors) => handleResponse(monitors))
-    .catch((error) => console.log({ error }))
+const getMonitors = () => {
+  return get(monitorsUrl())
 }
 
-export { getMonitors }
+const disableMonitor = (monitor) => {
+  monitor.status = `offline`
+  return put(monitorsUrl(`/${monitor.id}`), monitor)
+}
+
+export { getMonitors, disableMonitor }

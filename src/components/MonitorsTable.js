@@ -62,7 +62,7 @@ const MonitorsTable = ({ monitors }) => {
                 <ViewEplQueryCell monitor={monitor} />
               </Table.Cell>
               <Table.Cell>
-                <MonitorMenuCell />
+                <MonitorMenuCell monitor={monitor} />
               </Table.Cell>
             </Table.Row>
           ))}

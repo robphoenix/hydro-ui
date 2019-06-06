@@ -1,3 +1,5 @@
+import { navigate } from '@reach/router'
+
 import { get, post } from '../utils/api-client'
 
 const tokenKey = '__hydro_token__'
@@ -44,6 +46,7 @@ function login({ username, password }) {
 
 function logout() {
   localStorage.removeItem(tokenKey)
+  navigate(`/`)
   return Promise.resolve()
 }
 

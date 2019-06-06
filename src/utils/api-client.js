@@ -26,4 +26,8 @@ const post = (endpoint, data) => {
   return client(`POST`, endpoint, data)
 }
 
-export { get, post }
+const put = (endpoint, data) => {
+  return client(`PUT`, endpoint, data)
+}
+
+export { get, post, put }

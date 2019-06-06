@@ -5,6 +5,7 @@ import { useAuth } from '../context/auth-context'
 import ViewMonitors from '../pages/ViewMonitors'
 import NavBar from './NavBar'
 import { Pane } from 'evergreen-ui'
+import { MonitorProvider } from '../context/monitor-context'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -17,10 +18,12 @@ const AuthenticatedApp = () => {
     <Pane>
       <NavBar />
 
-      <Router>
-        <Redirect from="/" to="/monitors" noThrow />
-        <ViewMonitors path="/monitors" />
-      </Router>
+      <MonitorProvider>
+        <Router>
+          <Redirect from="/" to="/monitors" noThrow />
+          <ViewMonitors path="/monitors" />
+        </Router>
+      </MonitorProvider>
     </Pane>
   )
 }

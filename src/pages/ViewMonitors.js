@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
-import { getMonitors } from '../utils/monitors-client'
 import MonitorsTable from '../components/MonitorsTable'
+import { useMonitor } from '../context/monitor-context'
 
 const ViewMonitors = () => {
   const [monitors, setMonitors] = useState([])
 
+  const { getMonitors } = useMonitor()
+
   useEffect(() => {
-    getMonitors(setMonitors)
-  }, [])
+    getMonitors()
+      .then((monitors) => setMonitors(monitors))
+      .catch((error) => console.log({ error }))
+  }, [getMonitors])
 
   return (
     <Pane display="flex" justifyContent="center">
