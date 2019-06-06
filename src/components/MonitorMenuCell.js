@@ -3,35 +3,39 @@ import { Popover, Position, Menu, toaster, Button } from 'evergreen-ui'
 
 import EnableMonitorMenuItem from './EnableMonitorMenuItem'
 import DisableMonitorMenuItem from './DisableMonitorMenuItem'
+import ArchiveMonitorMenuItem from './ArchiveMonitorMenuItem'
+import UnarchiveMonitorMenuItem from './UnarchiveMonitorMenuItem'
 
 const MonitorMenuCell = ({ monitor }) => {
+  const isArchived = monitor.status === `archived`
+  const isOnline = monitor.status === `online`
+  const isOffline = monitor.status === `offline`
+
   return (
     <Popover
       position={Position.BOTTOM_RIGHT}
       content={
         <Menu>
           <Menu.Group>
-            <Menu.Item onSelect={() => toaster.notify('Edit')}>Edit</Menu.Item>
-            <Menu.Item onSelect={() => toaster.notify('Duplicate')}>
-              Duplicate
-            </Menu.Item>
-            {monitor.status === `offline` && (
-              <EnableMonitorMenuItem monitor={monitor} />
+            {!isArchived && (
+              <Menu.Item onSelect={() => toaster.notify('Edit')}>
+                Edit
+              </Menu.Item>
             )}
-            {monitor.status === `online` && (
-              <DisableMonitorMenuItem monitor={monitor} />
+            {!isArchived && (
+              <Menu.Item onSelect={() => toaster.notify('Duplicate')}>
+                Duplicate
+              </Menu.Item>
             )}
-            <Menu.Item
-              onSelect={() => toaster.danger('Archive')}
-              intent="danger"
-            >
-              Archive
-            </Menu.Item>
+            {isOffline && <EnableMonitorMenuItem monitor={monitor} />}
+            {isOnline && <DisableMonitorMenuItem monitor={monitor} />}
+            {!isArchived && <ArchiveMonitorMenuItem monitor={monitor} />}
+            {isArchived && <UnarchiveMonitorMenuItem monitor={monitor} />}
           </Menu.Group>
         </Menu>
       }
     >
-      <Button marginRight={16}>Menu</Button>
+      <Button>Menu</Button>
     </Popover>
   )
 }

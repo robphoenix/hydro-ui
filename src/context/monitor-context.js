@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { getMonitors } from '../utils/monitors-client'
-import * as monitors from '../utils/monitors-client'
+import { getMonitors } from '../utils/monitor-client'
+import * as monitors from '../utils/monitor-client'
 
 import { toaster } from 'evergreen-ui'
 
@@ -19,13 +19,28 @@ function MonitorProvider(props) {
   const disableMonitor = (monitor) => {
     return monitors
       .disableMonitor(monitor)
-      .then(() => toaster.notify(`${monitor.name} disabled`))
+      .then(() => toaster.notify(`${monitor.name} has been disabled`))
       .catch((error) => console.log({ error }))
   }
+
   const enableMonitor = (monitor) => {
     return monitors
       .enableMonitor(monitor)
-      .then(() => toaster.notify(`${monitor.name} enabled`))
+      .then(() => toaster.notify(`${monitor.name} has been enabled`))
+      .catch((error) => console.log({ error }))
+  }
+
+  const archiveMonitor = (monitor) => {
+    return monitors
+      .archiveMonitor(monitor)
+      .then(() => toaster.notify(`${monitor.name} has been archived`))
+      .catch((error) => console.log({ error }))
+  }
+
+  const unarchiveMonitor = (monitor) => {
+    return monitors
+      .unarchiveMonitor(monitor)
+      .then(() => toaster.notify(`${monitor.name} has been archived`))
       .catch((error) => console.log({ error }))
   }
 
@@ -35,6 +50,8 @@ function MonitorProvider(props) {
         getMonitors,
         disableMonitor,
         enableMonitor,
+        archiveMonitor,
+        unarchiveMonitor,
       }}
       {...props}
     />

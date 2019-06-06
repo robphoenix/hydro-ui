@@ -18,4 +18,19 @@ const enableMonitor = (monitor) => {
   return put(monitorsUrl(`/${monitor.id}`), monitor)
 }
 
-export { getMonitors, disableMonitor, enableMonitor }
+const archiveMonitor = (monitor) => {
+  monitor.status = `archived`
+  return put(monitorsUrl(`/${monitor.id}`), monitor)
+}
+
+const unarchiveMonitor = (monitor) => {
+  return disableMonitor(monitor)
+}
+
+export {
+  getMonitors,
+  disableMonitor,
+  enableMonitor,
+  archiveMonitor,
+  unarchiveMonitor,
+}
