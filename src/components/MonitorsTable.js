@@ -1,20 +1,9 @@
 import React, { useState } from 'react'
-import {
-  Table,
-  Pane,
-  Heading,
-  Text,
-  majorScale,
-  SegmentedControl,
-  Code,
-  Pre,
-  Popover,
-  Button,
-  Icon,
-  toaster,
-} from 'evergreen-ui'
+import { Table, Pane, majorScale, SegmentedControl } from 'evergreen-ui'
+
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
+import MonitorMenuCell from './MonitorMenuCell'
 
 const MonitorsTable = ({ monitors }) => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -27,10 +16,11 @@ const MonitorsTable = ({ monitors }) => {
   ]
 
   const matchesSearchQuery = (monitor) => {
-    if (searchQuery === '') {
+    const query = searchQuery.trim()
+    if (query === '') {
       return true
     }
-    const regex = new RegExp(searchQuery.toLowerCase(), 'gi')
+    const regex = new RegExp(query.toLowerCase(), 'gi')
     const term = `${monitor.name} ${monitor.description}`.toLowerCase()
     const match = term.match(regex)
     return match && match.length > 0
@@ -50,16 +40,17 @@ const MonitorsTable = ({ monitors }) => {
         width={240}
         options={monitorsStatusOptions}
         value={monitorsStatus}
-        onChange={(value) => setMonitorsStatus(value)}
+        onChange={setMonitorsStatus}
         marginBottom={majorScale(4)}
       />
 
       <Table>
         <Table.Head>
           <Table.SearchHeaderCell
-            onChange={(value) => setSearchQuery(value.trim())}
+            onChange={setSearchQuery}
             placeholder="Search by monitor name and description..."
           />
+          <Table.HeaderCell />
         </Table.Head>
         <Table.Body height={580}>
           {tableItems.map((monitor) => (
@@ -69,6 +60,9 @@ const MonitorsTable = ({ monitors }) => {
               </Table.Cell>
               <Table.Cell>
                 <ViewEplQueryCell monitor={monitor} />
+              </Table.Cell>
+              <Table.Cell>
+                <MonitorMenuCell />
               </Table.Cell>
             </Table.Row>
           ))}
