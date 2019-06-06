@@ -1,21 +1,10 @@
-import React, { useState } from 'react'
-import {
-  Popover,
-  Position,
-  Menu,
-  toaster,
-  Button,
-  Dialog,
-  Text,
-  Strong,
-} from 'evergreen-ui'
-import { useMonitor } from '../context/monitor-context'
+import React from 'react'
+import { Popover, Position, Menu, toaster, Button } from 'evergreen-ui'
+
+import EnableMonitorMenuItem from './EnableMonitorMenuItem'
+import DisableMonitorMenuItem from './DisableMonitorMenuItem'
 
 const MonitorMenuCell = ({ monitor }) => {
-  const [showDisableDialog, setShowDisableDialog] = useState(false)
-  const [showEnableDialog, setShowEnableDialog] = useState(false)
-  const { disableMonitor, enableMonitor } = useMonitor()
-
   return (
     <Popover
       position={Position.BOTTOM_RIGHT}
@@ -27,41 +16,10 @@ const MonitorMenuCell = ({ monitor }) => {
               Duplicate
             </Menu.Item>
             {monitor.status === `offline` && (
-              <Menu.Item onSelect={() => setShowEnableDialog(true)}>
-                <Dialog
-                  isShown={showEnableDialog}
-                  title="Enable Monitor"
-                  onCloseComplete={() => setShowEnableDialog(false)}
-                  confirmLabel="Enable"
-                  onConfirm={() => enableMonitor(monitor)}
-                >
-                  <Text>
-                    Are you sure you want to enable{' '}
-                    <Strong>{monitor.name}</Strong>{' '}
-                  </Text>
-                </Dialog>
-                Enable
-              </Menu.Item>
+              <EnableMonitorMenuItem monitor={monitor} />
             )}
             {monitor.status === `online` && (
-              <Menu.Item
-                onSelect={() => setShowDisableDialog(true)}
-                intent="danger"
-              >
-                <Dialog
-                  isShown={showDisableDialog}
-                  title="Disable Monitor"
-                  onCloseComplete={() => setShowDisableDialog(false)}
-                  confirmLabel="Disable"
-                  onConfirm={() => disableMonitor(monitor)}
-                >
-                  <Text>
-                    Are you sure you want to disable{' '}
-                    <Strong>{monitor.name}</Strong>{' '}
-                  </Text>
-                </Dialog>
-                Disable
-              </Menu.Item>
+              <DisableMonitorMenuItem monitor={monitor} />
             )}
             <Menu.Item
               onSelect={() => toaster.danger('Archive')}
