@@ -13,4 +13,9 @@ const disableMonitor = (monitor) => {
   return put(monitorsUrl(`/${monitor.id}`), monitor)
 }
 
-export { getMonitors, disableMonitor }
+const enableMonitor = (monitor) => {
+  monitor.status = `online`
+  return put(monitorsUrl(`/${monitor.id}`), monitor)
+}
+
+export { getMonitors, disableMonitor, enableMonitor }

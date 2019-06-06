@@ -13,7 +13,7 @@ const ViewMonitors = () => {
     getMonitors()
       .then((monitors) => setMonitors(monitors))
       .catch((error) => console.log({ error }))
-  }, [getMonitors])
+  })
 
   return (
     <Pane display="flex" justifyContent="center">

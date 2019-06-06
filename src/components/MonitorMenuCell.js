@@ -12,18 +12,13 @@ import {
 import { useMonitor } from '../context/monitor-context'
 
 const MonitorMenuCell = ({ monitor }) => {
-  const [showDialog, setShowDialog] = useState(false)
-  const { disableMonitor } = useMonitor()
-
-  // const onDisable = () => {
-  //   disableMonitor(monitor)
-  //     .then(() => toaster.notify(`${monitor.name} disabled`))
-  //     .catch((error) => console.log({ error }))
-  // }
+  const [showDisableDialog, setShowDisableDialog] = useState(false)
+  const [showEnableDialog, setShowEnableDialog] = useState(false)
+  const { disableMonitor, enableMonitor } = useMonitor()
 
   return (
     <Popover
-      position={Position.BOTTOM_LEFT}
+      position={Position.BOTTOM_RIGHT}
       content={
         <Menu>
           <Menu.Group>
@@ -31,21 +26,43 @@ const MonitorMenuCell = ({ monitor }) => {
             <Menu.Item onSelect={() => toaster.notify('Duplicate')}>
               Duplicate
             </Menu.Item>
-            <Menu.Item onSelect={() => setShowDialog(true)} intent="danger">
-              <Dialog
-                isShown={showDialog}
-                title="Disable Monitor"
-                onCloseComplete={() => setShowDialog(false)}
-                confirmLabel="Disable"
-                onConfirm={() => disableMonitor(monitor)}
+            {monitor.status === `offline` && (
+              <Menu.Item onSelect={() => setShowEnableDialog(true)}>
+                <Dialog
+                  isShown={showEnableDialog}
+                  title="Enable Monitor"
+                  onCloseComplete={() => setShowEnableDialog(false)}
+                  confirmLabel="Enable"
+                  onConfirm={() => enableMonitor(monitor)}
+                >
+                  <Text>
+                    Are you sure you want to enable{' '}
+                    <Strong>{monitor.name}</Strong>{' '}
+                  </Text>
+                </Dialog>
+                Enable
+              </Menu.Item>
+            )}
+            {monitor.status === `online` && (
+              <Menu.Item
+                onSelect={() => setShowDisableDialog(true)}
+                intent="danger"
               >
-                <Text>
-                  Are you sure you want to disable{' '}
-                  <Strong>{monitor.name}</Strong>{' '}
-                </Text>
-              </Dialog>
-              Disable
-            </Menu.Item>
+                <Dialog
+                  isShown={showDisableDialog}
+                  title="Disable Monitor"
+                  onCloseComplete={() => setShowDisableDialog(false)}
+                  confirmLabel="Disable"
+                  onConfirm={() => disableMonitor(monitor)}
+                >
+                  <Text>
+                    Are you sure you want to disable{' '}
+                    <Strong>{monitor.name}</Strong>{' '}
+                  </Text>
+                </Dialog>
+                Disable
+              </Menu.Item>
+            )}
             <Menu.Item
               onSelect={() => toaster.danger('Archive')}
               intent="danger"

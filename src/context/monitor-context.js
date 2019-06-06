@@ -17,9 +17,15 @@ function useMonitor() {
 
 function MonitorProvider(props) {
   const disableMonitor = (monitor) => {
-    monitors
+    return monitors
       .disableMonitor(monitor)
       .then(() => toaster.notify(`${monitor.name} disabled`))
+      .catch((error) => console.log({ error }))
+  }
+  const enableMonitor = (monitor) => {
+    return monitors
+      .enableMonitor(monitor)
+      .then(() => toaster.notify(`${monitor.name} enabled`))
       .catch((error) => console.log({ error }))
   }
 
@@ -28,6 +34,7 @@ function MonitorProvider(props) {
       value={{
         getMonitors,
         disableMonitor,
+        enableMonitor,
       }}
       {...props}
     />
