@@ -9,7 +9,7 @@ const ViewMonitors = () => {
 
   useEffect(() => {
     fetchMonitors()
-  }, [fetchMonitors, monitors])
+  }, [fetchMonitors])
 
   return (
     <Pane display="flex" justifyContent="center">

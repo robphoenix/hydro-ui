@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import {
   getMonitors,
@@ -43,14 +43,14 @@ function MonitorsProvider(props) {
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
 
-  const fetchMonitors = async () => {
+  const fetchMonitors = useCallback(async () => {
     try {
       const monitors = await getMonitors()
       dispatch({ type: 'success', value: monitors })
     } catch (error) {
       dispatch({ type: 'error', value: error })
     }
-  }
+  }, [])
 
   const refreshMonitors = fetchMonitors
   const { monitors } = state
