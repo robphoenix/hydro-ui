@@ -3,14 +3,16 @@ import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
 import { useMonitor } from '../context/monitor-context'
 
-const UnarchiveMonitorMenuItem = ({ monitor, refresh }) => {
+const UnarchiveMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
-  const { unarchiveMonitor } = useMonitor()
+
+  const { unarchiveMonitor, refreshMonitors } = useMonitor()
+
   const handleConfirm = async () => {
     try {
       await unarchiveMonitor(monitor)
       toaster.notify(`${monitor.name} has been unarchived`)
-      refresh()
+      refreshMonitors()
     } catch (error) {
       toaster.warning(error)
     }

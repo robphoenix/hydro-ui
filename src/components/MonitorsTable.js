@@ -13,7 +13,7 @@ import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
 import MonitorMenuCell from './MonitorMenuCell'
 
-const MonitorsTable = ({ monitors, refresh }) => {
+const MonitorsTable = ({ monitors }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [monitorsStatus, setMonitorsStatus] = useState('online')
   const [selectedCategories, setSelectedCategories] = useState([])
@@ -140,7 +140,7 @@ const MonitorsTable = ({ monitors, refresh }) => {
                 ))}
               </Table.Cell>
               <Table.Cell justifyContent="flex-end">
-                <MonitorMenuCell monitor={monitor} refresh={refresh} />
+                <MonitorMenuCell monitor={monitor} />
               </Table.Cell>
             </Table.Row>
           ))}

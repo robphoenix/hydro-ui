@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
-import useFetchMonitors from '../hooks/useFetchMonitors'
+import { useMonitor } from '../context/monitor-context'
 
 const ViewMonitors = () => {
-  const { monitors, fetchMonitors } = useFetchMonitors()
+  const { monitors, fetchMonitors } = useMonitor()
 
   useEffect(() => {
     fetchMonitors()
-  }, [fetchMonitors])
+  }, [fetchMonitors, monitors])
 
   return (
     <Pane display="flex" justifyContent="center">

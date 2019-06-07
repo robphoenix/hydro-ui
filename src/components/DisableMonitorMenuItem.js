@@ -3,14 +3,15 @@ import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
 import { useMonitor } from '../context/monitor-context'
 
-const DisableMonitorMenuItem = ({ monitor, refresh }) => {
+const DisableMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
-  const { disableMonitor } = useMonitor()
+
+  const { disableMonitor, refreshMonitors } = useMonitor()
   const handleConfirm = async () => {
     try {
       await disableMonitor(monitor)
       toaster.notify(`${monitor.name} has been disabled`)
-      refresh()
+      refreshMonitors()
     } catch (error) {
       toaster.warning(error)
     }
