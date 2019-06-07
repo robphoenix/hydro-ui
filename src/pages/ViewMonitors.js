@@ -20,7 +20,7 @@ const ViewMonitors = () => {
       <Pane width="50%">
         <Heading
           is="h2"
-          size={700}
+          size={800}
           marginTop="default"
           marginBottom={majorScale(3)}
         >

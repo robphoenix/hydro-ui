@@ -1,21 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { TextInputField, Button, majorScale, Alert } from 'evergreen-ui'
 
-const LoginForm = ({ onSubmit }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [invalidUsername, setInvalidUsername] = useState(false)
-  const [invalidPassword, setInvalidPassword] = useState(false)
-  const [error, setError] = useState('')
+import useLoginForm from '../hooks/useLoginForm'
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    onSubmit({ username, password }).catch((err) => {
-      setError(err.message)
-    })
-    setUsername('')
-    setPassword('')
-  }
+const LoginForm = () => {
+  const {
+    username,
+    usernameIsValid,
+    password,
+    passwordIsValid,
+    error,
+    handleUsernameChange,
+    handleUsernameBlur,
+    handleUsernameFocus,
+    handlePasswordChange,
+    handlePasswordBlur,
+    handlePasswordFocus,
+    handleSubmit,
+  } = useLoginForm()
 
   return (
     <form onSubmit={handleSubmit}>
@@ -23,36 +25,32 @@ const LoginForm = ({ onSubmit }) => {
         autoFocus
         placeholder="Username"
         label="Username"
+        name="username"
         value={username}
         required
-        isInvalid={invalidUsername}
+        isInvalid={!usernameIsValid}
         validationMessage={
-          invalidUsername && 'You must enter your Bet365 username'
+          !usernameIsValid && 'You must enter your Bet365 username'
         }
-        onChange={(e) => setUsername(e.target.value)}
-        onBlur={() => setInvalidUsername(username === '')}
-        onFocus={() => {
-          setError('')
-          setInvalidUsername(false)
-        }}
+        onChange={handleUsernameChange}
+        onBlur={handleUsernameBlur}
+        onFocus={handleUsernameFocus}
       />
 
       <TextInputField
         placeholder="Password"
         label="Password"
         type="password"
+        name="password"
         value={password}
         required
-        isInvalid={invalidPassword}
+        isInvalid={!passwordIsValid}
         validationMessage={
-          invalidPassword && 'You must enter your Bet365 password'
+          !passwordIsValid && 'You must enter your Bet365 password'
         }
-        onChange={(e) => setPassword(e.target.value)}
-        onBlur={() => setInvalidPassword(password === '')}
-        onFocus={() => {
-          setError('')
-          setInvalidPassword(false)
-        }}
+        onChange={handlePasswordChange}
+        onBlur={handlePasswordBlur}
+        onFocus={handlePasswordFocus}
       />
 
       <Button
