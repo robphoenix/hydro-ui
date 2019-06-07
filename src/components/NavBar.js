@@ -9,6 +9,7 @@ import {
   Menu,
   Text,
 } from 'evergreen-ui'
+import { navigate } from '@reach/router'
 
 import Logo from './Logo'
 import { useUser } from '../context/user-context'
@@ -40,8 +41,12 @@ const NavBar = () => {
           content={
             <Menu>
               <Menu.Group>
-                <Menu.Item onSelect={() => {}}>View Monitors</Menu.Item>
-                <Menu.Item onSelect={() => {}}>Add New Monitor</Menu.Item>
+                <Menu.Item onSelect={() => navigate(`/monitors/view`)}>
+                  View Monitors
+                </Menu.Item>
+                <Menu.Item onSelect={() => navigate(`/monitors/add`)}>
+                  Add New Monitor
+                </Menu.Item>
                 <Menu.Item onSelect={() => {}}>View Feed Types</Menu.Item>
               </Menu.Group>
             </Menu>

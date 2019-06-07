@@ -1,6 +1,5 @@
 import React from 'react'
 
-import * as monitors from '../utils/monitor-client'
 import {
   getMonitors,
   disableMonitor,
