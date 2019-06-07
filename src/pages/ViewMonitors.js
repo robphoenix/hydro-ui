@@ -1,22 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
-import { useMonitor } from '../context/monitor-context'
+import useFetchMonitors from '../hooks/useFetchMonitors'
 
 const ViewMonitors = () => {
-  const [monitors, setMonitors] = useState([])
-
-  const { getMonitors } = useMonitor()
-
-  const fetchMonitors = useCallback(async () => {
-    try {
-      const monitors = await getMonitors()
-      setMonitors(monitors)
-    } catch (error) {
-      console.log({ error })
-    }
-  }, [getMonitors])
+  const { monitors, fetchMonitors } = useFetchMonitors()
 
   useEffect(() => {
     fetchMonitors()
