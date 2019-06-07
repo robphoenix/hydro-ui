@@ -21,7 +21,7 @@ function onAuthenticationChange(path) {
 function AuthProvider(props) {
   const isLoggedIn = () => auth.isLoggedIn()
   const login = (form) =>
-    auth.login(form).then(() => onAuthenticationChange(`/monitors`))
+    auth.login(form).then(() => onAuthenticationChange(`/monitors/view`))
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
   const logout = () =>
     auth.logout().then(() => onAuthenticationChange(`/login`))

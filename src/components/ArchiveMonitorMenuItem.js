@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
-import { Menu, Dialog, Text, Strong } from 'evergreen-ui'
+import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
 import { useMonitor } from '../context/monitor-context'
 
-const ArchiveMonitorMenuItem = ({ monitor }) => {
+const ArchiveMonitorMenuItem = ({ monitor, refresh }) => {
   const [showDialog, setShowDialog] = useState(false)
   const { archiveMonitor } = useMonitor()
+  const handleConfirm = async () => {
+    try {
+      await archiveMonitor(monitor)
+      toaster.notify(`${monitor.name} has been archived`)
+      refresh()
+    } catch (error) {
+      toaster.warning(error)
+    }
+  }
+
   return (
     <Menu.Item onSelect={() => setShowDialog(true)} intent="danger">
       <Dialog
@@ -13,7 +23,7 @@ const ArchiveMonitorMenuItem = ({ monitor }) => {
         title="Archive Monitor"
         onCloseComplete={() => setShowDialog(false)}
         confirmLabel="Archive"
-        onConfirm={() => archiveMonitor(monitor)}
+        onConfirm={handleConfirm}
       >
         <Text>
           Are you sure you want to archive <Strong>{monitor.name}</Strong>{' '}

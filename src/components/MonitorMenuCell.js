@@ -6,7 +6,7 @@ import DisableMonitorMenuItem from './DisableMonitorMenuItem'
 import ArchiveMonitorMenuItem from './ArchiveMonitorMenuItem'
 import UnarchiveMonitorMenuItem from './UnarchiveMonitorMenuItem'
 
-const MonitorMenuCell = ({ monitor }) => {
+const MonitorMenuCell = ({ monitor, refresh }) => {
   const isArchived = monitor.status === `archived`
   const isOnline = monitor.status === `online`
   const isOffline = monitor.status === `offline`
@@ -27,10 +27,18 @@ const MonitorMenuCell = ({ monitor }) => {
                 Duplicate
               </Menu.Item>
             )}
-            {isOffline && <EnableMonitorMenuItem monitor={monitor} />}
-            {isOnline && <DisableMonitorMenuItem monitor={monitor} />}
-            {!isArchived && <ArchiveMonitorMenuItem monitor={monitor} />}
-            {isArchived && <UnarchiveMonitorMenuItem monitor={monitor} />}
+            {isOffline && (
+              <EnableMonitorMenuItem monitor={monitor} refresh={refresh} />
+            )}
+            {isOnline && (
+              <DisableMonitorMenuItem monitor={monitor} refresh={refresh} />
+            )}
+            {!isArchived && (
+              <ArchiveMonitorMenuItem monitor={monitor} refresh={refresh} />
+            )}
+            {isArchived && (
+              <UnarchiveMonitorMenuItem monitor={monitor} refresh={refresh} />
+            )}
           </Menu.Group>
         </Menu>
       }

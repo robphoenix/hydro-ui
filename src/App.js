@@ -15,9 +15,13 @@ function App() {
       return response
     },
     (error) => {
-      const { status, data } = error.response
-      if (status === 401) {
-        return Promise.reject(data)
+      try {
+        const { status, data } = error.response
+        if (status === 401) {
+          return Promise.reject(data)
+        }
+      } catch {
+        return Promise.reject(error)
       }
     },
   )

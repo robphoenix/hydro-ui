@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-import { Menu, Dialog, Text, Strong } from 'evergreen-ui'
+import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
 import { useMonitor } from '../context/monitor-context'
 
-const DisableMonitorMenuItem = ({ monitor }) => {
+const DisableMonitorMenuItem = ({ monitor, refresh }) => {
   const [showDialog, setShowDialog] = useState(false)
   const { disableMonitor } = useMonitor()
+  const handleConfirm = async () => {
+    try {
+      await disableMonitor(monitor)
+      toaster.notify(`${monitor.name} has been disabled`)
+      refresh()
+    } catch (error) {
+      toaster.warning(error)
+    }
+  }
 
   return (
     <Menu.Item onSelect={() => setShowDialog(true)} intent="danger">
@@ -14,7 +23,7 @@ const DisableMonitorMenuItem = ({ monitor }) => {
         title="Disable Monitor"
         onCloseComplete={() => setShowDialog(false)}
         confirmLabel="Disable"
-        onConfirm={() => disableMonitor(monitor)}
+        onConfirm={handleConfirm}
       >
         <Text>
           Are you sure you want to disable <Strong>{monitor.name}</Strong>{' '}

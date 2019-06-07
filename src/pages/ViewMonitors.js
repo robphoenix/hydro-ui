@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
@@ -9,11 +9,18 @@ const ViewMonitors = () => {
 
   const { getMonitors } = useMonitor()
 
+  const fetchMonitors = useCallback(async () => {
+    try {
+      const monitors = await getMonitors()
+      setMonitors(monitors)
+    } catch (error) {
+      console.log({ error })
+    }
+  }, [getMonitors])
+
   useEffect(() => {
-    getMonitors()
-      .then((monitors) => setMonitors(monitors))
-      .catch((error) => console.log({ error }))
-  })
+    fetchMonitors()
+  }, [fetchMonitors])
 
   return (
     <Pane display="flex" justifyContent="center">
@@ -27,7 +34,7 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
 
-        <MonitorsTable monitors={monitors} />
+        <MonitorsTable monitors={monitors} refresh={fetchMonitors} />
       </Pane>
     </Pane>
   )

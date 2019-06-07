@@ -5,7 +5,6 @@ import LoginForm from '../components/LoginForm'
 import Logo from '../components/Logo'
 
 const Login = () => {
-  // const { login } = useAuth()
   return (
     <Pane display="flex" justifyContent="center" marginTop={majorScale(5)}>
       <Pane width={300}>

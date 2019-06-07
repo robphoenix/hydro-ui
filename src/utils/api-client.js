@@ -10,12 +10,8 @@ const client = (method, endpoint, data) => {
     url,
     data,
   })
-    .then((response) => {
-      return response.data
-    })
-    .catch((err) => {
-      return Promise.reject(err)
-    })
+    .then((response) => response.data)
+    .catch((err) => Promise.reject(err))
 }
 
 const get = (endpoint) => {
