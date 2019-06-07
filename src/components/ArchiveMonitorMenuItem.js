@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
-import { useMonitor } from '../context/monitor-context'
+import { useMonitors } from '../context/monitors-context'
 
 const ArchiveMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
 
-  const { archiveMonitor, refreshMonitors } = useMonitor()
+  const { archiveMonitor, refreshMonitors } = useMonitors()
 
   const handleConfirm = async () => {
     try {

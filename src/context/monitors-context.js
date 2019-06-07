@@ -8,17 +8,17 @@ import {
   unarchiveMonitor,
 } from '../utils/monitor-client'
 
-const MonitorContext = React.createContext()
+const MonitorsContext = React.createContext()
 
-function useMonitor() {
-  const context = React.useContext(MonitorContext)
+function useMonitors() {
+  const context = React.useContext(MonitorsContext)
   if (context === undefined) {
-    throw new Error(`useMonitor must be used within a MonitorProvider`)
+    throw new Error(`useMonitors must be used within a MonitorsProvider`)
   }
   return context
 }
 
-function MonitorProvider(props) {
+function MonitorsProvider(props) {
   const monitorsReducer = (state, action) => {
     switch (action.type) {
       case 'success':
@@ -56,7 +56,7 @@ function MonitorProvider(props) {
   const { monitors } = state
 
   return (
-    <MonitorContext.Provider
+    <MonitorsContext.Provider
       value={{
         disableMonitor,
         enableMonitor,
@@ -71,4 +71,4 @@ function MonitorProvider(props) {
   )
 }
 
-export { useMonitor, MonitorProvider }
+export { useMonitors, MonitorsProvider }

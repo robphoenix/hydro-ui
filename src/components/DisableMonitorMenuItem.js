@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
-import { useMonitor } from '../context/monitor-context'
+import { useMonitors } from '../context/monitors-context'
 
 const DisableMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
 
-  const { disableMonitor, refreshMonitors } = useMonitor()
+  const { disableMonitor, refreshMonitors } = useMonitors()
   const handleConfirm = async () => {
     try {
       await disableMonitor(monitor)

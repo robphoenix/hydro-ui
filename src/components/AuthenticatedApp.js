@@ -5,7 +5,7 @@ import { useAuth } from '../context/auth-context'
 import ViewMonitors from '../pages/ViewMonitors'
 import NavBar from './NavBar'
 import { Pane } from 'evergreen-ui'
-import { MonitorProvider } from '../context/monitor-context'
+import { MonitorsProvider } from '../context/monitors-context'
 import AddMonitor from '../pages/AddMonitor'
 
 const AuthenticatedApp = () => {
@@ -19,13 +19,13 @@ const AuthenticatedApp = () => {
     <Pane>
       <NavBar />
 
-      <MonitorProvider>
+      <MonitorsProvider>
         <Router>
           <Redirect from="/" to="/monitors/view" noThrow />
           <ViewMonitors path="/monitors/view" />
           <AddMonitor path="/monitors/add" />
         </Router>
-      </MonitorProvider>
+      </MonitorsProvider>
     </Pane>
   )
 }

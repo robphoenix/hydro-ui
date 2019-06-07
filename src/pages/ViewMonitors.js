@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
-import { useMonitor } from '../context/monitor-context'
+import { useMonitors } from '../context/monitors-context'
 
 const ViewMonitors = () => {
-  const { monitors, fetchMonitors } = useMonitor()
+  const { monitors, fetchMonitors } = useMonitors()
 
   useEffect(() => {
     fetchMonitors()
@@ -23,7 +23,7 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
 
-        <MonitorsTable monitors={monitors} refresh={fetchMonitors} />
+        <MonitorsTable monitors={monitors} />
       </Pane>
     </Pane>
   )

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 
-import { useMonitor } from '../context/monitor-context'
+import { useMonitors } from '../context/monitors-context'
 
 const EnableMonitorMenuItem = ({ monitor }) => {
-  const { refreshMonitors, enableMonitor } = useMonitor()
+  const { refreshMonitors, enableMonitor } = useMonitors()
 
   const [showDialog, setShowDialog] = useState(false)
 
