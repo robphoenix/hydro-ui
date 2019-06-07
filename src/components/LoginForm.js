@@ -6,16 +6,11 @@ import useLoginForm from '../hooks/useLoginForm'
 const LoginForm = () => {
   const {
     username,
-    usernameIsValid,
     password,
-    passwordIsValid,
     error,
-    handleUsernameChange,
-    handleUsernameBlur,
-    handleUsernameFocus,
-    handlePasswordChange,
-    handlePasswordBlur,
-    handlePasswordFocus,
+    handleChange,
+    handleBlur,
+    handleFocus,
     handleSubmit,
   } = useLoginForm()
 
@@ -26,15 +21,15 @@ const LoginForm = () => {
         placeholder="Username"
         label="Username"
         name="username"
-        value={username}
+        value={username.value}
         required
-        isInvalid={!usernameIsValid}
+        isInvalid={!username.valid}
         validationMessage={
-          !usernameIsValid && 'You must enter your Bet365 username'
+          !username.valid && 'You must enter your Bet365 username'
         }
-        onChange={handleUsernameChange}
-        onBlur={handleUsernameBlur}
-        onFocus={handleUsernameFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
       />
 
       <TextInputField
@@ -42,21 +37,21 @@ const LoginForm = () => {
         label="Password"
         type="password"
         name="password"
-        value={password}
+        value={password.value}
         required
-        isInvalid={!passwordIsValid}
+        isInvalid={!password.valid}
         validationMessage={
-          !passwordIsValid && 'You must enter your Bet365 password'
+          !password.valid && 'You must enter your Bet365 password'
         }
-        onChange={handlePasswordChange}
-        onBlur={handlePasswordBlur}
-        onFocus={handlePasswordFocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
       />
 
       <Button
         type="submit"
         appearance="primary"
-        disabled={username === '' || password === ''}
+        disabled={username.value === '' || password.value === ''}
       >
         LOG IN
       </Button>
