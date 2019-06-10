@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Pane,
   Heading,
@@ -16,6 +16,7 @@ import {
 import useForm from '../hooks/useForm'
 
 const AddMonitor = () => {
+  const nameMaxChars = 50
   const priorityOptions = [
     { label: 'Lowest', value: 'lowest' },
     { label: 'Low', value: 'low' },
@@ -24,7 +25,7 @@ const AddMonitor = () => {
     { label: 'Highest', value: 'highest' },
   ]
 
-  const [rangeValue, setRangeValue] = useState(50)
+  const [rangeValue, setRangeValue] = React.useState(50)
 
   const initialValues = {
     name: '',
@@ -45,10 +46,16 @@ const AddMonitor = () => {
   const validate = (values) => {
     let errors = {}
     if (values.name === '') {
-      errors.username = 'You must enter a Monitor name'
+      errors.name = 'You must enter a Monitor name'
+    }
+    if (values.name.length > nameMaxChars) {
+      errors.name = `Monitor name cannot be longer than ${nameMaxChars} characters`
+    }
+    if (!/^[a-zA-Z0-9 _-]+$/.test(values.name)) {
+      errors.name = `Monitor name cannot contain punctuation marks, except dashes and underscores`
     }
     if (values.description === '') {
-      errors.password = 'You must enter a Monitor description'
+      errors.description = 'You must enter a Monitor description'
     }
     return errors
   }
@@ -58,6 +65,8 @@ const AddMonitor = () => {
     getInputFieldProps,
     getSwitchFieldProps,
     getSegmentedControlFieldProps,
+    errors,
+    touched,
   } = useForm({
     initialValues,
     onSubmit,
@@ -79,8 +88,10 @@ const AddMonitor = () => {
           <TextInputField
             autoFocus
             label="Monitor Name"
-            hint="Monitor Name must be unique, and cannot contain punctuation marks"
+            description="Monitor Name must be unique, and cannot contain punctuation marks"
             placeholder="Monitor Name"
+            isInvalid={errors.name && touched.name}
+            validationMessage={touched.name && errors.name}
             required
             {...getInputFieldProps('name')}
           />
