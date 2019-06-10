@@ -61,12 +61,12 @@ function useForm(props) {
     isSubmitting: false,
   })
 
-  React.useEffect(() => {
+  const validate = () => {
     if (props.validate) {
       const errors = props.validate(state.values)
       dispatch({ type: 'SET_ERRORS', payload: errors })
     }
-  }, [props, state.values])
+  }
 
   const handleInputChange = (fieldName) => (event) => {
     event.persist()
@@ -74,6 +74,7 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event.target.value },
     })
+    validate()
   }
 
   const handleSwitchChange = (fieldName) => (event) => {
@@ -82,6 +83,7 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event.target.checked },
     })
+    validate()
   }
 
   const handleSegmentedControlChange = (fieldName) => (event) => {
@@ -89,6 +91,7 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event },
     })
+    validate()
   }
 
   const handleBlur = (fieldName) => () => {
@@ -96,6 +99,7 @@ function useForm(props) {
       type: 'SET_FIELD_TOUCHED',
       payload: { [fieldName]: true },
     })
+    validate()
   }
 
   const getInputFieldProps = (fieldName) => ({
