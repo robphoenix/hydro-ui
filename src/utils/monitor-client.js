@@ -3,6 +3,9 @@ import { get, put, post } from './api-client'
 const monitorsUrl = (endpoint = ``) => {
   return `p/monitors${endpoint ? '/' : ''}${endpoint}`
 }
+const optionsUrl = (endpoint) => {
+  return `${monitorsUrl()}/options/${endpoint}`
+}
 
 const getMonitors = () => {
   return get(monitorsUrl())
@@ -31,6 +34,10 @@ const unarchiveMonitor = (monitor) => {
   return disableMonitor(monitor)
 }
 
+const getGroups = () => {
+  return get(optionsUrl(`groups`))
+}
+
 export {
   getMonitors,
   addMonitor,
@@ -38,4 +45,5 @@ export {
   enableMonitor,
   archiveMonitor,
   unarchiveMonitor,
+  getGroups,
 }

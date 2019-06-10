@@ -11,9 +11,11 @@ import {
   SegmentedControl,
   SelectMenu,
   Button,
+  Alert,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
+import { useMonitors } from '../context/monitors-context'
 
 const thirtySeconds = 30
 const oneMinute = 60
@@ -77,16 +79,25 @@ const AddMonitor = () => {
     query: '',
     cacheWindow: min,
   }
-  const onSubmit = async (formValues) => {
-    const status = formValues.status ? `online` : `offline`
-    const cacheWindow = durationValues()[formValues.cacheWindow]
+
+  const { addMonitor, groups, fetchGroups } = useMonitors()
+
+  React.useEffect(() => {
+    fetchGroups()
+  }, [fetchGroups])
+
+  const onSubmit = async (values) => {
+    const status = values.status ? `online` : `offline`
+    const cacheWindow = durationValues()[values.cacheWindow]
     // NOTE: priority is not yet used
-    const { name, description, query } = formValues
-    const values = { name, description, status, query, cacheWindow }
+    const { name, description, query } = values
+    const monitor = { name, description, status, query, cacheWindow }
+
+    // addMonitor(monitor)
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
     await sleep(1000)
-    alert(JSON.stringify(values, null, 2))
+    alert(JSON.stringify(monitor, null, 2))
   }
   const validate = (values) => {
     let errors = {}
@@ -115,6 +126,7 @@ const AddMonitor = () => {
     getSegmentedControlFieldProps,
     errors,
     touched,
+    submitError,
   } = useForm({
     initialValues,
     onSubmit,
@@ -132,6 +144,13 @@ const AddMonitor = () => {
         >
           Add Monitor
         </Heading>
+        {submitError && (
+          <Alert
+            intent="danger"
+            title={submitError.message}
+            marginTop={majorScale(4)}
+          />
+        )}
         <form onSubmit={handleSubmit}>
           <TextInputField
             autoFocus
@@ -230,7 +249,15 @@ const AddMonitor = () => {
             </SelectMenu>
           </FormField>
           <FormField label="Groups" labelFor="groups">
-            <SelectMenu id="groups" isMultiSelect title="Select Groups">
+            <SelectMenu
+              id="groups"
+              isMultiSelect
+              title="Select Groups"
+              options={groups.map((group) => ({
+                label: group.name,
+                value: group.id,
+              }))}
+            >
               <Button type="button">Select Groups</Button>
             </SelectMenu>
           </FormField>

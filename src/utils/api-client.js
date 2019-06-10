@@ -10,7 +10,11 @@ const client = (method, endpoint, data) => {
     url,
     data,
   })
-    .then((response) => response.data)
+    .then((response) => {
+      if (response) {
+        return response.data
+      }
+    })
     .catch((err) => Promise.reject(err))
 }
 
