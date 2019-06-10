@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import {
   getMonitors,
+  addMonitor,
   disableMonitor,
   enableMonitor,
   archiveMonitor,
@@ -43,7 +44,7 @@ function MonitorsProvider(props) {
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
 
-  const fetchMonitors = useCallback(async () => {
+  const fetchMonitors = React.useCallback(async () => {
     try {
       const monitors = await getMonitors()
       dispatch({ type: 'success', value: monitors })
@@ -58,6 +59,7 @@ function MonitorsProvider(props) {
   return (
     <MonitorsContext.Provider
       value={{
+        addMonitor,
         disableMonitor,
         enableMonitor,
         archiveMonitor,
