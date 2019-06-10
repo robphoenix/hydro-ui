@@ -32,12 +32,13 @@ const AddMonitor = () => {
     description: '',
     status: false,
     priority: 'mid',
+    query: '',
   }
   const onSubmit = async (formValues) => {
     const status = formValues.status ? `online` : `offline`
     // NOTE: priority is not yet used
-    const { name, description } = formValues
-    const values = { name, description, status }
+    const { name, description, query } = formValues
+    const values = { name, description, status, query }
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
     await sleep(1000)
@@ -45,17 +46,20 @@ const AddMonitor = () => {
   }
   const validate = (values) => {
     let errors = {}
-    if (values.name === '') {
-      errors.name = 'You must enter a Monitor name'
+    if (!/^[a-zA-Z0-9 _-]+$/.test(values.name)) {
+      errors.name = `Monitor name cannot contain punctuation marks, except dashes and underscores`
     }
     if (values.name.length > nameMaxChars) {
       errors.name = `Monitor name cannot be longer than ${nameMaxChars} characters`
     }
-    if (!/^[a-zA-Z0-9 _-]+$/.test(values.name)) {
-      errors.name = `Monitor name cannot contain punctuation marks, except dashes and underscores`
+    if (values.name === '') {
+      errors.name = 'You must enter a Monitor name'
     }
     if (values.description === '') {
       errors.description = 'You must enter a Monitor description'
+    }
+    if (values.query === '') {
+      errors.query = 'You must enter an EPL Query'
     }
     return errors
   }
@@ -98,12 +102,14 @@ const AddMonitor = () => {
           <FormField
             label="Monitor Description"
             isRequired
+            validationMessage={touched.description && errors.description}
             labelFor="description"
             marginBottom={majorScale(3)}
           >
             <Textarea
               id="description"
               placeholder="Monitor description..."
+              isInvalid={errors.description && touched.description}
               required
               {...getInputFieldProps('description')}
             />
@@ -119,7 +125,9 @@ const AddMonitor = () => {
                 {...getSwitchFieldProps('status')}
                 marginRight={majorScale(1)}
               />
-              <Text>Offline</Text>
+              <Text>
+                {getSwitchFieldProps('status').checked ? `Online` : `Offline`}
+              </Text>
             </Pane>
           </FormField>
           <FormField
@@ -136,10 +144,17 @@ const AddMonitor = () => {
           <FormField
             label="EPL Query"
             isRequired
-            labelFor="eplQuery"
+            labelFor="query"
             marginBottom={majorScale(2)}
+            validationMessage={touched.query && errors.query}
           >
-            <Textarea id="eplQuery" placeholder="EPL Query..." />
+            <Textarea
+              id="query"
+              placeholder="EPL Query..."
+              required
+              {...getInputFieldProps('query')}
+              isInvalid={errors.query && touched.query}
+            />
           </FormField>
           <FormField label="Cache Window" labelFor="cacheWindow">
             <input
