@@ -1,18 +1,28 @@
 import React from 'react'
 import { TextInputField, Button, majorScale, Alert } from 'evergreen-ui'
 
-import useLoginForm from '../hooks/useLoginForm'
+import useForm from '../hooks/useForm'
+import { useAuth } from '../context/auth-context'
 
 const LoginForm = () => {
-  const {
-    username,
-    password,
-    error,
-    handleChange,
-    handleBlur,
-    handleFocus,
-    handleSubmit,
-  } = useLoginForm()
+  const { login } = useAuth()
+
+  const initialValues = { username: '', password: '' }
+  const onSubmit = async (values) => await login(values)
+  const validate = (values) => {
+    let errors = {}
+    if (values.username === '') {
+      errors.username = 'You must enter your Bet365 username'
+    }
+    if (values.password === '') {
+      errors.password = 'You must enter your Bet365 password'
+    }
+    return errors
+  }
+
+  const { handleSubmit, getFieldProps, touched, errors, submitError } = useForm(
+    { initialValues, onSubmit, validate },
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -21,15 +31,10 @@ const LoginForm = () => {
         placeholder="Username"
         label="Username"
         name="username"
-        value={username.value}
         required
-        isInvalid={!username.valid}
-        validationMessage={
-          !username.valid && 'You must enter your Bet365 username'
-        }
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        {...getFieldProps('username')}
+        isInvalid={errors.username && touched.username}
+        validationMessage={touched.username && errors.username}
       />
 
       <TextInputField
@@ -37,26 +42,21 @@ const LoginForm = () => {
         label="Password"
         type="password"
         name="password"
-        value={password.value}
+        {...getFieldProps('password')}
         required
-        isInvalid={!password.valid}
-        validationMessage={
-          !password.valid && 'You must enter your Bet365 password'
-        }
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        isInvalid={errors.password && touched.password}
+        validationMessage={touched.password && errors.password}
       />
 
-      <Button
-        type="submit"
-        appearance="primary"
-        disabled={username.value === '' || password.value === ''}
-      >
+      <Button type="submit" appearance="primary">
         LOG IN
       </Button>
-      {error && (
-        <Alert intent="danger" title={error} marginTop={majorScale(4)} />
+      {submitError && (
+        <Alert
+          intent="danger"
+          title={submitError.message}
+          marginTop={majorScale(4)}
+        />
       )}
     </form>
   )

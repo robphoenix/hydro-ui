@@ -1,0 +1,118 @@
+import React from 'react'
+
+import { setNestedObjectValues } from '../utils/utils'
+
+// https://codesandbox.io/s/pp3k64jj1x
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SET_ERRORS':
+      return {
+        ...state,
+        errors: action.payload,
+      }
+    case 'SET_FIELD_VALUE':
+      return {
+        ...state,
+        values: {
+          ...state.values,
+          ...action.payload,
+        },
+      }
+    case 'SET_FIELD_TOUCHED':
+      return {
+        ...state,
+        touched: {
+          ...state.touched,
+          ...action.payload,
+        },
+      }
+    case 'SUBMIT_ATTEMPT':
+      return {
+        ...state,
+        isSubmitting: true,
+        touched: setNestedObjectValues(state.values, true),
+      }
+    case 'SUBMIT_SUCCESS':
+      return {
+        ...state,
+        isSubmitting: false,
+      }
+    case 'SUBMIT_FAILURE':
+      return {
+        ...state,
+        isSubmitting: false,
+        submitError: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
+function useForm(props) {
+  if (!props.onSubmit) {
+    throw new Error('You forgot to pass onSubmit to useFormik!')
+  }
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    values: props.initialValues,
+    errors: {},
+    touched: {},
+    isSubmitting: false,
+  })
+
+  React.useEffect(() => {
+    if (props.validate) {
+      const errors = props.validate(state.values)
+      dispatch({ type: 'SET_ERRORS', payload: errors })
+    }
+  }, [props, state.values])
+
+  const handleChange = (fieldName) => (event) => {
+    event.persist()
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: event.target.value },
+    })
+  }
+
+  const handleBlur = (fieldName) => () => {
+    dispatch({
+      type: 'SET_FIELD_TOUCHED',
+      payload: { [fieldName]: true },
+    })
+  }
+
+  const getFieldProps = (fieldName) => ({
+    value: state.values[fieldName],
+    onChange: handleChange(fieldName),
+    onBlur: handleBlur(fieldName),
+  })
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    dispatch({ type: 'SUBMIT_ATTEMPT' })
+    const errors = props.validate(state.values)
+    if (!Object.keys(errors).length) {
+      try {
+        await props.onSubmit(state.values)
+        dispatch({ type: 'SUBMIT_SUCCESS' })
+      } catch (submitError) {
+        dispatch({ type: 'SUBMIT_FAILURE', payload: submitError })
+      }
+    } else {
+      dispatch({ type: 'SET_ERRORS', payload: errors })
+      dispatch({ type: 'SUBMIT_FAILURE' })
+    }
+  }
+
+  return {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    getFieldProps,
+    ...state,
+  }
+}
+
+export default useForm
