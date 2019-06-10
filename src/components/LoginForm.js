@@ -20,9 +20,13 @@ const LoginForm = () => {
     return errors
   }
 
-  const { handleSubmit, getFieldProps, touched, errors, submitError } = useForm(
-    { initialValues, onSubmit, validate },
-  )
+  const {
+    handleSubmit,
+    getInputFieldProps,
+    touched,
+    errors,
+    submitError,
+  } = useForm({ initialValues, onSubmit, validate })
 
   return (
     <form onSubmit={handleSubmit}>
@@ -32,7 +36,7 @@ const LoginForm = () => {
         label="Username"
         name="username"
         required
-        {...getFieldProps('username')}
+        {...getInputFieldProps('username')}
         isInvalid={errors.username && touched.username}
         validationMessage={touched.username && errors.username}
       />
@@ -42,7 +46,7 @@ const LoginForm = () => {
         label="Password"
         type="password"
         name="password"
-        {...getFieldProps('password')}
+        {...getInputFieldProps('password')}
         required
         isInvalid={errors.password && touched.password}
         validationMessage={touched.password && errors.password}

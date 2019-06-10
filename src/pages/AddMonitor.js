@@ -13,6 +13,8 @@ import {
   Button,
 } from 'evergreen-ui'
 
+import useForm from '../hooks/useForm'
+
 const AddMonitor = () => {
   const priorityOptions = [
     { label: 'Lowest', value: 'lowest' },
@@ -23,6 +25,44 @@ const AddMonitor = () => {
   ]
 
   const [rangeValue, setRangeValue] = useState(50)
+
+  const initialValues = {
+    name: '',
+    description: '',
+    status: false,
+    priority: 'mid',
+  }
+  const onSubmit = async (formValues) => {
+    const status = formValues.status ? `online` : `offline`
+    // NOTE: priority is not yet used
+    const { name, description } = formValues
+    const values = { name, description, status }
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+    await sleep(1000)
+    alert(JSON.stringify(values, null, 2))
+  }
+  const validate = (values) => {
+    let errors = {}
+    if (values.name === '') {
+      errors.username = 'You must enter a Monitor name'
+    }
+    if (values.description === '') {
+      errors.password = 'You must enter a Monitor description'
+    }
+    return errors
+  }
+
+  const {
+    handleSubmit,
+    getInputFieldProps,
+    getSwitchFieldProps,
+    getSegmentedControlFieldProps,
+  } = useForm({
+    initialValues,
+    onSubmit,
+    validate,
+  })
 
   return (
     <Pane display="flex" justifyContent="center">
@@ -35,12 +75,14 @@ const AddMonitor = () => {
         >
           Add Monitor
         </Heading>
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInputField
+            autoFocus
             label="Monitor Name"
             hint="Monitor Name must be unique, and cannot contain punctuation marks"
             placeholder="Monitor Name"
             required
+            {...getInputFieldProps('name')}
           />
           <FormField
             label="Monitor Description"
@@ -52,6 +94,7 @@ const AddMonitor = () => {
               id="description"
               placeholder="Monitor description..."
               required
+              {...getInputFieldProps('description')}
             />
           </FormField>
           <FormField
@@ -60,7 +103,11 @@ const AddMonitor = () => {
             marginBottom={majorScale(3)}
           >
             <Pane display="flex" alignItems="center">
-              <Switch id="status" marginRight={majorScale(1)} />
+              <Switch
+                id="status"
+                {...getSwitchFieldProps('status')}
+                marginRight={majorScale(1)}
+              />
               <Text>Offline</Text>
             </Pane>
           </FormField>
@@ -71,7 +118,7 @@ const AddMonitor = () => {
           >
             <SegmentedControl
               options={priorityOptions}
-              value={priorityOptions[2].value}
+              {...getSegmentedControlFieldProps('priority')}
             />
           </FormField>
 
@@ -81,7 +128,7 @@ const AddMonitor = () => {
             labelFor="eplQuery"
             marginBottom={majorScale(2)}
           >
-            <Textarea id="eplQuery" placeholder="EPL Query..." required />
+            <Textarea id="eplQuery" placeholder="EPL Query..." />
           </FormField>
           <FormField label="Cache Window" labelFor="cacheWindow">
             <input
@@ -114,6 +161,7 @@ const AddMonitor = () => {
               <Button type="button">Select Groups</Button>
             </SelectMenu>
           </FormField>
+          <Button>Submit</Button>
         </form>
       </Pane>
     </Pane>

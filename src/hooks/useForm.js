@@ -68,11 +68,26 @@ function useForm(props) {
     }
   }, [props, state.values])
 
-  const handleChange = (fieldName) => (event) => {
+  const handleInputChange = (fieldName) => (event) => {
     event.persist()
     dispatch({
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event.target.value },
+    })
+  }
+
+  const handleSwitchChange = (fieldName) => (event) => {
+    event.persist()
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: event.target.checked },
+    })
+  }
+
+  const handleSegmentedControlChange = (fieldName) => (event) => {
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: event },
     })
   }
 
@@ -83,10 +98,20 @@ function useForm(props) {
     })
   }
 
-  const getFieldProps = (fieldName) => ({
+  const getInputFieldProps = (fieldName) => ({
     value: state.values[fieldName],
-    onChange: handleChange(fieldName),
+    onChange: handleInputChange(fieldName),
     onBlur: handleBlur(fieldName),
+  })
+
+  const getSwitchFieldProps = (fieldName) => ({
+    checked: state.values[fieldName],
+    onChange: handleSwitchChange(fieldName),
+  })
+
+  const getSegmentedControlFieldProps = (fieldName) => ({
+    value: state.values[fieldName],
+    onChange: handleSegmentedControlChange(fieldName),
   })
 
   const handleSubmit = async (event) => {
@@ -107,10 +132,12 @@ function useForm(props) {
   }
 
   return {
-    handleChange,
+    handleInputChange,
     handleBlur,
     handleSubmit,
-    getFieldProps,
+    getInputFieldProps,
+    getSwitchFieldProps,
+    getSegmentedControlFieldProps,
     ...state,
   }
 }
