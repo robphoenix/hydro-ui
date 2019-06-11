@@ -133,6 +133,9 @@ const AddMonitor = () => {
     if (values.query === '') {
       errors.query = 'You must enter an EPL Query'
     }
+    if (values.groups.length === 0) {
+      errors.groups = 'You must select at least one group'
+    }
     return errors
   }
 
@@ -286,6 +289,8 @@ const AddMonitor = () => {
               display="flex"
               flexDirection="column"
               alignItems="flex-start"
+              isRequired
+              validationMessage={errors.groups}
             >
               <SelectMenu
                 id="groups"
@@ -311,7 +316,9 @@ const AddMonitor = () => {
               </SelectMenu>
             </FormField>
           </Pane>
-          <Button appearance="primary">Submit</Button>
+          <Button appearance="primary" disabled={!!Object.keys(errors).length}>
+            Submit
+          </Button>
         </form>
       </Pane>
     </Pane>
