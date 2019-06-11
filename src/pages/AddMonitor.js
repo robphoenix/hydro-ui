@@ -17,6 +17,7 @@ import {
 
 import useForm from '../hooks/useForm'
 import { useMonitors } from '../context/monitors-context'
+import { useUser } from '../context/user-context'
 
 const thirtySeconds = 30
 const oneMinute = 60
@@ -72,6 +73,18 @@ const AddMonitor = () => {
     { label: 'Highest', value: 'highest' },
   ]
 
+  const { addMonitor, allGroups, fetchGroups } = useMonitors()
+  const { groups: userGroups } = useUser()
+
+  React.useEffect(() => {
+    fetchGroups()
+  }, [fetchGroups])
+
+  const selectedGroups = (selected) =>
+    allGroups.filter((group) =>
+      selected.map((value) => +value).includes(group.id),
+    )
+
   const initialValues = {
     name: '',
     description: '',
@@ -79,21 +92,12 @@ const AddMonitor = () => {
     priority: 'mid',
     query: '',
     cacheWindow: min,
-    groups: [],
+    groups: userGroups.map((g) => `${g.id}`),
   }
-
-  const { addMonitor, allGroups, fetchGroups } = useMonitors()
-
-  React.useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
-
   const onSubmit = async (values) => {
     const status = values.status ? `online` : `offline`
     const cacheWindow = durationValues()[values.cacheWindow]
-    const groups = allGroups.filter((group) =>
-      values.groups.map((value) => +value).includes(group.id),
-    )
+    const groups = selectedGroups(values.groups)
 
     // NOTE: priority is not yet used
     const { name, description, query } = values
@@ -258,7 +262,9 @@ const AddMonitor = () => {
             marginBottom={majorScale(2)}
           >
             <SelectMenu id="categories" isMultiSelect title="Select Categories">
-              <Button type="button">Select Categories</Button>
+              <Button type="button" iconAfter="caret-down">
+                Select Categories
+              </Button>
             </SelectMenu>
           </FormField>
           <FormField
@@ -267,29 +273,44 @@ const AddMonitor = () => {
             marginBottom={majorScale(2)}
           >
             <SelectMenu id="actions" isMultiSelect title="Select Actions">
-              <Button type="button">Select Actions</Button>
+              <Button type="button" iconAfter="caret-down">
+                Select Actions
+              </Button>
             </SelectMenu>
           </FormField>
-          <FormField
-            label="Groups"
-            labelFor="groups"
-            marginBottom={majorScale(3)}
-          >
-            <SelectMenu
-              id="groups"
-              isMultiSelect
-              position={Position.BOTTOM_LEFT}
-              title="Select Groups"
-              options={allGroups.map((group) => ({
-                label: group.name,
-                value: `${group.id}`,
-              }))}
-              {...getSelectMenuProps(`groups`)}
-              width={400}
+          <Pane display="flex">
+            <FormField
+              label="Groups"
+              labelFor="groups"
+              marginBottom={majorScale(3)}
+              display="flex"
+              flexDirection="column"
+              alignItems="flex-start"
             >
-              <Button type="button">Select Groups</Button>
-            </SelectMenu>
-          </FormField>
+              <SelectMenu
+                id="groups"
+                isMultiSelect
+                position={Position.BOTTOM_LEFT}
+                title="Select Groups"
+                options={allGroups.map((group) => ({
+                  label: group.name,
+                  value: `${group.id}`,
+                }))}
+                {...getSelectMenuProps(`groups`)}
+                width={400}
+              >
+                <Button type="button" iconAfter="caret-down">
+                  {getSelectMenuProps(`groups`).selected.length
+                    ? `${getSelectMenuProps(`groups`).selected.length} group${
+                        getSelectMenuProps(`groups`).selected.length > 1
+                          ? `s`
+                          : ``
+                      } selected`
+                    : `Select Groups`}
+                </Button>
+              </SelectMenu>
+            </FormField>
+          </Pane>
           <Button appearance="primary">Submit</Button>
         </form>
       </Pane>
