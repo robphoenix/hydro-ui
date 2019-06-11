@@ -13,11 +13,13 @@ import {
   Button,
   Alert,
   Position,
+  toaster,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
 import { useMonitors } from '../context/monitors-context'
 import { useUser } from '../context/user-context'
+import { navigate } from '@reach/router'
 
 const thirtySeconds = 30
 const oneMinute = 60
@@ -95,6 +97,7 @@ const AddMonitor = () => {
     groups: userGroups.map((g) => `${g.id}`),
   }
   const onSubmit = async (values) => {
+    const type = `standard`
     const status = values.status ? `online` : `offline`
     const cacheWindow = durationValues()[values.cacheWindow]
     const groups = selectedGroups(values.groups)
@@ -108,13 +111,10 @@ const AddMonitor = () => {
       query,
       cacheWindow,
       groups,
+      type,
     }
 
-    // addMonitor(monitor)
-
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-    await sleep(1000)
-    alert(JSON.stringify(monitor, null, 2))
+    await addMonitor(monitor).then(() => navigate(`/monitors/view`))
   }
   const validate = (values) => {
     let errors = {}
@@ -154,6 +154,15 @@ const AddMonitor = () => {
     validate,
   })
 
+  React.useEffect(() => {
+    if (submitError) {
+      const { message, cause, uuid } = submitError
+      toaster.danger(message, {
+        description: `${cause}  [Error id: ${uuid}]`,
+      })
+    }
+  }, [submitError])
+
   return (
     <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
       <Pane width="30%">
@@ -165,13 +174,6 @@ const AddMonitor = () => {
         >
           Add Monitor
         </Heading>
-        {submitError && (
-          <Alert
-            intent="danger"
-            title={submitError.message}
-            marginTop={majorScale(4)}
-          />
-        )}
         <form onSubmit={handleSubmit}>
           <TextInputField
             autoFocus

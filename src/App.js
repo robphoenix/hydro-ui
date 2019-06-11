@@ -15,14 +15,10 @@ function App() {
       return response
     },
     (error) => {
-      try {
-        const { status, data } = error.response
-        if (status === 401) {
-          return Promise.reject(data)
-        }
-      } catch {
-        return Promise.reject(error)
+      if (error.response.data) {
+        return Promise.reject(error.response.data)
       }
+      return Promise.reject(error)
     },
   )
 

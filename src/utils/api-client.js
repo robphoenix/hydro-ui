@@ -11,6 +11,8 @@ const client = (method, endpoint, data) => {
     data,
   })
     .then((response) => {
+      console.log({ response })
+
       if (response) {
         return response.data
       }
