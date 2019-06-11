@@ -94,6 +94,26 @@ function useForm(props) {
     validate()
   }
 
+  const handleSelect = (fieldName) => (item) => {
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: [...state.values[fieldName], item.value] },
+    })
+    validate()
+  }
+
+  const handleDeselect = (fieldName) => (item) => {
+    const values = state.values[fieldName]
+    const deselectedItemIndex = values.indexOf(item.value)
+    const selectedItems = values.filter((_item, i) => i !== deselectedItemIndex)
+
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: selectedItems },
+    })
+    validate()
+  }
+
   const handleBlur = (fieldName) => () => {
     dispatch({
       type: 'SET_FIELD_TOUCHED',
@@ -116,6 +136,12 @@ function useForm(props) {
   const getSegmentedControlFieldProps = (fieldName) => ({
     value: state.values[fieldName],
     onChange: handleSegmentedControlChange(fieldName),
+  })
+
+  const getSelectMenuProps = (fieldName) => ({
+    selected: state.values[fieldName],
+    onSelect: handleSelect(fieldName),
+    onDeselect: handleDeselect(fieldName),
   })
 
   const handleSubmit = async (event) => {
@@ -142,6 +168,7 @@ function useForm(props) {
     getInputFieldProps,
     getSwitchFieldProps,
     getSegmentedControlFieldProps,
+    getSelectMenuProps,
     ...state,
   }
 }

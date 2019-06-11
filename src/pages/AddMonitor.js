@@ -12,6 +12,7 @@ import {
   SelectMenu,
   Button,
   Alert,
+  Position,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
@@ -78,6 +79,7 @@ const AddMonitor = () => {
     priority: 'mid',
     query: '',
     cacheWindow: min,
+    groups: [],
   }
 
   const { addMonitor, groups, fetchGroups } = useMonitors()
@@ -90,8 +92,8 @@ const AddMonitor = () => {
     const status = values.status ? `online` : `offline`
     const cacheWindow = durationValues()[values.cacheWindow]
     // NOTE: priority is not yet used
-    const { name, description, query } = values
-    const monitor = { name, description, status, query, cacheWindow }
+    const { name, description, query, groups } = values
+    const monitor = { name, description, status, query, cacheWindow, groups }
 
     // addMonitor(monitor)
 
@@ -124,6 +126,7 @@ const AddMonitor = () => {
     getInputFieldProps,
     getSwitchFieldProps,
     getSegmentedControlFieldProps,
+    getSelectMenuProps,
     errors,
     touched,
     submitError,
@@ -238,25 +241,40 @@ const AddMonitor = () => {
               {durationNames()[getInputFieldProps('cacheWindow').value]}
             </Text>
           </FormField>
-          <FormField label="Categories" labelFor="categories">
+          <FormField
+            label="Categories"
+            labelFor="categories"
+            marginBottom={majorScale(2)}
+          >
             <SelectMenu id="categories" isMultiSelect title="Select Categories">
               <Button type="button">Select Categories</Button>
             </SelectMenu>
           </FormField>
-          <FormField label="Actions" labelFor="actions">
+          <FormField
+            label="Actions"
+            labelFor="actions"
+            marginBottom={majorScale(2)}
+          >
             <SelectMenu id="actions" isMultiSelect title="Select Actions">
               <Button type="button">Select Actions</Button>
             </SelectMenu>
           </FormField>
-          <FormField label="Groups" labelFor="groups">
+          <FormField
+            label="Groups"
+            labelFor="groups"
+            marginBottom={majorScale(3)}
+          >
             <SelectMenu
               id="groups"
               isMultiSelect
+              position={Position.BOTTOM_LEFT}
               title="Select Groups"
               options={groups.map((group) => ({
                 label: group.name,
-                value: group.id,
+                value: `${group.id}`,
               }))}
+              {...getSelectMenuProps(`groups`)}
+              width={400}
             >
               <Button type="button">Select Groups</Button>
             </SelectMenu>
