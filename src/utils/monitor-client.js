@@ -34,7 +34,7 @@ const unarchiveMonitor = (monitor) => {
   return disableMonitor(monitor)
 }
 
-const getGroups = () => {
+const getAllGroups = () => {
   return get(optionsUrl(`groups`))
 }
 
@@ -45,5 +45,5 @@ export {
   enableMonitor,
   archiveMonitor,
   unarchiveMonitor,
-  getGroups,
+  getAllGroups,
 }

@@ -82,7 +82,7 @@ const AddMonitor = () => {
     groups: [],
   }
 
-  const { addMonitor, groups, fetchGroups } = useMonitors()
+  const { addMonitor, allGroups, fetchGroups } = useMonitors()
 
   React.useEffect(() => {
     fetchGroups()
@@ -91,9 +91,20 @@ const AddMonitor = () => {
   const onSubmit = async (values) => {
     const status = values.status ? `online` : `offline`
     const cacheWindow = durationValues()[values.cacheWindow]
+    const groups = allGroups.filter((group) =>
+      values.groups.map((value) => +value).includes(group.id),
+    )
+
     // NOTE: priority is not yet used
-    const { name, description, query, groups } = values
-    const monitor = { name, description, status, query, cacheWindow, groups }
+    const { name, description, query } = values
+    const monitor = {
+      name,
+      description,
+      status,
+      query,
+      cacheWindow,
+      groups,
+    }
 
     // addMonitor(monitor)
 
@@ -137,7 +148,7 @@ const AddMonitor = () => {
   })
 
   return (
-    <Pane display="flex" justifyContent="center">
+    <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
       <Pane width="30%">
         <Heading
           is="h2"
@@ -269,7 +280,7 @@ const AddMonitor = () => {
               isMultiSelect
               position={Position.BOTTOM_LEFT}
               title="Select Groups"
-              options={groups.map((group) => ({
+              options={allGroups.map((group) => ({
                 label: group.name,
                 value: `${group.id}`,
               }))}
@@ -279,7 +290,7 @@ const AddMonitor = () => {
               <Button type="button">Select Groups</Button>
             </SelectMenu>
           </FormField>
-          <Button>Submit</Button>
+          <Button appearance="primary">Submit</Button>
         </form>
       </Pane>
     </Pane>

@@ -7,7 +7,7 @@ import {
   enableMonitor,
   archiveMonitor,
   unarchiveMonitor,
-  getGroups,
+  getAllGroups,
 } from '../utils/monitor-client'
 
 const MonitorsContext = React.createContext()
@@ -43,7 +43,7 @@ function MonitorsProvider(props) {
 
   const [state, dispatch] = React.useReducer(monitorsReducer, {
     monitors: [],
-    groups: [],
+    allGroups: [],
     errors: {},
   })
 
@@ -60,14 +60,14 @@ function MonitorsProvider(props) {
 
   const fetchGroups = React.useCallback(async () => {
     try {
-      const groups = await getGroups()
-      dispatch({ type: 'SUCCESS', payload: { groups } })
+      const allGroups = await getAllGroups()
+      dispatch({ type: 'SUCCESS', payload: { allGroups } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { groups: error } })
+      dispatch({ type: 'SET_ERROR', value: { allGroups: error } })
     }
   }, [])
 
-  const { monitors, groups } = state
+  const { monitors, allGroups } = state
 
   return (
     <MonitorsContext.Provider
@@ -81,7 +81,7 @@ function MonitorsProvider(props) {
         fetchMonitors,
         refreshMonitors,
         fetchGroups,
-        groups,
+        allGroups,
       }}
       {...props}
     />
