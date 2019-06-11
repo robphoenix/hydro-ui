@@ -8,6 +8,8 @@ import {
   archiveMonitor,
   unarchiveMonitor,
   getAllGroups,
+  getAllCategories,
+  getAllActions,
 } from '../utils/monitor-client'
 
 const MonitorsContext = React.createContext()
@@ -44,6 +46,8 @@ function MonitorsProvider(props) {
   const [state, dispatch] = React.useReducer(monitorsReducer, {
     monitors: [],
     allGroups: [],
+    allCategories: [],
+    allActions: [],
     errors: {},
   })
 
@@ -67,7 +71,25 @@ function MonitorsProvider(props) {
     }
   }, [])
 
-  const { monitors, allGroups } = state
+  const fetchCategories = React.useCallback(async () => {
+    try {
+      const allCategories = await getAllCategories()
+      dispatch({ type: 'SUCCESS', payload: { allCategories } })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', value: { allCategories: error } })
+    }
+  }, [])
+
+  const fetchActions = React.useCallback(async () => {
+    try {
+      const allActions = await getAllActions()
+      dispatch({ type: 'SUCCESS', payload: { allActions } })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', value: { allActions: error } })
+    }
+  }, [])
+
+  const { monitors, allGroups, allCategories, allActions } = state
 
   return (
     <MonitorsContext.Provider
@@ -81,7 +103,11 @@ function MonitorsProvider(props) {
         fetchMonitors,
         refreshMonitors,
         fetchGroups,
+        fetchCategories,
+        fetchActions,
         allGroups,
+        allCategories,
+        allActions,
       }}
       {...props}
     />

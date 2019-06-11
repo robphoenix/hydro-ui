@@ -74,17 +74,28 @@ const AddMonitor = () => {
     { label: 'Highest', value: 'highest' },
   ]
 
-  const { addMonitor, allGroups, fetchGroups } = useMonitors()
+  const {
+    addMonitor,
+    allGroups,
+    fetchGroups,
+    allCategories,
+    fetchCategories,
+    allActions,
+    fetchActions,
+  } = useMonitors()
   const { groups: userGroups } = useUser()
 
   React.useEffect(() => {
     fetchGroups()
-  }, [fetchGroups])
+    fetchCategories()
+    fetchActions()
+  }, [fetchActions, fetchCategories, fetchGroups])
 
-  const selectedGroups = (selected) =>
-    allGroups.filter((group) =>
-      selected.map((value) => +value).includes(group.id),
+  const selectedItems = (selected, all) => {
+    return all.filter((category) =>
+      selected.map((value) => +value).includes(category.id),
     )
+  }
 
   const initialValues = {
     name: '',
@@ -94,12 +105,16 @@ const AddMonitor = () => {
     query: '',
     cacheWindow: min,
     groups: userGroups.map((g) => `${g.id}`),
+    categories: [],
+    actions: [],
   }
   const onSubmit = async (values) => {
     const type = `standard`
     const status = values.status ? `online` : `offline`
     const cacheWindow = durationValues()[values.cacheWindow]
-    const groups = selectedGroups(values.groups)
+    const groups = selectedItems(values.groups, allGroups)
+    const actions = selectedItems(values.actions, allActions)
+    const categories = selectedItems(values.categories, allCategories)
 
     // NOTE: priority is not yet used
     const { name, description, query } = values
@@ -111,9 +126,12 @@ const AddMonitor = () => {
       cacheWindow,
       groups,
       type,
+      actions,
+      categories,
     }
 
-    await addMonitor(monitor).then(() => navigate(`/monitors/view`))
+    await addMonitor(monitor)
+    navigate(`/monitors/view`)
   }
   const validate = (values) => {
     let errors = {}
@@ -262,63 +280,98 @@ const AddMonitor = () => {
               {durationNames()[getInputFieldProps('cacheWindow').value]}
             </Text>
           </FormField>
+
           <FormField
             label="Categories"
             labelFor="categories"
             marginBottom={majorScale(2)}
           >
-            <SelectMenu id="categories" isMultiSelect title="Select Categories">
+            <SelectMenu
+              id="categories"
+              isMultiSelect
+              title="Select Categories"
+              position={Position.BOTTOM_LEFT}
+              options={allCategories.map((category) => ({
+                label: category.name,
+                value: `${category.id}`,
+              }))}
+              {...getSelectMenuProps(`categories`)}
+              width={400}
+            >
               <Button type="button" iconAfter="caret-down">
-                Select Categories
+                {getSelectMenuProps(`categories`).selected.length
+                  ? `${
+                      getSelectMenuProps(`categories`).selected.length
+                    } categor${
+                      getSelectMenuProps(`categories`).selected.length > 1
+                        ? `ies`
+                        : `y`
+                    } selected`
+                  : `Select Categories`}
               </Button>
             </SelectMenu>
           </FormField>
+
           <FormField
             label="Actions"
             labelFor="actions"
             marginBottom={majorScale(2)}
           >
-            <SelectMenu id="actions" isMultiSelect title="Select Actions">
+            <SelectMenu
+              id="actions"
+              isMultiSelect
+              title="Select Actions"
+              position={Position.BOTTOM_LEFT}
+              options={allActions.map((action) => ({
+                label: action.name,
+                value: `${action.id}`,
+              }))}
+              {...getSelectMenuProps(`actions`)}
+              width={400}
+            >
               <Button type="button" iconAfter="caret-down">
-                Select Actions
+                {getSelectMenuProps(`actions`).selected.length
+                  ? `${getSelectMenuProps(`actions`).selected.length} action${
+                      getSelectMenuProps(`actions`).selected.length > 1
+                        ? `s`
+                        : ``
+                    } selected`
+                  : `Select Actions`}
               </Button>
             </SelectMenu>
           </FormField>
-          <Pane display="flex">
-            <FormField
-              label="Groups"
-              labelFor="groups"
-              marginBottom={majorScale(3)}
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-start"
-              isRequired
-              validationMessage={errors.groups}
+
+          <FormField
+            label="Groups"
+            labelFor="groups"
+            marginBottom={majorScale(3)}
+            isRequired
+            validationMessage={errors.groups}
+          >
+            <SelectMenu
+              id="groups"
+              isMultiSelect
+              position={Position.BOTTOM_LEFT}
+              title="Select Groups"
+              options={allGroups.map((group) => ({
+                label: group.name,
+                value: `${group.id}`,
+              }))}
+              {...getSelectMenuProps(`groups`)}
+              width={400}
             >
-              <SelectMenu
-                id="groups"
-                isMultiSelect
-                position={Position.BOTTOM_LEFT}
-                title="Select Groups"
-                options={allGroups.map((group) => ({
-                  label: group.name,
-                  value: `${group.id}`,
-                }))}
-                {...getSelectMenuProps(`groups`)}
-                width={400}
-              >
-                <Button type="button" iconAfter="caret-down">
-                  {getSelectMenuProps(`groups`).selected.length
-                    ? `${getSelectMenuProps(`groups`).selected.length} group${
-                        getSelectMenuProps(`groups`).selected.length > 1
-                          ? `s`
-                          : ``
-                      } selected`
-                    : `Select Groups`}
-                </Button>
-              </SelectMenu>
-            </FormField>
-          </Pane>
+              <Button type="button" iconAfter="caret-down">
+                {getSelectMenuProps(`groups`).selected.length
+                  ? `${getSelectMenuProps(`groups`).selected.length} group${
+                      getSelectMenuProps(`groups`).selected.length > 1
+                        ? `s`
+                        : ``
+                    } selected`
+                  : `Select Groups`}
+              </Button>
+            </SelectMenu>
+          </FormField>
+
           <Button appearance="primary" disabled={!!Object.keys(errors).length}>
             Submit
           </Button>

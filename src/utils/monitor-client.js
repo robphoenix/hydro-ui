@@ -38,6 +38,14 @@ const getAllGroups = () => {
   return get(optionsUrl(`groups`))
 }
 
+const getAllCategories = () => {
+  return get(optionsUrl(`categories`))
+}
+
+const getAllActions = () => {
+  return get(optionsUrl(`actions`))
+}
+
 export {
   getMonitors,
   addMonitor,
@@ -46,4 +54,6 @@ export {
   archiveMonitor,
   unarchiveMonitor,
   getAllGroups,
+  getAllCategories,
+  getAllActions,
 }
