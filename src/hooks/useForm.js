@@ -51,7 +51,7 @@ function reducer(state, action) {
 
 function useForm(props) {
   if (!props.onSubmit) {
-    throw new Error('You forgot to pass onSubmit to useFormik!')
+    throw new Error('You forgot to pass onSubmit to useForm!')
   }
 
   const [state, dispatch] = React.useReducer(reducer, {
@@ -61,12 +61,12 @@ function useForm(props) {
     isSubmitting: false,
   })
 
-  const validate = () => {
+  React.useEffect(() => {
     if (props.validate) {
       const errors = props.validate(state.values)
       dispatch({ type: 'SET_ERRORS', payload: errors })
     }
-  }
+  }, [props, state.values])
 
   const handleInputChange = (fieldName) => (event) => {
     event.persist()
@@ -74,7 +74,6 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event.target.value },
     })
-    validate()
   }
 
   const handleSwitchChange = (fieldName) => (event) => {
@@ -83,7 +82,6 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event.target.checked },
     })
-    validate()
   }
 
   const handleSegmentedControlChange = (fieldName) => (event) => {
@@ -91,7 +89,6 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: event },
     })
-    validate()
   }
 
   const handleSelect = (fieldName) => (item) => {
@@ -99,7 +96,6 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: [...state.values[fieldName], item.value] },
     })
-    validate()
   }
 
   const handleDeselect = (fieldName) => (item) => {
@@ -111,7 +107,6 @@ function useForm(props) {
       type: 'SET_FIELD_VALUE',
       payload: { [fieldName]: selectedItems },
     })
-    validate()
   }
 
   const handleBlur = (fieldName) => () => {
@@ -119,7 +114,6 @@ function useForm(props) {
       type: 'SET_FIELD_TOUCHED',
       payload: { [fieldName]: true },
     })
-    validate()
   }
 
   const getInputFieldProps = (fieldName) => ({
