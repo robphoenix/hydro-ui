@@ -11,7 +11,6 @@ import {
   SegmentedControl,
   SelectMenu,
   Button,
-  Alert,
   Position,
   toaster,
 } from 'evergreen-ui'
@@ -240,6 +239,8 @@ const AddMonitor = () => {
               required
               {...getInputFieldProps('query')}
               isInvalid={errors.query && touched.query}
+              fontFamily="mono"
+              rows="10"
             />
           </FormField>
           <FormField
