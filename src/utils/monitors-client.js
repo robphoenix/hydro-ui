@@ -14,6 +14,10 @@ const getMonitors = () => {
   return get(monitorsUrl())
 }
 
+const getMonitorById = (id) => {
+  return get(monitorsUrl(id))
+}
+
 const addMonitor = (monitor) => {
   return post(monitorsUrl(), monitor)
 }
@@ -55,6 +59,7 @@ const addCategories = (categories) => {
 
 export {
   getMonitors,
+  getMonitorById,
   addMonitor,
   addCategories,
   disableMonitor,
