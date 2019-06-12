@@ -1,10 +1,21 @@
 import React from 'react'
 import { useMonitors } from '../context/monitors-context'
-import { Pane, Heading, Text, majorScale, Button, Table } from 'evergreen-ui'
+import {
+  Pane,
+  Heading,
+  Text,
+  majorScale,
+  Button,
+  Table,
+  Dialog,
+  Pre,
+  Code,
+} from 'evergreen-ui'
 
 const ViewMonitorById = ({ id }) => {
   const [headers, setHeaders] = React.useState([])
   const [data, setData] = React.useState([])
+  const [showEplQuery, setShowEplQuery] = React.useState(false)
 
   const {
     monitor,
@@ -52,7 +63,23 @@ const ViewMonitorById = ({ id }) => {
             <Text size={600} marginBottom={majorScale(2)}>
               {monitor.description}
             </Text>
-            <Button>View EPL Query</Button>
+            <Pane>
+              <Dialog
+                isShown={showEplQuery}
+                title="EPL Query"
+                onCloseComplete={() => setShowEplQuery(false)}
+                hasFooter={false}
+              >
+                <Pre maxWidth={1000} whiteSpace="pre-wrap">
+                  <Code appearance="minimal" size={500}>
+                    {monitor.query}
+                  </Code>
+                </Pre>
+              </Dialog>
+              <Button onClick={() => setShowEplQuery(true)}>
+                View EPL Query
+              </Button>
+            </Pane>
           </Pane>
         )}
         {monitor && (

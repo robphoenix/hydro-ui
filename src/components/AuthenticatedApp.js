@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Router, Redirect } from '@reach/router'
 
 import { useAuth } from '../context/auth-context'
@@ -12,7 +12,7 @@ import ViewMonitorById from '../pages/ViewMonitorById'
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
 
-  useEffect(() => {
+  React.useEffect(() => {
     initTokenRefreshInterval()
   }, [initTokenRefreshInterval])
 
