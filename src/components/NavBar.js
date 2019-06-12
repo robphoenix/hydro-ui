@@ -9,11 +9,11 @@ import {
   Menu,
   Text,
 } from 'evergreen-ui'
-import { navigate } from '@reach/router'
 
 import Logo from './Logo'
 import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
+import NavLink from './NavLink'
 
 const NavBar = () => {
   const user = useUser()
@@ -30,7 +30,7 @@ const NavBar = () => {
       width="100%"
       height={majorScale(11)}
       backgroundColor="white"
-      zIndex="999"
+      zIndex="2"
     >
       <Logo height="40px" />
       <Heading is="h1" size={700} marginLeft={majorScale(2)}>
@@ -42,13 +42,15 @@ const NavBar = () => {
           content={
             <Menu>
               <Menu.Group>
-                <Menu.Item onSelect={() => navigate(`/monitors/view`)}>
-                  View Monitors
+                <Menu.Item>
+                  <NavLink to="/monitors/view">View Monitors</NavLink>
                 </Menu.Item>
-                <Menu.Item onSelect={() => navigate(`/monitors/add`)}>
-                  Add New Monitor
+                <Menu.Item>
+                  <NavLink to="/monitors/add">Add New Monitor</NavLink>
                 </Menu.Item>
-                <Menu.Item onSelect={() => {}}>View Feed Types</Menu.Item>
+                <Menu.Item>
+                  <NavLink to="#">View Feed Types</NavLink>
+                </Menu.Item>
               </Menu.Group>
             </Menu>
           }
