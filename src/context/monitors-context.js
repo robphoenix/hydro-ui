@@ -2,6 +2,7 @@ import React from 'react'
 
 import {
   getMonitors,
+  getMonitorById,
   addMonitor,
   addCategories,
   disableMonitor,
@@ -11,7 +12,8 @@ import {
   getAllGroups,
   getAllCategories,
   getAllActions,
-} from '../utils/monitor-client'
+} from '../utils/monitors-client'
+import { newEventBus } from '../utils/eventbus-client'
 
 const MonitorsContext = React.createContext()
 
@@ -46,10 +48,12 @@ function MonitorsProvider(props) {
 
   const [state, dispatch] = React.useReducer(monitorsReducer, {
     monitors: [],
+    monitor: {},
     allGroups: [],
     allCategories: [],
     allActions: [],
     errors: {},
+    eventBusMessage: {},
   })
 
   const fetchMonitors = React.useCallback(async () => {
@@ -62,6 +66,15 @@ function MonitorsProvider(props) {
   }, [])
 
   const refreshMonitors = fetchMonitors
+
+  const fetchMonitorById = React.useCallback(async (id) => {
+    try {
+      const monitor = await getMonitorById(id)
+      dispatch({ type: 'SUCCESS', payload: { monitor } })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', value: { monitors: error } })
+    }
+  }, [])
 
   const fetchGroups = React.useCallback(async () => {
     try {
@@ -90,7 +103,23 @@ function MonitorsProvider(props) {
     }
   }, [])
 
-  const { monitors, allGroups, allCategories, allActions } = state
+  const initEventBus = React.useCallback((name) => {
+    if (name) {
+      const eb = newEventBus(name, (error, eventBusMessage) => {
+        if (error) {
+          eb.close()
+          dispatch({ type: 'SET_ERROR', value: { eventBus: error } })
+        }
+        if (eventBusMessage) {
+          const { h: headers, d: data } = eventBusMessage.body
+          dispatch({
+            type: 'SUCCESS',
+            payload: { eventBusMessage: { headers, data } },
+          })
+        }
+      })
+    }
+  }, [])
 
   return (
     <MonitorsContext.Provider
@@ -101,15 +130,14 @@ function MonitorsProvider(props) {
         enableMonitor,
         archiveMonitor,
         unarchiveMonitor,
-        monitors,
         fetchMonitors,
+        fetchMonitorById,
         refreshMonitors,
         fetchGroups,
         fetchCategories,
         fetchActions,
-        allGroups,
-        allCategories,
-        allActions,
+        initEventBus,
+        ...state,
       }}
       {...props}
     />

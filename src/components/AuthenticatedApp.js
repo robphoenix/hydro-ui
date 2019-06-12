@@ -7,6 +7,7 @@ import NavBar from './NavBar'
 import { Pane } from 'evergreen-ui'
 import { MonitorsProvider } from '../context/monitors-context'
 import AddMonitor from '../pages/AddMonitor'
+import ViewMonitorById from '../pages/ViewMonitorById'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -24,6 +25,7 @@ const AuthenticatedApp = () => {
           <Redirect from="/" to="/monitors/view" noThrow />
           <ViewMonitors path="/monitors/view" />
           <AddMonitor path="/monitors/add" />
+          <ViewMonitorById path="/monitors/:id" />
         </Router>
       </MonitorsProvider>
     </Pane>

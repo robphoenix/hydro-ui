@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   Table,
   Pane,
@@ -14,12 +14,13 @@ import ViewEplQueryCell from './ViewEplQueryCell'
 import MonitorMenuCell from './MonitorMenuCell'
 
 const MonitorsTable = ({ monitors }) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [monitorsStatus, setMonitorsStatus] = useState('online')
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [filterCategoriesButtonText, setFilterCategoriesButtonText] = useState(
-    ``,
-  )
+  const [searchQuery, setSearchQuery] = React.useState('')
+  const [monitorsStatus, setMonitorsStatus] = React.useState('online')
+  const [selectedCategories, setSelectedCategories] = React.useState([])
+  const [
+    filterCategoriesButtonText,
+    setFilterCategoriesButtonText,
+  ] = React.useState(``)
 
   const monitorsStatusOptions = [
     { label: 'Online', value: 'online' },
@@ -66,7 +67,7 @@ const MonitorsTable = ({ monitors }) => {
     })
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     let text = `Filter Categories...`
     const numberOfCategories = selectedCategories.length
     if (numberOfCategories === 1) {

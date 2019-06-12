@@ -8,6 +8,7 @@ import {
   Position,
   Menu,
   Text,
+  Icon,
 } from 'evergreen-ui'
 
 import Logo from './Logo'
@@ -67,8 +68,15 @@ const NavBar = () => {
           </Button>
         </Popover>
 
-        <Button appearance="minimal" marginLeft="auto" onClick={() => logout()}>
+        <Button
+          appearance="minimal"
+          marginLeft="auto"
+          onClick={logout}
+          display="flex"
+          alignItems="center"
+        >
           <Text>Log Out {user.displayName}</Text>
+          <Icon icon="log-out" color="muted" marginLeft={majorScale(2)} />
         </Button>
       </Pane>
     </Pane>
