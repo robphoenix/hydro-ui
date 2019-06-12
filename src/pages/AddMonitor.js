@@ -66,6 +66,7 @@ const durationNames = () => durations.map((d) => d.name)
 
 const AddMonitor = () => {
   const nameMaxChars = 50
+  const categoriesMax = 4
   const priorityOptions = [
     { label: 'Lowest', value: 'lowest' },
     { label: 'Low', value: 'low' },
@@ -142,16 +143,19 @@ const AddMonitor = () => {
       errors.name = `Monitor name cannot be longer than ${nameMaxChars} characters`
     }
     if (values.name === '') {
-      errors.name = 'You must enter a Monitor name'
+      errors.name = `You must enter a Monitor name`
     }
     if (values.description === '') {
-      errors.description = 'You must enter a Monitor description'
+      errors.description = `You must enter a Monitor description`
     }
     if (values.query === '') {
-      errors.query = 'You must enter an EPL Query'
+      errors.query = `You must enter an EPL Query`
     }
     if (values.groups.length === 0) {
-      errors.groups = 'You must select at least one group'
+      errors.groups = `You must select at least one group`
+    }
+    if (values.categories && values.categories.length > 4) {
+      errors.categories = `You can only select up to ${categoriesMax} categories`
     }
     return errors
   }
@@ -285,11 +289,13 @@ const AddMonitor = () => {
             label="Categories"
             labelFor="categories"
             marginBottom={majorScale(2)}
+            validationMessage={errors.categories}
           >
             <SelectMenu
               id="categories"
               isMultiSelect
               title="Select Categories"
+              description={`You can select up to ${categoriesMax} categories`}
               position={Position.BOTTOM_LEFT}
               options={allCategories.map((category) => ({
                 label: category.name,
