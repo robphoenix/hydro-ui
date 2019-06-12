@@ -10,7 +10,7 @@ const DisableMonitorMenuItem = ({ monitor }) => {
   const handleConfirm = async () => {
     try {
       await disableMonitor(monitor)
-      toaster.notify(`${monitor.name} has been disabled`)
+      toaster.success(`${monitor.name} has been disabled`)
       refreshMonitors()
     } catch (error) {
       toaster.warning(error)

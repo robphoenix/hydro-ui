@@ -6,6 +6,9 @@ const monitorsUrl = (endpoint = ``) => {
 const optionsUrl = (endpoint) => {
   return `${monitorsUrl()}/options/${endpoint}`
 }
+const groupsUrl = optionsUrl(`groups`)
+const actionsUrl = optionsUrl(`actions`)
+const categoriesUrl = optionsUrl(`categories`)
 
 const getMonitors = () => {
   return get(monitorsUrl())
@@ -35,20 +38,25 @@ const unarchiveMonitor = (monitor) => {
 }
 
 const getAllGroups = () => {
-  return get(optionsUrl(`groups`))
+  return get(groupsUrl)
 }
 
 const getAllCategories = () => {
-  return get(optionsUrl(`categories`))
+  return get(categoriesUrl)
 }
 
 const getAllActions = () => {
-  return get(optionsUrl(`actions`))
+  return get(actionsUrl)
+}
+
+const addCategories = (categories) => {
+  return post(categoriesUrl, { categories })
 }
 
 export {
   getMonitors,
   addMonitor,
+  addCategories,
   disableMonitor,
   enableMonitor,
   archiveMonitor,

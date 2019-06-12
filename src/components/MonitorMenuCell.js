@@ -18,12 +18,12 @@ const MonitorMenuCell = ({ monitor }) => {
         <Menu>
           <Menu.Group>
             {!isArchived && (
-              <Menu.Item onSelect={() => toaster.notify('Edit')}>
+              <Menu.Item onSelect={() => toaster.success('Edit')}>
                 Edit
               </Menu.Item>
             )}
             {!isArchived && (
-              <Menu.Item onSelect={() => toaster.notify('Duplicate')}>
+              <Menu.Item onSelect={() => toaster.success('Duplicate')}>
                 Duplicate
               </Menu.Item>
             )}

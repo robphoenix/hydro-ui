@@ -76,6 +76,13 @@ function useForm(props) {
     })
   }
 
+  const handleTagInputChange = (fieldName) => (values) => {
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: values },
+    })
+  }
+
   const handleSwitchChange = (fieldName) => (event) => {
     event.persist()
     dispatch({
@@ -122,6 +129,11 @@ function useForm(props) {
     onBlur: handleBlur(fieldName),
   })
 
+  const getTagInputFieldProps = (fieldName) => ({
+    values: state.values[fieldName],
+    onChange: handleTagInputChange(fieldName),
+  })
+
   const getSwitchFieldProps = (fieldName) => ({
     checked: state.values[fieldName],
     onChange: handleSwitchChange(fieldName),
@@ -156,10 +168,9 @@ function useForm(props) {
   }
 
   return {
-    handleInputChange,
-    handleBlur,
     handleSubmit,
     getInputFieldProps,
+    getTagInputFieldProps,
     getSwitchFieldProps,
     getSegmentedControlFieldProps,
     getSelectMenuProps,

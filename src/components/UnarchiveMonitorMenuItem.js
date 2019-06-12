@@ -11,7 +11,7 @@ const UnarchiveMonitorMenuItem = ({ monitor }) => {
   const handleConfirm = async () => {
     try {
       await unarchiveMonitor(monitor)
-      toaster.notify(`${monitor.name} has been unarchived`)
+      toaster.success(`${monitor.name} has been unarchived`)
       refreshMonitors()
     } catch (error) {
       toaster.warning(error)

@@ -11,7 +11,7 @@ const EnableMonitorMenuItem = ({ monitor }) => {
   const handleConfirm = async () => {
     try {
       await enableMonitor(monitor)
-      toaster.notify(`${monitor.name} has been enabled`)
+      toaster.success(`${monitor.name} has been enabled`)
       refreshMonitors()
     } catch (error) {
       toaster.warning(error)

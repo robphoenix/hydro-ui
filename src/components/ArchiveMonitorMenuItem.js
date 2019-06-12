@@ -11,7 +11,7 @@ const ArchiveMonitorMenuItem = ({ monitor }) => {
   const handleConfirm = async () => {
     try {
       await archiveMonitor(monitor)
-      toaster.notify(`${monitor.name} has been archived`)
+      toaster.success(`${monitor.name} has been archived`)
       refreshMonitors()
     } catch (error) {
       toaster.warning(error)

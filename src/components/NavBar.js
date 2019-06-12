@@ -30,6 +30,7 @@ const NavBar = () => {
       width="100%"
       height={majorScale(11)}
       backgroundColor="white"
+      zIndex="999"
     >
       <Logo height="40px" />
       <Heading is="h1" size={700} marginLeft={majorScale(2)}>

@@ -13,6 +13,7 @@ import {
   Button,
   Position,
   toaster,
+  TagInput,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
@@ -77,6 +78,7 @@ const AddMonitor = () => {
 
   const {
     addMonitor,
+    addCategories,
     allGroups,
     fetchGroups,
     allCategories,
@@ -107,6 +109,7 @@ const AddMonitor = () => {
     cacheWindow: min,
     groups: userGroups.map((g) => `${g.id}`),
     categories: [],
+    newCategories: [],
     actions: [],
   }
   const onSubmit = async (values) => {
@@ -163,6 +166,7 @@ const AddMonitor = () => {
   const {
     handleSubmit,
     getInputFieldProps,
+    getTagInputFieldProps,
     getSwitchFieldProps,
     getSegmentedControlFieldProps,
     getSelectMenuProps,
@@ -316,6 +320,38 @@ const AddMonitor = () => {
                   : `Select Categories`}
               </Button>
             </SelectMenu>
+          </FormField>
+
+          <FormField
+            label="Create New Categories"
+            labelFor="newCategories"
+            marginBottom={majorScale(2)}
+          >
+            <Pane display="flex" alignItems="center">
+              <TagInput
+                inputProps={{ placeholder: 'Add Categories...' }}
+                tagProps={{
+                  color: 'teal',
+                }}
+                addOnBlur={true}
+                {...getTagInputFieldProps('newCategories')}
+                flex="2"
+              />
+              <Button
+                type="button"
+                marginLeft={majorScale(2)}
+                onClick={async () => {
+                  const props = getTagInputFieldProps('newCategories')
+                  const { values, onChange } = props
+                  await addCategories(values)
+                  toaster.success(`New categories created: ${values}`)
+                  onChange([])
+                  fetchCategories()
+                }}
+              >
+                Add Categories
+              </Button>
+            </Pane>
           </FormField>
 
           <FormField

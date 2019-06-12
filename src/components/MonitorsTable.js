@@ -122,7 +122,7 @@ const MonitorsTable = ({ monitors }) => {
         <Table.Body height={700}>
           {tableItems.map((monitor) => (
             <Table.Row key={monitor.id} height="auto" padding={majorScale(3)}>
-              <Table.Cell>
+              <Table.Cell flex="2">
                 <MonitorNameCell monitor={monitor} />
               </Table.Cell>
               <Table.Cell>
@@ -139,7 +139,7 @@ const MonitorsTable = ({ monitors }) => {
                   </Badge>
                 ))}
               </Table.Cell>
-              <Table.Cell justifyContent="flex-end">
+              <Table.Cell justifyContent="flex-end" flex="1">
                 <MonitorMenuCell monitor={monitor} />
               </Table.Cell>
             </Table.Row>

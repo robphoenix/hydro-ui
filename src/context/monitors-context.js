@@ -3,6 +3,7 @@ import React from 'react'
 import {
   getMonitors,
   addMonitor,
+  addCategories,
   disableMonitor,
   enableMonitor,
   archiveMonitor,
@@ -95,6 +96,7 @@ function MonitorsProvider(props) {
     <MonitorsContext.Provider
       value={{
         addMonitor,
+        addCategories,
         disableMonitor,
         enableMonitor,
         archiveMonitor,

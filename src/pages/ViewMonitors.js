@@ -13,7 +13,7 @@ const ViewMonitors = () => {
 
   return (
     <Pane display="flex" justifyContent="center">
-      <Pane width="50%">
+      <Pane width="75%">
         <Heading
           is="h2"
           size={800}
