@@ -128,7 +128,7 @@ const MonitorsTable = ({ monitors }) => {
               <Table.Cell>
                 <ViewEplQueryCell monitor={monitor} />
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell display="flex" flex="2" flexWrap="wrap">
                 {monitor.categories.map((category) => (
                   <Badge
                     key={category.id}
