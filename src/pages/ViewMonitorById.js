@@ -20,8 +20,10 @@ const ViewMonitorById = ({ id }) => {
   const {
     monitor,
     fetchMonitorById,
-    eventBusMessage,
-    initEventBus,
+    liveDataMessage,
+    cachedDataMessage,
+    initLiveDataConnection,
+    initCachedDataConnection,
   } = useMonitors()
 
   React.useEffect(() => {
@@ -31,16 +33,27 @@ const ViewMonitorById = ({ id }) => {
   React.useEffect(() => {
     if (monitor) {
       const { name } = monitor
-      initEventBus(name)
+      initLiveDataConnection(name)
     }
-  }, [initEventBus, monitor])
+  }, [initLiveDataConnection, monitor])
 
   React.useEffect(() => {
-    if (Object.keys(eventBusMessage) && Object.keys(eventBusMessage).length) {
-      setHeaders(eventBusMessage.headers)
-      setData(eventBusMessage.data)
+    if (monitor) {
+      const { name } = monitor
+      initCachedDataConnection(name)
     }
-  }, [eventBusMessage])
+  }, [initCachedDataConnection, monitor])
+
+  React.useEffect(() => {
+    if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
+      setHeaders(liveDataMessage.headers)
+      setData(liveDataMessage.data)
+    }
+  }, [liveDataMessage])
+
+  React.useEffect(() => {
+    console.log({ cachedDataMessage })
+  }, [cachedDataMessage])
 
   return (
     <Pane display="flex" justifyContent="center">
