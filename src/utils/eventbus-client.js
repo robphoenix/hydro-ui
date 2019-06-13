@@ -1,3 +1,4 @@
+// @ts-nocheck
 import EventBus from 'vertx3-eventbus-client'
 
 const eventBusUrl = `http://mn2formlt0002d0:6081/eventbus`
