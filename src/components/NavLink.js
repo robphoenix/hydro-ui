@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from '@reach/router'
+// eslint-disable-next-line no-unused-vars
 import styled from 'styled-components/macro'
 
 // TODO: use evergreen theming to get colour
