@@ -17,50 +17,7 @@ import {
 import { useMonitors } from '../context/monitors-context'
 import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
-
-const thirtySeconds = 30
-const oneMinute = 60
-const twoMinutes = 2 * oneMinute
-const fiveMinutes = 5 * oneMinute
-const tenMinutes = 10 * oneMinute
-const fifteenMinutes = 15 * oneMinute
-const thirtyMinutes = 30 * oneMinute
-const oneHour = 60 * oneMinute
-const twoHours = 2 * oneHour
-const fourHours = 4 * oneHour
-const sixHours = 6 * oneHour
-const twelveHours = 12 * oneHour
-const eighteenHours = 18 * oneHour
-const oneDay = 24 * oneHour
-const twoDays = 2 * oneDay
-const fourDays = 4 * oneDay
-const oneWeek = 7 * oneDay
-
-const durations = [
-  { value: 0, name: 'off' },
-  { value: thirtySeconds, name: '30 Seconds' },
-  { value: oneMinute, name: '1 Minute' },
-  { value: twoMinutes, name: '2 Minutes' },
-  { value: fiveMinutes, name: '5 Minutes' },
-  { value: tenMinutes, name: '10 Minutes' },
-  { value: fifteenMinutes, name: '15 Minutes' },
-  { value: thirtyMinutes, name: '30 Minutes' },
-  { value: oneHour, name: '1 Hour' },
-  { value: twoHours, name: '2 Hours' },
-  { value: fourHours, name: '4 Hours' },
-  { value: sixHours, name: '6 Hours' },
-  { value: twelveHours, name: '12 Hours' },
-  { value: eighteenHours, name: '18 Hours' },
-  { value: oneDay, name: '1 Day' },
-  { value: twoDays, name: '2 Days' },
-  { value: fourDays, name: '4 Days' },
-  { value: oneWeek, name: '1 Week' },
-]
-
-const min = 0
-const max = durations.length - 1
-const durationValues = () => durations.map((d) => d.value)
-const durationNames = () => durations.map((d) => d.name)
+import useCacheWindowDurations from '../hooks/useCacheWindowDurations'
 
 const CreateMonitorForm = ({ initialValues, createMonitor }) => {
   const nameMaxChars = 50
@@ -72,6 +29,13 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     { label: 'High', value: 'high' },
     { label: 'Highest', value: 'highest' },
   ]
+
+  const {
+    cacheWindowMin,
+    cacheWindowMax,
+    cacheWindowDurationValues,
+    cacheWindowDurationNames,
+  } = useCacheWindowDurations()
 
   const {
     addCategories,
@@ -98,7 +62,7 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
   const onSubmit = async (values) => {
     const type = `standard`
     const status = values.status ? `online` : `offline`
-    const cacheWindow = durationValues()[values.cacheWindow]
+    const cacheWindow = cacheWindowDurationValues[values.cacheWindow]
     const groups = selectedItems(values.groups, allGroups)
     const actions = selectedItems(values.actions, allActions)
     const categories = selectedItems(values.categories, allCategories)
@@ -250,14 +214,16 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
         <input
           id="cacheWindow"
           type="range"
-          min={min}
-          max={max}
+          min={cacheWindowMin}
+          max={cacheWindowMax}
           {...getInputFieldProps('cacheWindow')}
           style={{
             width: `100%`,
           }}
         />
-        <Text>{durationNames()[getInputFieldProps('cacheWindow').value]}</Text>
+        <Text>
+          {cacheWindowDurationNames[getInputFieldProps('cacheWindow').value]}
+        </Text>
       </FormField>
 
       <FormField
