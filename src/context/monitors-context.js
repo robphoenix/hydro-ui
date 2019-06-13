@@ -41,6 +41,11 @@ function MonitorsProvider(props) {
             ...action.payload,
           },
         }
+      case 'ADD_CONNECTION':
+        return {
+          ...state,
+          eventBusConnections: [...state.eventBusConnections, action.payload],
+        }
       default:
         return state
     }
@@ -55,6 +60,7 @@ function MonitorsProvider(props) {
     errors: {},
     liveDataMessage: {},
     cachedDataMessage: {},
+    eventBusConnections: [],
   }
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
@@ -121,8 +127,12 @@ function MonitorsProvider(props) {
           })
         }
       })
+      dispatch({ type: 'ADD_CONNECTION', payload: eb })
     }
   }, [])
+
+  const closeEventBusConnections = () =>
+    state.eventBusConnections.map((eb) => eb.close())
 
   const initCachedDataConnection = React.useCallback((name) => {
     if (name) {
@@ -163,6 +173,7 @@ function MonitorsProvider(props) {
         fetchActions,
         initLiveDataConnection,
         initCachedDataConnection,
+        closeEventBusConnections,
         ...state,
       }}
       {...props}

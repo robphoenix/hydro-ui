@@ -12,12 +12,15 @@ import {
   Code,
   Badge,
 } from 'evergreen-ui'
+import dateFnsFormat from 'date-fns/format'
 
 const ViewMonitorById = ({ id }) => {
   const [headers, setHeaders] = React.useState([])
   const [data, setData] = React.useState([])
   const [isLiveData, setIsLiveData] = React.useState(false)
   const [showEplQuery, setShowEplQuery] = React.useState(false)
+  const [dataPaused, setDataPaused] = React.useState(false)
+  const [dataReceived, setDataReceived] = React.useState(``)
 
   const {
     monitor,
@@ -26,7 +29,17 @@ const ViewMonitorById = ({ id }) => {
     cachedDataMessage,
     initLiveDataConnection,
     initCachedDataConnection,
+    closeEventBusConnections,
   } = useMonitors()
+
+  const togglePause = () => {
+    setDataPaused(!dataPaused)
+    if (dataPaused) {
+      closeEventBusConnections()
+    } else {
+      initLiveDataConnection(monitor.name)
+    }
+  }
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -51,6 +64,7 @@ const ViewMonitorById = ({ id }) => {
       setHeaders(liveDataMessage.headers)
       setData(liveDataMessage.data)
       setIsLiveData(true)
+      setDataReceived(dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`))
     }
   }, [liveDataMessage])
 
@@ -95,6 +109,14 @@ const ViewMonitorById = ({ id }) => {
                   </Code>
                 </Pre>
               </Dialog>
+              <Button
+                onClick={togglePause}
+                disabled={!isLiveData}
+                marginRight={majorScale(2)}
+                intent="warning"
+              >
+                {dataPaused ? 'Run' : 'Pause'}
+              </Button>
               <Button onClick={() => setShowEplQuery(true)}>
                 View EPL Query
               </Button>
@@ -109,6 +131,7 @@ const ViewMonitorById = ({ id }) => {
                   data
                 </Text>
               )}
+              {isLiveData && <Text>, received at {dataReceived}</Text>}
             </Pane>
           </Pane>
         )}
