@@ -245,8 +245,14 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
           {...getSelectMenuProps(`categories`)}
           width={400}
         >
-          <Button type="button" iconAfter="caret-down">
-            {getSelectMenuProps(`categories`).selected.length
+          <Button
+            type="button"
+            iconAfter="caret-down"
+            disabled={!(allCategories && !!allCategories.length)}
+          >
+            {!allCategories.length
+              ? `No Categories Available`
+              : getSelectMenuProps(`categories`).selected.length
               ? `${getSelectMenuProps(`categories`).selected.length} categor${
                   getSelectMenuProps(`categories`).selected.length > 1
                     ? `ies`
@@ -273,6 +279,9 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
             flex="2"
           />
           <Button
+            disabled={
+              getTagInputFieldProps('newCategories').values.length === 0
+            }
             type="button"
             marginLeft={majorScale(2)}
             onClick={async () => {
@@ -306,8 +315,14 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
           {...getSelectMenuProps(`actions`)}
           width={400}
         >
-          <Button type="button" iconAfter="caret-down">
-            {getSelectMenuProps(`actions`).selected.length
+          <Button
+            type="button"
+            iconAfter="caret-down"
+            disabled={!(allActions && !!allActions.length)}
+          >
+            {!allActions.length
+              ? `No Actions Available`
+              : getSelectMenuProps(`actions`).selected.length
               ? `${getSelectMenuProps(`actions`).selected.length} action${
                   getSelectMenuProps(`actions`).selected.length > 1 ? `s` : ``
                 } selected`
