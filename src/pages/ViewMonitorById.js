@@ -10,11 +10,13 @@ import {
   Dialog,
   Pre,
   Code,
+  Badge,
 } from 'evergreen-ui'
 
 const ViewMonitorById = ({ id }) => {
   const [headers, setHeaders] = React.useState([])
   const [data, setData] = React.useState([])
+  const [isLiveData, setIsLiveData] = React.useState(false)
   const [showEplQuery, setShowEplQuery] = React.useState(false)
 
   const {
@@ -48,12 +50,16 @@ const ViewMonitorById = ({ id }) => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
       setHeaders(liveDataMessage.headers)
       setData(liveDataMessage.data)
+      setIsLiveData(true)
     }
   }, [liveDataMessage])
 
   React.useEffect(() => {
-    console.log({ cachedDataMessage })
-  }, [cachedDataMessage])
+    if (!isLiveData) {
+      setHeaders(cachedDataMessage.headers)
+      setData(cachedDataMessage.data)
+    }
+  }, [cachedDataMessage, isLiveData])
 
   return (
     <Pane display="flex" justifyContent="center">
@@ -73,10 +79,10 @@ const ViewMonitorById = ({ id }) => {
             >
               {monitor.name}
             </Heading>
-            <Text size={600} marginBottom={majorScale(2)}>
+            <Text size={600} marginBottom={majorScale(3)}>
               {monitor.description}
             </Text>
-            <Pane>
+            <Pane display="flex" alignItems="center">
               <Dialog
                 isShown={showEplQuery}
                 title="EPL Query"
@@ -92,10 +98,21 @@ const ViewMonitorById = ({ id }) => {
               <Button onClick={() => setShowEplQuery(true)}>
                 View EPL Query
               </Button>
+              {monitor && data && (
+                <Text marginLeft={majorScale(2)}>
+                  Currently viewing{' '}
+                  {isLiveData ? (
+                    <Badge color="green">live</Badge>
+                  ) : (
+                    <Badge color="yellow">cached</Badge>
+                  )}{' '}
+                  data
+                </Text>
+              )}
             </Pane>
           </Pane>
         )}
-        {monitor && (
+        {monitor && data && (
           <Table>
             <Table.Head>
               {headers.map((header) => (
