@@ -22,19 +22,23 @@ const addMonitor = (monitor) => {
   return post(monitorsUrl(), monitor)
 }
 
+const updateMonitor = (monitor) => {
+  return put(monitorsUrl(monitor.id), monitor)
+}
+
 const disableMonitor = (monitor) => {
   monitor.status = `offline`
-  return put(monitorsUrl(monitor.id), monitor)
+  return updateMonitor(monitor)
 }
 
 const enableMonitor = (monitor) => {
   monitor.status = `online`
-  return put(monitorsUrl(monitor.id), monitor)
+  return updateMonitor(monitor)
 }
 
 const archiveMonitor = (monitor) => {
   monitor.status = `archived`
-  return put(monitorsUrl(monitor.id), monitor)
+  return updateMonitor(monitor)
 }
 
 const unarchiveMonitor = (monitor) => {
@@ -61,6 +65,7 @@ export {
   getMonitors,
   getMonitorById,
   addMonitor,
+  updateMonitor,
   addCategories,
   disableMonitor,
   enableMonitor,

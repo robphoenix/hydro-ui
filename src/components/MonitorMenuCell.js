@@ -5,6 +5,7 @@ import EnableMonitorMenuItem from './EnableMonitorMenuItem'
 import DisableMonitorMenuItem from './DisableMonitorMenuItem'
 import ArchiveMonitorMenuItem from './ArchiveMonitorMenuItem'
 import UnarchiveMonitorMenuItem from './UnarchiveMonitorMenuItem'
+import { navigate } from '@reach/router'
 
 const MonitorMenuCell = ({ monitor }) => {
   const isArchived = monitor.status === `archived`
@@ -18,7 +19,7 @@ const MonitorMenuCell = ({ monitor }) => {
         <Menu>
           <Menu.Group>
             {!isArchived && (
-              <Menu.Item onSelect={() => toaster.success('Edit')}>
+              <Menu.Item onSelect={() => navigate(`${monitor.id}/edit`)}>
                 Edit
               </Menu.Item>
             )}

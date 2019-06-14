@@ -13,6 +13,7 @@ import {
   Badge,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
+import { navigate } from '@reach/router'
 
 const ViewMonitorById = ({ id }) => {
   const [headers, setHeaders] = React.useState([])
@@ -117,8 +118,17 @@ const ViewMonitorById = ({ id }) => {
               >
                 {dataPaused ? 'Run' : 'Pause'}
               </Button>
-              <Button onClick={() => setShowEplQuery(true)}>
+              <Button
+                onClick={() => setShowEplQuery(true)}
+                marginRight={majorScale(2)}
+              >
                 View EPL Query
+              </Button>
+              <Button
+                onClick={() => navigate(`${monitor.id}/edit`)}
+                appearance="primary"
+              >
+                Edit
               </Button>
               {monitor && data && (
                 <Text marginLeft={majorScale(2)}>

@@ -123,11 +123,13 @@ function useForm(props) {
     })
   }
 
-  const getInputFieldProps = (fieldName) => ({
-    value: state.values[fieldName],
-    onChange: handleInputChange(fieldName),
-    onBlur: handleBlur(fieldName),
-  })
+  const getInputFieldProps = (fieldName) => {
+    return {
+      value: state.values[fieldName],
+      onChange: handleInputChange(fieldName),
+      onBlur: handleBlur(fieldName),
+    }
+  }
 
   const getTagInputFieldProps = (fieldName) => ({
     values: state.values[fieldName],

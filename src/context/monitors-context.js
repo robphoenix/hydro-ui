@@ -4,6 +4,7 @@ import {
   getMonitors,
   getMonitorById,
   addMonitor,
+  updateMonitor,
   addCategories,
   disableMonitor,
   enableMonitor,
@@ -160,6 +161,7 @@ function MonitorsProvider(props) {
     <MonitorsContext.Provider
       value={{
         addMonitor,
+        updateMonitor,
         addCategories,
         disableMonitor,
         enableMonitor,

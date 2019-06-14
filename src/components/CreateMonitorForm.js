@@ -19,7 +19,11 @@ import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
 import useCacheWindowDurations from '../hooks/useCacheWindowDurations'
 
-const CreateMonitorForm = ({ initialValues, createMonitor }) => {
+const CreateMonitorForm = ({
+  initialValues,
+  createMonitor,
+  disableNameInput,
+}) => {
   const nameMaxChars = 50
   const categoriesMax = 4
   const priorityOptions = [
@@ -53,9 +57,9 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     fetchActions()
   }, [fetchActions, fetchCategories, fetchGroups])
 
-  const selectedItems = (selected, all) => {
-    return all.filter((category) =>
-      selected.map((value) => +value).includes(category.id),
+  const selectedItems = (selected, allItems) => {
+    return allItems.filter((item) =>
+      selected.map((value) => +value).includes(item.id),
     )
   }
 
@@ -68,8 +72,9 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     const categories = selectedItems(values.categories, allCategories)
 
     // NOTE: priority is not yet used
-    const { name, description, query } = values
+    const { name, description, query, id } = values
     const monitor = {
+      id,
       name,
       description,
       status,
@@ -84,12 +89,13 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     await createMonitor(monitor)
     navigate(`/monitors/view`)
   }
+
   const validate = (values) => {
     let errors = {}
     if (!/^[a-zA-Z0-9 _-]+$/.test(values.name)) {
       errors.name = `Monitor name cannot contain punctuation marks, except dashes and underscores`
     }
-    if (values.name.length > nameMaxChars) {
+    if (values.name && values.name.length > nameMaxChars) {
       errors.name = `Monitor name cannot be longer than ${nameMaxChars} characters`
     }
     if (values.name === '') {
@@ -101,7 +107,7 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     if (values.query === '') {
       errors.query = `You must enter an EPL Query`
     }
-    if (values.groups.length === 0) {
+    if (values.groups && values.groups.length === 0) {
       errors.groups = `You must select at least one group`
     }
     if (values.categories && values.categories.length > 4) {
@@ -135,12 +141,34 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
     }
   }, [submitError])
 
+  const categoriesButtonText = () => {
+    let text = `No Categories Avaliable`
+    if (allCategories && allCategories.length) {
+      const categoriesProps = getSelectMenuProps(`categories`)
+      const { selected } = categoriesProps
+      if (selected && selected.length) {
+        const numCategories = selected && selected.length
+        text = `${numCategories} categor${
+          numCategories > 1 ? `ies` : `y`
+        } selected`
+      } else {
+        text = `Select Categories`
+      }
+    }
+    return text
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <TextInputField
         autoFocus
+        disabled={disableNameInput}
         label="Monitor Name"
-        description="Monitor Name must be unique, and cannot contain punctuation marks"
+        description={
+          disableNameInput
+            ? `Monitor name cannot be edited`
+            : `Monitor Name must be unique, and cannot contain punctuation marks`
+        }
         placeholder="Monitor Name"
         isInvalid={errors.name && touched.name}
         validationMessage={touched.name && errors.name}
@@ -250,15 +278,7 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
             iconAfter="caret-down"
             disabled={!(allCategories && !!allCategories.length)}
           >
-            {!allCategories.length
-              ? `No Categories Available`
-              : getSelectMenuProps(`categories`).selected.length
-              ? `${getSelectMenuProps(`categories`).selected.length} categor${
-                  getSelectMenuProps(`categories`).selected.length > 1
-                    ? `ies`
-                    : `y`
-                } selected`
-              : `Select Categories`}
+            {categoriesButtonText()}
           </Button>
         </SelectMenu>
       </FormField>
@@ -280,6 +300,7 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
           />
           <Button
             disabled={
+              getTagInputFieldProps('newCategories').values &&
               getTagInputFieldProps('newCategories').values.length === 0
             }
             type="button"
@@ -351,7 +372,8 @@ const CreateMonitorForm = ({ initialValues, createMonitor }) => {
           width={400}
         >
           <Button type="button" iconAfter="caret-down">
-            {getSelectMenuProps(`groups`).selected.length
+            {getSelectMenuProps(`groups`).selected &&
+            getSelectMenuProps(`groups`).selected.length
               ? `${getSelectMenuProps(`groups`).selected.length} group${
                   getSelectMenuProps(`groups`).selected.length > 1 ? `s` : ``
                 } selected`
