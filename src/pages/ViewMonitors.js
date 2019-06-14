@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Pane, Heading, majorScale } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
@@ -7,13 +7,13 @@ import { useMonitors } from '../context/monitors-context'
 const ViewMonitors = () => {
   const { monitors, fetchMonitors } = useMonitors()
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchMonitors()
   }, [fetchMonitors])
 
   return (
     <Pane display="flex" justifyContent="center">
-      <Pane width="75%">
+      <Pane width="60%">
         <Heading
           is="h2"
           size={800}

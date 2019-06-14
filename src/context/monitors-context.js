@@ -13,6 +13,7 @@ import {
   getAllGroups,
   getAllCategories,
   getAllActions,
+  getFeedTypes,
 } from '../utils/monitors-client'
 import { eventBusLiveData, eventBusCachedData } from '../utils/eventbus-client'
 
@@ -55,6 +56,7 @@ function MonitorsProvider(props) {
   const initialState = {
     monitors: [],
     monitor: {},
+    feedTypes: {},
     allGroups: [],
     allCategories: [],
     allActions: [],
@@ -110,6 +112,15 @@ function MonitorsProvider(props) {
       dispatch({ type: 'SUCCESS', payload: { allActions } })
     } catch (error) {
       dispatch({ type: 'SET_ERROR', value: { allActions: error } })
+    }
+  }, [])
+
+  const fetchFeedTypes = React.useCallback(async () => {
+    try {
+      const feedTypes = await getFeedTypes()
+      dispatch({ type: 'SUCCESS', payload: { feedTypes } })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', value: { feedTypes: error } })
     }
   }, [])
 
@@ -173,6 +184,7 @@ function MonitorsProvider(props) {
         fetchGroups,
         fetchCategories,
         fetchActions,
+        fetchFeedTypes,
         initLiveDataConnection,
         initCachedDataConnection,
         closeEventBusConnections,

@@ -50,7 +50,7 @@ const NavBar = () => {
                   <NavLink to="/monitors/add">Add New Monitor</NavLink>
                 </Menu.Item>
                 <Menu.Item>
-                  <NavLink to="#">View Feed Types</NavLink>
+                  <NavLink to="/monitors/feedtypes">View Feed Types</NavLink>
                 </Menu.Item>
               </Menu.Group>
             </Menu>

@@ -10,6 +10,7 @@ import AddMonitor from '../pages/AddMonitor'
 import ViewMonitorById from '../pages/ViewMonitorById'
 import EditMonitor from '../pages/EditMonitor'
 import DuplicateMonitor from '../pages/DuplicateMonitor'
+import ViewFeedTypes from '../pages/ViewFeedTypes'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -26,6 +27,7 @@ const AuthenticatedApp = () => {
         <Router>
           <Redirect from="/" to="/monitors/view" noThrow />
           <ViewMonitors path="/monitors/view" />
+          <ViewFeedTypes path="/monitors/feedtypes" />
           <AddMonitor path="/monitors/add" />
           <EditMonitor path="/monitors/:id/edit" />
           <DuplicateMonitor path="/monitors/:id/duplicate" />

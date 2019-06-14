@@ -9,6 +9,7 @@ const optionsUrl = (endpoint) => {
 const groupsUrl = optionsUrl(`groups`)
 const actionsUrl = optionsUrl(`actions`)
 const categoriesUrl = optionsUrl(`categories`)
+const feedTypesUrl = optionsUrl(`feedtypes`)
 
 const getMonitors = () => {
   return get(monitorsUrl())
@@ -61,6 +62,10 @@ const addCategories = (categories) => {
   return post(categoriesUrl, { categories })
 }
 
+const getFeedTypes = () => {
+  return get(feedTypesUrl)
+}
+
 export {
   getMonitors,
   getMonitorById,
@@ -74,4 +79,5 @@ export {
   getAllGroups,
   getAllCategories,
   getAllActions,
+  getFeedTypes,
 }
