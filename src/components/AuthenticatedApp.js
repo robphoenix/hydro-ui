@@ -9,6 +9,7 @@ import { MonitorsProvider } from '../context/monitors-context'
 import AddMonitor from '../pages/AddMonitor'
 import ViewMonitorById from '../pages/ViewMonitorById'
 import EditMonitor from '../pages/EditMonitor'
+import DuplicateMonitor from '../pages/DuplicateMonitor'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -27,6 +28,7 @@ const AuthenticatedApp = () => {
           <ViewMonitors path="/monitors/view" />
           <AddMonitor path="/monitors/add" />
           <EditMonitor path="/monitors/:id/edit" />
+          <DuplicateMonitor path="/monitors/:id/duplicate" />
           <ViewMonitorById path="/monitors/:id" />
         </Router>
       </MonitorsProvider>

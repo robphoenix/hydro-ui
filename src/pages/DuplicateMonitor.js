@@ -4,8 +4,8 @@ import { Pane, majorScale, Heading } from 'evergreen-ui'
 import { useMonitors } from '../context/monitors-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 
-const EditMonitor = ({ id }) => {
-  const { updateMonitor, monitor, fetchMonitorById } = useMonitors()
+const DuplicateMonitor = ({ id }) => {
+  const { addMonitor, monitor, fetchMonitorById } = useMonitors()
   const [initialValues, setInitialValues] = React.useState({})
 
   React.useEffect(() => {
@@ -21,7 +21,7 @@ const EditMonitor = ({ id }) => {
 
       setInitialValues({
         id,
-        name,
+        name: `DUPLICATE ${name}`,
         description,
         status,
         priority,
@@ -48,9 +48,8 @@ const EditMonitor = ({ id }) => {
         </Heading>
         {Object.keys(initialValues).length > 0 && (
           <CreateMonitorForm
-            disableNameInput
             initialValues={initialValues}
-            createMonitor={updateMonitor}
+            createMonitor={addMonitor}
           />
         )}
       </Pane>
@@ -58,4 +57,4 @@ const EditMonitor = ({ id }) => {
   )
 }
 
-export default EditMonitor
+export default DuplicateMonitor

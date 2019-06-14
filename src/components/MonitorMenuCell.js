@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover, Position, Menu, toaster, Button } from 'evergreen-ui'
+import { Popover, Position, Menu, Button } from 'evergreen-ui'
 
 import EnableMonitorMenuItem from './EnableMonitorMenuItem'
 import DisableMonitorMenuItem from './DisableMonitorMenuItem'
@@ -24,7 +24,7 @@ const MonitorMenuCell = ({ monitor }) => {
               </Menu.Item>
             )}
             {!isArchived && (
-              <Menu.Item onSelect={() => toaster.success('Duplicate')}>
+              <Menu.Item onSelect={() => navigate(`${monitor.id}/duplicate`)}>
                 Duplicate
               </Menu.Item>
             )}
