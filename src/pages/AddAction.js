@@ -1,6 +1,14 @@
 import React from 'react'
+import {
+  Pane,
+  majorScale,
+  Heading,
+  UnorderedList,
+  ListItem,
+  Button,
+} from 'evergreen-ui'
+
 import { useMonitors } from '../context/monitors-context'
-import { Pane, majorScale, Heading, RadioGroup } from 'evergreen-ui'
 import CreateBlockActionForm from '../components/CreateBlockActionForm'
 import CreateEmailRateActionForm from '../components/CreateEmailRateActionForm'
 
@@ -31,15 +39,20 @@ const AddAction = () => {
           Add Action
         </Heading>
         <Pane display="flex" width="100%">
-          <RadioGroup
-            flex="1"
-            marginTop={40}
-            size={16}
-            label="Action Type"
-            value={actionType}
-            options={actionTypeOptions}
-            onChange={(value) => setActionType(value)}
-          />
+          <UnorderedList listStyle="none" flex="1">
+            {actionTypeOptions.map((option) => (
+              <ListItem key={option.value}>
+                <Button
+                  type="button"
+                  appearance="minimal"
+                  color="muted"
+                  onClick={() => setActionType(option.value)}
+                >
+                  {option.label}
+                </Button>
+              </ListItem>
+            ))}
+          </UnorderedList>
           {actionType === 'block' && (
             <CreateBlockActionForm createAction={addAction} />
           )}

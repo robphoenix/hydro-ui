@@ -1,6 +1,14 @@
 import React from 'react'
 import { useMonitors } from '../context/monitors-context'
-import { Pane, Heading, majorScale, RadioGroup } from 'evergreen-ui'
+import {
+  Pane,
+  Heading,
+  majorScale,
+  RadioGroup,
+  UnorderedList,
+  ListItem,
+  Button,
+} from 'evergreen-ui'
 import FeedTypesTable from '../components/FeedTypesTable'
 
 const ViewFeedTypes = () => {
@@ -37,15 +45,20 @@ const ViewFeedTypes = () => {
       <Pane width="80%">
         {esperDataTypes && !!esperDataTypes.length && (
           <Pane display="flex" width="100%">
-            <RadioGroup
-              flex="1"
-              marginTop={40}
-              size={16}
-              label="Feed Types"
-              value={currentFeedType}
-              options={esperDataTypes}
-              onChange={(value) => setCurrentFeedType(value)}
-            />
+            <UnorderedList listStyle="none" flex="1">
+              {esperDataTypes.map((option) => (
+                <ListItem key={option.value}>
+                  <Button
+                    type="button"
+                    appearance="minimal"
+                    color="muted"
+                    onClick={() => setCurrentFeedType(option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                </ListItem>
+              ))}
+            </UnorderedList>
 
             <FeedTypesTable esperDataTypes={feedTypes[currentFeedType]} />
           </Pane>

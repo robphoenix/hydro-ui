@@ -12,6 +12,7 @@ import {
   Switch,
   SegmentedControl,
   TextInput,
+  Heading,
 } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 
@@ -134,6 +135,9 @@ const CreateBlockActionForm = ({ createAction }) => {
 
   return (
     <Pane flex="2">
+      <Heading is="h3" size={600} marginBottom={majorScale(3)}>
+        Block
+      </Heading>
       <form onSubmit={handleSubmit}>
         <TextInputField
           label="Action Name"
