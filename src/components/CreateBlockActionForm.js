@@ -13,6 +13,7 @@ import {
   SegmentedControl,
   TextInput,
 } from 'evergreen-ui'
+import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
 
@@ -46,11 +47,11 @@ const CreateBlockActionForm = ({ createAction }) => {
     name: '',
     description: '',
     parameters: [],
-    blockPermanently: false,
-    blockDuration: ``,
-    blockDurationUnit: `minutes`,
+    permanently: false,
+    blockTime: ``,
+    blockTimeUnit: `minutes`,
     blockDelay: ``,
-    blockDelayUnit: `seconds`,
+    blockDelayUnit: ``,
   }
 
   const validate = (values) => {
@@ -64,16 +65,43 @@ const CreateBlockActionForm = ({ createAction }) => {
     if (values.parameters && !values.parameters.length) {
       errors.parameters = `You must choose at least one parameter to block on`
     }
-    if (!values.blockPermanently && values.blockDuration === ``) {
-      errors.blockDuration = `You must specify a block duration or block permanently`
+    if (!values.permanently && values.blockTime === ``) {
+      errors.blockTime = `You must specify a block duration or block permanently`
+    }
+    if (values.blockDelay !== `` && values.blockDelayUnit === ``) {
+      errors.blockDelayUnit = `You must specify a unit for the block delay`
     }
     return errors
   }
 
   const onSubmit = async (values) => {
-    console.log({ values })
+    const {
+      name,
+      description,
+      permanently,
+      blockTime,
+      blockTimeUnit,
+      blockDelay,
+      blockDelayUnit,
+      parameters,
+    } = values
+    const actionType = `block`
+    const metadata = permanently
+      ? {
+          blockTime: -1,
+          parameters,
+        }
+      : {
+          blockTime,
+          blockTimeUnit,
+          blockDelay,
+          blockDelayUnit,
+          parameters,
+        }
 
-    await createAction(values)
+    await createAction({ name, description, actionType, metadata })
+    navigate(`/monitors/view`)
+    toaster.success(`Action created: ${name}`)
   }
 
   const {
@@ -165,65 +193,72 @@ const CreateBlockActionForm = ({ createAction }) => {
 
         <FormField
           label="Block Permanently"
-          labelFor="blockPermanently"
+          labelFor="permanently"
           marginBottom={majorScale(3)}
         >
           <Pane display="flex" alignItems="center">
             <Switch
-              id="blockPermanently"
-              {...getSwitchFieldProps('blockPermanently')}
+              id="permanently"
+              {...getSwitchFieldProps('permanently')}
               marginRight={majorScale(1)}
             />
           </Pane>
         </FormField>
 
-        {!getSwitchFieldProps(`blockPermanently`).checked && (
+        {!getSwitchFieldProps(`permanently`).checked && (
           <Pane width="50%">
             <FormField
               label="Block Duration"
-              labelFor="blockDuration"
-              validationMessage={touched.blockDuration && errors.blockDuration}
+              labelFor="blockTime"
+              validationMessage={touched.blockTime && errors.blockTime}
               isRequired
               marginBottom={majorScale(3)}
             >
               <Pane display="flex" alignItems="center">
                 <TextInput
                   flex="1"
-                  id="blockDuration"
+                  id="blockTime"
                   placeholder="Block Duration"
-                  isInvalid={errors.blockDuration && touched.blockDuration}
+                  isInvalid={errors.blockTime && touched.blockTime}
                   required
                   type="number"
                   min="1"
                   max="60"
-                  {...getInputFieldProps(`blockDuration`)}
+                  {...getInputFieldProps(`blockTime`)}
                   marginRight={majorScale(1)}
                 />
                 <SegmentedControl
                   flex="1"
                   options={blockDurationUnitOptions}
-                  {...getSegmentedControlFieldProps(`blockDurationUnit`)}
+                  {...getSegmentedControlFieldProps(`blockTimeUnit`)}
                 />
               </Pane>
             </FormField>
 
-            <Pane display="flex" alignItems="center">
-              <TextInputField
-                flex="1"
-                label="Block Delay"
-                placeholder="Block Delay"
-                type="number"
-                min="1"
-                max="60"
-                {...getInputFieldProps(`blockDelay`)}
-                marginRight={majorScale(1)}
-              />
-              <SegmentedControl
-                flex="1"
-                options={blockDelayUnitOptions}
-                {...getSegmentedControlFieldProps(`blockDelayUnit`)}
-              />
-            </Pane>
+            <FormField
+              label="Block Delay"
+              labelFor="blockDelay"
+              validationMessage={touched.blockDelay && errors.blockDelayUnit}
+              marginBottom={majorScale(3)}
+            >
+              <Pane display="flex" alignItems="center">
+                <TextInput
+                  flex="1"
+                  id="blockDelay"
+                  placeholder="Block Delay"
+                  type="number"
+                  min="1"
+                  max="60"
+                  {...getInputFieldProps(`blockDelay`)}
+                  marginRight={majorScale(1)}
+                />
+                <SegmentedControl
+                  flex="1"
+                  options={blockDelayUnitOptions}
+                  {...getSegmentedControlFieldProps(`blockDelayUnit`)}
+                />
+              </Pane>
+            </FormField>
           </Pane>
         )}
 
