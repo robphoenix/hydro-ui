@@ -23,8 +23,8 @@ const ViewFeedTypes = () => {
   }, [currentFeedType, feedTypes])
 
   return (
-    <Pane display="flex" justifyContent="center">
-      <Pane width="80%">
+    <Pane display="flex" alignItems="center" flexDirection="column">
+      <Pane width="60%">
         <Heading
           is="h2"
           size={800}
@@ -33,7 +33,8 @@ const ViewFeedTypes = () => {
         >
           Monitor Feed Types
         </Heading>
-
+      </Pane>
+      <Pane width="80%">
         {esperDataTypes && !!esperDataTypes.length && (
           <Pane display="flex" width="100%">
             <RadioGroup

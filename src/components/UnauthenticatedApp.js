@@ -7,7 +7,7 @@ const UnauthenticatedApp = () => {
   return (
     <Router>
       <Redirect from="/" to="/login" noThrow />
-      <Login path="/login" />
+      <Login path="/login" default />
     </Router>
   )
 }
