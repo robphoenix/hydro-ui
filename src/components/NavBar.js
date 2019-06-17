@@ -63,7 +63,34 @@ const NavBar = () => {
             color="muted"
           >
             <Text size={500} textTransform="uppercase" letterSpacing="0.4px">
-              Monitors
+              monitors
+            </Text>
+          </Button>
+        </Popover>
+
+        <Popover
+          position={Position.BOTTOM_LEFT}
+          content={
+            <Menu>
+              <Menu.Group>
+                <Menu.Item>
+                  <NavLink to="/actions/view">View Actions</NavLink>
+                </Menu.Item>
+                <Menu.Item>
+                  <NavLink to="/actions/add">Add New Action</NavLink>
+                </Menu.Item>
+              </Menu.Group>
+            </Menu>
+          }
+        >
+          <Button
+            appearance="minimal"
+            iconAfter="caret-down"
+            marginLeft={majorScale(4)}
+            color="muted"
+          >
+            <Text size={500} textTransform="uppercase" letterSpacing="0.4px">
+              actions
             </Text>
           </Button>
         </Popover>

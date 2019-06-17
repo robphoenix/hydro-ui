@@ -14,6 +14,7 @@ import {
   getAllCategories,
   getAllActions,
   getFeedTypes,
+  addAction,
 } from '../utils/monitors-client'
 import { eventBusLiveData, eventBusCachedData } from '../utils/eventbus-client'
 
@@ -172,6 +173,7 @@ function MonitorsProvider(props) {
     <MonitorsContext.Provider
       value={{
         addMonitor,
+        addAction,
         updateMonitor,
         addCategories,
         disableMonitor,

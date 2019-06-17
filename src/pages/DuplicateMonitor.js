@@ -44,7 +44,7 @@ const DuplicateMonitor = ({ id }) => {
           marginTop="default"
           marginBottom={majorScale(3)}
         >
-          Edit Monitor
+          Duplicate Monitor
         </Heading>
         {Object.keys(initialValues).length > 0 && (
           <CreateMonitorForm

@@ -66,10 +66,15 @@ const getFeedTypes = () => {
   return get(feedTypesUrl)
 }
 
+const addAction = (action) => {
+  return post(actionsUrl, action)
+}
+
 export {
   getMonitors,
   getMonitorById,
   addMonitor,
+  addAction,
   updateMonitor,
   addCategories,
   disableMonitor,
