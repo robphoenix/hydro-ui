@@ -134,6 +134,7 @@ function useForm(props) {
   const getTagInputFieldProps = (fieldName) => ({
     values: state.values[fieldName],
     onChange: handleTagInputChange(fieldName),
+    onBlur: handleBlur(fieldName),
   })
 
   const getSwitchFieldProps = (fieldName) => ({

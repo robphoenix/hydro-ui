@@ -7,6 +7,7 @@ import {
   Textarea,
   Button,
   Pane,
+  TagInput,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
@@ -17,6 +18,12 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   const initialValues = {
     name: '',
     description: '',
+    emailAddresses: [],
+  }
+
+  const validEmailAddress = (emailAddress) => {
+    const regex = new RegExp(/\S+\.\S+@bet365\.com/, 'gi')
+    return emailAddress.trim().match(regex)
   }
 
   const validate = (values) => {
@@ -27,10 +34,19 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     if (values.description === '') {
       errors.description = `You must enter an Action description`
     }
+    if (values.emailAddresses && !values.emailAddresses.length) {
+      errors.emailAddresses = `You must provide at least one email address`
+    }
+    if (!values.emailAddresses.every(validEmailAddress)) {
+      errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
+    }
     return errors
   }
 
   const onSubmit = async (values) => {
+    const emailAddresses = values.emailAddresses.join(`;`)
+    console.log(emailAddresses)
+
     console.log({ values })
 
     await createAction(values)
@@ -39,6 +55,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   const {
     handleSubmit,
     getInputFieldProps,
+    getTagInputFieldProps,
     errors,
     touched,
     submitError,
@@ -84,6 +101,24 @@ const CreateEmailRateActionForm = ({ createAction }) => {
             isInvalid={errors.description && touched.description}
             required
             {...getInputFieldProps('description')}
+          />
+        </FormField>
+
+        <FormField
+          label="Email Addresses"
+          isRequired
+          labelFor="emailAddresses"
+          validationMessage={touched.emailAddresses && errors.emailAddresses}
+          marginBottom={majorScale(3)}
+        >
+          <TagInput
+            width="100%"
+            id="emailAddresses"
+            inputProps={{ placeholder: 'Add email addresses...' }}
+            tagProps={(value) =>
+              !validEmailAddress(value) ? { color: 'red', isSolid: true } : {}
+            }
+            {...getTagInputFieldProps(`emailAddresses`)}
           />
         </FormField>
 
