@@ -35,6 +35,7 @@ function MonitorsProvider(props) {
         return {
           ...state,
           ...action.payload,
+          isLoading: false,
         }
       case 'SET_ERROR':
         return {
@@ -55,6 +56,7 @@ function MonitorsProvider(props) {
   }
 
   const initialState = {
+    isLoading: true,
     monitors: [],
     monitor: {},
     feedTypes: {},
@@ -74,7 +76,7 @@ function MonitorsProvider(props) {
       const monitors = await getMonitors()
       dispatch({ type: 'SUCCESS', payload: { monitors } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { monitors: error } })
+      dispatch({ type: 'SET_ERROR', payload: { monitors: error } })
     }
   }, [])
 
@@ -85,7 +87,7 @@ function MonitorsProvider(props) {
       const monitor = await getMonitorById(id)
       dispatch({ type: 'SUCCESS', payload: { monitor } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { monitors: error } })
+      dispatch({ type: 'SET_ERROR', payload: { monitorById: error } })
     }
   }, [])
 
@@ -94,7 +96,7 @@ function MonitorsProvider(props) {
       const allGroups = await getAllGroups()
       dispatch({ type: 'SUCCESS', payload: { allGroups } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { allGroups: error } })
+      dispatch({ type: 'SET_ERROR', payload: { allGroups: error } })
     }
   }, [])
 
@@ -103,7 +105,7 @@ function MonitorsProvider(props) {
       const allCategories = await getAllCategories()
       dispatch({ type: 'SUCCESS', payload: { allCategories } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { allCategories: error } })
+      dispatch({ type: 'SET_ERROR', payload: { allCategories: error } })
     }
   }, [])
 
@@ -112,7 +114,7 @@ function MonitorsProvider(props) {
       const allActions = await getAllActions()
       dispatch({ type: 'SUCCESS', payload: { allActions } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { allActions: error } })
+      dispatch({ type: 'SET_ERROR', payload: { allActions: error } })
     }
   }, [])
 
@@ -121,7 +123,7 @@ function MonitorsProvider(props) {
       const feedTypes = await getFeedTypes()
       dispatch({ type: 'SUCCESS', payload: { feedTypes } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', value: { feedTypes: error } })
+      dispatch({ type: 'SET_ERROR', payload: { feedTypes: error } })
     }
   }, [])
 
@@ -130,7 +132,7 @@ function MonitorsProvider(props) {
       const eb = eventBusLiveData(name, (error, message) => {
         if (error) {
           eb.close()
-          dispatch({ type: 'SET_ERROR', value: { liveData: error } })
+          dispatch({ type: 'SET_ERROR', payload: { liveData: error } })
         }
         if (message) {
           const { h: headers, d: data } = message.body
@@ -152,7 +154,7 @@ function MonitorsProvider(props) {
       const eb = eventBusCachedData(name, (error, message) => {
         if (error) {
           eb.close()
-          dispatch({ type: 'SET_ERROR', value: { cachedData: error } })
+          dispatch({ type: 'SET_ERROR', payload: { cachedData: error } })
         }
         if (message) {
           if (message.body) {

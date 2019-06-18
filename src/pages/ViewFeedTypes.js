@@ -4,7 +4,6 @@ import {
   Pane,
   Heading,
   majorScale,
-  RadioGroup,
   UnorderedList,
   ListItem,
   Button,
