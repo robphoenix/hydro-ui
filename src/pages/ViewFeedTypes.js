@@ -51,7 +51,11 @@ const ViewFeedTypes = () => {
                     type="button"
                     appearance="minimal"
                     color="muted"
-                    onClick={() => setCurrentFeedType(option.value)}
+                    onClick={() => {
+                      console.log({ option })
+
+                      setCurrentFeedType(option.value)
+                    }}
                   >
                     {option.label}
                   </Button>
@@ -59,7 +63,10 @@ const ViewFeedTypes = () => {
               ))}
             </UnorderedList>
 
-            <FeedTypesTable esperDataTypes={feedTypes[currentFeedType]} />
+            <FeedTypesTable
+              esperDataTypes={feedTypes[currentFeedType]}
+              feedName={currentFeedType}
+            />
           </Pane>
         )}
       </Pane>
