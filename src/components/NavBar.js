@@ -16,9 +16,33 @@ import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
 
+const MenuButton = (props) => (
+  <Button
+    appearance="minimal"
+    iconAfter="caret-down"
+    marginLeft={majorScale(4)}
+    color="muted"
+    {...props}
+  />
+)
+
+const LinkTitle = (props) => (
+  <Text size={500} textTransform="uppercase" letterSpacing="0.4px" {...props} />
+)
+
 const NavBar = () => {
   const user = useUser()
   const { logout } = useAuth()
+
+  const monitorsLinks = [
+    { to: `/monitors/view`, label: `View Monitors` },
+    { to: `/monitors/add`, label: `Add New Monitor` },
+    { to: `/monitors/feedtypes`, label: `View Feed Types` },
+  ]
+  const actionsLinks = [
+    { to: `/actions/view`, label: `View Actions` },
+    { to: `/actions/add`, label: `Add New Action` },
+  ]
 
   return (
     <Pane
@@ -40,48 +64,36 @@ const NavBar = () => {
       <Pane is="nav" display="flex" width="100%">
         <Popover
           position={Position.BOTTOM_LEFT}
-          content={
+          content={({ close }) => (
             <Menu>
               <Menu.Group>
-                <Menu.Item>
-                  <NavLink to="/monitors/view">View Monitors</NavLink>
-                </Menu.Item>
-                <Menu.Item>
-                  <NavLink to="/monitors/add">Add New Monitor</NavLink>
-                </Menu.Item>
-                <Menu.Item>
-                  <NavLink to="/monitors/feedtypes">View Feed Types</NavLink>
-                </Menu.Item>
+                {monitorsLinks.map((link) => (
+                  <Menu.Item key={link.to} onSelect={close}>
+                    <NavLink to={link.to}>{link.label}</NavLink>
+                  </Menu.Item>
+                ))}
               </Menu.Group>
             </Menu>
-          }
+          )}
         >
-          <Button
-            appearance="minimal"
-            iconAfter="caret-down"
-            marginLeft={majorScale(4)}
-            color="muted"
-          >
-            <Text size={500} textTransform="uppercase" letterSpacing="0.4px">
-              monitors
-            </Text>
-          </Button>
+          <MenuButton>
+            <LinkTitle>monitors</LinkTitle>
+          </MenuButton>
         </Popover>
 
         <Popover
           position={Position.BOTTOM_LEFT}
-          content={
+          content={({ close }) => (
             <Menu>
               <Menu.Group>
-                <Menu.Item>
-                  <NavLink to="/actions/view">View Actions</NavLink>
-                </Menu.Item>
-                <Menu.Item>
-                  <NavLink to="/actions/add">Add New Action</NavLink>
-                </Menu.Item>
+                {actionsLinks.map((link) => (
+                  <Menu.Item key={link.to} onSelect={close}>
+                    <NavLink to={link.to}>{link.label}</NavLink>
+                  </Menu.Item>
+                ))}
               </Menu.Group>
             </Menu>
-          }
+          )}
         >
           <Button
             appearance="minimal"
@@ -89,9 +101,7 @@ const NavBar = () => {
             marginLeft={majorScale(4)}
             color="muted"
           >
-            <Text size={500} textTransform="uppercase" letterSpacing="0.4px">
-              actions
-            </Text>
+            <LinkTitle>actions</LinkTitle>
           </Button>
         </Popover>
 

@@ -4,18 +4,17 @@ import {
   TextInputField,
   FormField,
   majorScale,
-  Textarea,
   Button,
   Pane,
   TagInput,
   TextInput,
-  Text,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
 import ActionName from './ActionName'
 import ActionDescription from './ActionDescription'
+import ActionHeading from './ActionHeading'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -95,8 +94,10 @@ const CreateEmailRateActionForm = ({ createAction }) => {
       })
     }
   }, [submitError])
+
   return (
     <Pane flex="2">
+      <ActionHeading>Email Rate</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}

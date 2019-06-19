@@ -1,10 +1,8 @@
 import React from 'react'
 import {
   toaster,
-  TextInputField,
   FormField,
   majorScale,
-  Textarea,
   Button,
   Pane,
   SelectMenu,
@@ -12,13 +10,13 @@ import {
   Switch,
   SegmentedControl,
   TextInput,
-  Heading,
 } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
 import ActionName from './ActionName'
 import ActionDescription from './ActionDescription'
+import ActionHeading from './ActionHeading'
 
 const CreateBlockActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -137,9 +135,7 @@ const CreateBlockActionForm = ({ createAction }) => {
 
   return (
     <Pane flex="2">
-      <Heading is="h3" size={600} marginBottom={majorScale(3)}>
-        Block
-      </Heading>
+      <ActionHeading>Block</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}
