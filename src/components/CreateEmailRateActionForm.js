@@ -8,6 +8,8 @@ import {
   Button,
   Pane,
   TagInput,
+  TextInput,
+  Text,
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
@@ -20,6 +22,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     description: ``,
     emailAddresses: [],
     emailSubject: ``,
+    emailSendLimit: 0,
   }
 
   const validEmailAddress = (emailAddress) => {
@@ -134,6 +137,25 @@ const CreateEmailRateActionForm = ({ createAction }) => {
           required
           {...getInputFieldProps(`emailSubject`)}
         />
+
+        <FormField
+          label="Email Send Limit"
+          labelFor="emailSendLimit"
+          description="The maximum number of emails to send out in any single hour, this
+            resets after every hour. Use -1 to specify an unlimited number of
+            emails per hour."
+          marginBottom={majorScale(3)}
+        >
+          <TextInput
+            flex="1"
+            id="emailSendLimit"
+            placeholder="Email Send Limit"
+            type="number"
+            min="-1"
+            {...getInputFieldProps(`emailSendLimit`)}
+            marginRight={majorScale(1)}
+          />
+        </FormField>
 
         <Button appearance="primary" disabled={disableSubmit}>
           Submit
