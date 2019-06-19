@@ -3,6 +3,8 @@ import React from 'react'
 import { FormField, majorScale, Pane, Paragraph, Code } from 'evergreen-ui'
 import ReactQuill from 'react-quill'
 
+import 'react-quill/dist/quill.snow.css'
+
 import './ActionEmailText.css'
 
 const quillModules = {

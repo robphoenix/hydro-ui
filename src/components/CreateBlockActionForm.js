@@ -14,9 +14,7 @@ import {
 import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
-import ActionName from './ActionName'
-import ActionDescription from './ActionDescription'
-import ActionHeading from './ActionHeading'
+import { ActionName, ActionDescription, ActionHeading } from './actions'
 
 const CreateBlockActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)

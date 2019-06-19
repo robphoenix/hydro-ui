@@ -11,6 +11,7 @@ import {
 import { useMonitors } from '../context/monitors-context'
 import CreateBlockActionForm from '../components/CreateBlockActionForm'
 import CreateEmailRateActionForm from '../components/CreateEmailRateActionForm'
+import CreateEmailBatchActionForm from '../components/CreateEmailBatchActionForm'
 
 const AddAction = () => {
   const [actionType, setActionType] = React.useState(`block`)
@@ -58,6 +59,9 @@ const AddAction = () => {
           )}
           {actionType === 'emailRate' && (
             <CreateEmailRateActionForm createAction={addAction} />
+          )}
+          {actionType === 'emailBatch' && (
+            <CreateEmailBatchActionForm createAction={addAction} />
           )}
         </Pane>
       </Pane>

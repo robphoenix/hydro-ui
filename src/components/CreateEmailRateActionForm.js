@@ -6,21 +6,18 @@ import {
   majorScale,
   Button,
   Pane,
-  TagInput,
   TextInput,
-  Code,
-  Paragraph,
 } from 'evergreen-ui'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
-import { navigate } from '@reach/router'
-import ActionName from './ActionName'
-import ActionDescription from './ActionDescription'
-import ActionHeading from './ActionHeading'
-import ActionEmailText from './ActionEmailText'
-import ActionEmailAddresses from './ActionEmailAddresses'
+import {
+  ActionName,
+  ActionDescription,
+  ActionHeading,
+  ActionEmailText,
+  ActionEmailAddresses,
+} from './actions'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
