@@ -9,6 +9,8 @@ import {
   TagInput,
   TextInput,
 } from 'evergreen-ui'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
 import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
@@ -25,6 +27,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     emailAddresses: [],
     emailSubject: ``,
     emailSendLimit: 0,
+    emailText: ``,
   }
 
   const validEmailAddress = (emailAddress) => {
@@ -53,11 +56,13 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   }
 
   const onSubmit = async (values) => {
+    console.log({ values })
+
     const emailAddresses = values.emailAddresses.join(`;`)
     const emailSendLimit = +values.emailSendLimit
     const actionType = `emailRate`
-    const { name, description, emailSubject } = values
-    const metadata = { emailAddresses, emailSubject, emailSendLimit }
+    const { name, description, emailSubject, emailText } = values
+    const metadata = { emailAddresses, emailSubject, emailSendLimit, emailText }
 
     await createAction({
       name,
@@ -73,6 +78,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     handleSubmit,
     getInputFieldProps,
     getTagInputFieldProps,
+    getQuillEditorProps,
     errors,
     touched,
     submitError,
@@ -155,6 +161,8 @@ const CreateEmailRateActionForm = ({ createAction }) => {
             marginRight={majorScale(1)}
           />
         </FormField>
+
+        <ReactQuill {...getQuillEditorProps(`emailText`)} />
 
         <Button appearance="primary" disabled={disableSubmit}>
           Submit
