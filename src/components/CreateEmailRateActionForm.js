@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 import React from 'react'
 import {
   toaster,
@@ -8,6 +9,9 @@ import {
   Pane,
   TagInput,
   TextInput,
+  Text,
+  Code,
+  Paragraph,
 } from 'evergreen-ui'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -20,6 +24,25 @@ import ActionHeading from './ActionHeading'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
+
+  const quillModules = {
+    toolbar: [
+      [{ size: ['small', false, 'large'] }],
+      ['bold', 'italic', 'underline'],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ color: [] }, { background: [] }],
+      [{ indent: '-1' }, { indent: '+1' }],
+
+      [
+        { align: '' },
+        { align: 'center' },
+        { align: 'right' },
+        { align: 'justify' },
+      ],
+      [{ list: 'bullet' }, { list: 'ordered' }],
+      ['link', 'image'],
+    ],
+  }
 
   const initialValues = {
     name: ``,
@@ -52,12 +75,13 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     if (values.emailSubject === ``) {
       errors.emailSubject = `You must specify an email subject`
     }
+    if (values.emailText === ``) {
+      errors.emailText = `You must provide an email text`
+    }
     return errors
   }
 
   const onSubmit = async (values) => {
-    console.log({ values })
-
     const emailAddresses = values.emailAddresses.join(`;`)
     const emailSendLimit = +values.emailSendLimit
     const actionType = `emailRate`
@@ -162,7 +186,30 @@ const CreateEmailRateActionForm = ({ createAction }) => {
           />
         </FormField>
 
-        <ReactQuill {...getQuillEditorProps(`emailText`)} />
+        <FormField
+          label="Email Text"
+          labelFor="emailText"
+          isRequired
+          validationMessage={touched.emailText && errors.emailText}
+          marginBottom={majorScale(3)}
+          display="block"
+        >
+          <Pane marginBottom={majorScale(2)}>
+            <Paragraph size={500}>
+              This text can contain variable data, using the
+              <Code>{'${data}'}</Code> substitution tag, where data can be any
+              esper data field, such as <Code>{'${uname}'}</Code>,{' '}
+              <Code>{'${topic}'}</Code> or <Code>{'${sip}'}</Code>. To display
+              the esperdata there MUST be a <Code>{'${esperData}'}</Code>{' '}
+              substitution tag.
+            </Paragraph>
+          </Pane>
+          <ReactQuill
+            id="emailText"
+            {...getQuillEditorProps(`emailText`)}
+            modules={quillModules}
+          />
+        </FormField>
 
         <Button appearance="primary" disabled={disableSubmit}>
           Submit

@@ -163,6 +163,7 @@ function useForm(props) {
   const getQuillEditorProps = (fieldName) => ({
     defaultValue: state.values[fieldName],
     onChange: handleQuillEditorChange(fieldName),
+    onBlur: handleBlur(fieldName),
   })
 
   const handleSubmit = async (event) => {
