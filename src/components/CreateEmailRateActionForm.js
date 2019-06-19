@@ -13,6 +13,8 @@ import {
 } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
+import { navigate } from '@reach/router'
+import ActionName from './ActionName'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -52,11 +54,19 @@ const CreateEmailRateActionForm = ({ createAction }) => {
 
   const onSubmit = async (values) => {
     const emailAddresses = values.emailAddresses.join(`;`)
-    console.log(emailAddresses)
+    const emailSendLimit = +values.emailSendLimit
+    const actionType = `emailRate`
+    const { name, description, emailSubject } = values
+    const metadata = { emailAddresses, emailSubject, emailSendLimit }
 
-    console.log({ values })
-
-    await createAction(values)
+    await createAction({
+      name,
+      description,
+      actionType,
+      metadata,
+    })
+    navigate(`/monitors/view`)
+    toaster.success(`Action created: ${name}`)
   }
 
   const {
@@ -87,13 +97,18 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   return (
     <Pane flex="2">
       <form onSubmit={handleSubmit}>
-        <TextInputField
+        {/* <TextInputField
           label="Action Name"
           placeholder="Action Name"
           isInvalid={errors.name && touched.name}
           validationMessage={touched.name && errors.name}
           required
           {...getInputFieldProps('name')}
+        /> */}
+        <ActionName
+          formProps={getInputFieldProps(`name`)}
+          error={errors.name}
+          touched={touched.name}
         />
         <FormField
           label="Action Description"

@@ -17,6 +17,7 @@ import {
 import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
+import ActionName from './ActionName'
 
 const CreateBlockActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -139,13 +140,10 @@ const CreateBlockActionForm = ({ createAction }) => {
         Block
       </Heading>
       <form onSubmit={handleSubmit}>
-        <TextInputField
-          label="Action Name"
-          placeholder="Action Name"
-          isInvalid={errors.name && touched.name}
-          validationMessage={touched.name && errors.name}
-          required
-          {...getInputFieldProps('name')}
+        <ActionName
+          formProps={getInputFieldProps(`name`)}
+          error={errors.name}
+          touched={touched.name}
         />
         <FormField
           label="Action Description"
