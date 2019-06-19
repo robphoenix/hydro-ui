@@ -97,14 +97,6 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   return (
     <Pane flex="2">
       <form onSubmit={handleSubmit}>
-        {/* <TextInputField
-          label="Action Name"
-          placeholder="Action Name"
-          isInvalid={errors.name && touched.name}
-          validationMessage={touched.name && errors.name}
-          required
-          {...getInputFieldProps('name')}
-        /> */}
         <ActionName
           formProps={getInputFieldProps(`name`)}
           error={errors.name}

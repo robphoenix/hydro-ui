@@ -15,10 +15,12 @@ function App() {
       return response
     },
     (error) => {
-      if (error.response.data) {
-        return Promise.reject(error.response.data)
+      try {
+        const { data } = error.response
+        return Promise.reject(data)
+      } catch {
+        return Promise.reject(error)
       }
-      return Promise.reject(error)
     },
   )
 
