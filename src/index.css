@@ -12,12 +12,3 @@ body {
   margin: 0;
   padding: 0;
 }
-
-/* This is for the react-quill components used in the Email Actions forms */
-.ql-container > .ql-editor {
-  height: auto;
-  min-height: 200px;
-  max-height: 600px;
-}
-
-
