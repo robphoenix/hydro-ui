@@ -18,6 +18,7 @@ import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
 import ActionName from './ActionName'
+import ActionDescription from './ActionDescription'
 
 const CreateBlockActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -145,21 +146,11 @@ const CreateBlockActionForm = ({ createAction }) => {
           error={errors.name}
           touched={touched.name}
         />
-        <FormField
-          label="Action Description"
-          isRequired
-          validationMessage={touched.description && errors.description}
-          labelFor="description"
-          marginBottom={majorScale(3)}
-        >
-          <Textarea
-            id="description"
-            placeholder="Action description..."
-            isInvalid={errors.description && touched.description}
-            required
-            {...getInputFieldProps('description')}
-          />
-        </FormField>
+        <ActionDescription
+          formProps={getInputFieldProps(`description`)}
+          error={errors.description}
+          touched={touched.description}
+        />
 
         <FormField
           label="Parameters"

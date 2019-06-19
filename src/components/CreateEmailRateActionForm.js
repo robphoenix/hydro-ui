@@ -15,6 +15,7 @@ import {
 import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
 import ActionName from './ActionName'
+import ActionDescription from './ActionDescription'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -102,21 +103,11 @@ const CreateEmailRateActionForm = ({ createAction }) => {
           error={errors.name}
           touched={touched.name}
         />
-        <FormField
-          label="Action Description"
-          isRequired
-          validationMessage={touched.description && errors.description}
-          labelFor="description"
-          marginBottom={majorScale(3)}
-        >
-          <Textarea
-            id="description"
-            placeholder="Action description..."
-            isInvalid={errors.description && touched.description}
-            required
-            {...getInputFieldProps('description')}
-          />
-        </FormField>
+        <ActionDescription
+          formProps={getInputFieldProps(`description`)}
+          error={errors.description}
+          touched={touched.description}
+        />
 
         <FormField
           label="Email Addresses"
