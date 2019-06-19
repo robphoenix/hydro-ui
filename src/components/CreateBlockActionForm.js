@@ -139,13 +139,13 @@ const CreateBlockActionForm = ({ createAction }) => {
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}
-          error={errors.name}
-          touched={touched.name}
+          isInvalid={errors.name && touched.name}
+          validationMessage={touched.name && errors.name}
         />
         <ActionDescription
           formProps={getInputFieldProps(`description`)}
-          error={errors.description}
-          touched={touched.description}
+          isInvalid={errors.description && touched.description}
+          validationMessage={touched.description && errors.description}
         />
 
         <FormField

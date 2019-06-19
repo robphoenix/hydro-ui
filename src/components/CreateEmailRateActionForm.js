@@ -20,6 +20,7 @@ import ActionName from './ActionName'
 import ActionDescription from './ActionDescription'
 import ActionHeading from './ActionHeading'
 import ActionEmailText from './ActionEmailText'
+import ActionEmailAddresses from './ActionEmailAddresses'
 
 const CreateEmailRateActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
@@ -111,32 +112,19 @@ const CreateEmailRateActionForm = ({ createAction }) => {
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}
-          error={errors.name}
-          touched={touched.name}
+          isInvalid={errors.name && touched.name}
+          validationMessage={touched.name && errors.name}
         />
         <ActionDescription
           formProps={getInputFieldProps(`description`)}
-          error={errors.description}
-          touched={touched.description}
+          isInvalid={errors.description && touched.description}
+          validationMessage={touched.description && errors.description}
         />
-
-        <FormField
-          label="Email Addresses"
-          isRequired
-          labelFor="emailAddresses"
+        <ActionEmailAddresses
+          formProps={getTagInputFieldProps(`emailAddresses`)}
           validationMessage={touched.emailAddresses && errors.emailAddresses}
-          marginBottom={majorScale(3)}
-        >
-          <TagInput
-            width="100%"
-            id="emailAddresses"
-            inputProps={{ placeholder: 'Add email addresses...' }}
-            tagProps={(value) =>
-              !validEmailAddress(value) ? { color: 'red', isSolid: true } : {}
-            }
-            {...getTagInputFieldProps(`emailAddresses`)}
-          />
-        </FormField>
+          validate={validEmailAddress}
+        />
 
         <TextInputField
           label="Email Subject"

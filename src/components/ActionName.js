@@ -1,13 +1,13 @@
 import React from 'react'
 import { TextInputField } from 'evergreen-ui'
 
-const ActionName = ({ formProps, error, touched }) => {
+const ActionName = ({ formProps, isInvalid, validationMessage }) => {
   return (
     <TextInputField
       label="Action Name"
       placeholder="Action Name"
-      isInvalid={error && touched}
-      validationMessage={touched && error}
+      isInvalid={isInvalid}
+      validationMessage={validationMessage}
       required
       {...formProps}
     />
