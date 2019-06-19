@@ -104,7 +104,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
   }, [submitError])
 
   return (
-    <Pane flex="2">
+    <Pane>
       <ActionHeading>Email Rate</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName

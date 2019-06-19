@@ -30,7 +30,7 @@ const AddAction = () => {
 
   return (
     <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
-      <Pane width="60%">
+      <Pane width="50%">
         <Heading
           is="h2"
           size={800}
@@ -54,15 +54,17 @@ const AddAction = () => {
               </ListItem>
             ))}
           </UnorderedList>
-          {actionType === 'block' && (
-            <CreateBlockActionForm createAction={addAction} />
-          )}
-          {actionType === 'emailRate' && (
-            <CreateEmailRateActionForm createAction={addAction} />
-          )}
-          {actionType === 'emailBatch' && (
-            <CreateEmailBatchActionForm createAction={addAction} />
-          )}
+          <Pane flex="3">
+            {actionType === `block` && (
+              <CreateBlockActionForm createAction={addAction} />
+            )}
+            {actionType === `emailRate` && (
+              <CreateEmailRateActionForm createAction={addAction} />
+            )}
+            {actionType === `emailBatch` && (
+              <CreateEmailBatchActionForm createAction={addAction} />
+            )}
+          </Pane>
         </Pane>
       </Pane>
     </Pane>

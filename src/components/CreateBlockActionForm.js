@@ -132,7 +132,7 @@ const CreateBlockActionForm = ({ createAction }) => {
   }, [submitError])
 
   return (
-    <Pane flex="2">
+    <Pane>
       <ActionHeading>Block</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName
