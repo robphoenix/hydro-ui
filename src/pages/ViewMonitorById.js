@@ -11,6 +11,8 @@ import {
   Pre,
   Code,
   Badge,
+  toaster,
+  Spinner,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
@@ -31,6 +33,8 @@ const ViewMonitorById = ({ id }) => {
     initLiveDataConnection,
     initCachedDataConnection,
     closeEventBusConnections,
+    errors,
+    isLoading,
   } = useMonitors()
 
   const togglePause = () => {
@@ -45,6 +49,15 @@ const ViewMonitorById = ({ id }) => {
   React.useEffect(() => {
     fetchMonitorById(id)
   }, [fetchMonitorById, id])
+
+  React.useEffect(() => {
+    const error = errors.monitorById
+    if (error) {
+      const { cause } = error
+      toaster.danger(`Cannot view monitor`, { description: cause })
+      navigate(`/monitors/view`)
+    }
+  })
 
   React.useEffect(() => {
     if (monitor) {
@@ -79,7 +92,17 @@ const ViewMonitorById = ({ id }) => {
   return (
     <Pane display="flex" justifyContent="center">
       <Pane width="75%">
-        {monitor && (
+        {isLoading && (
+          <Pane
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height={400}
+          >
+            <Spinner />
+          </Pane>
+        )}
+        {!isLoading && monitor && !!Object.keys(monitor).length && (
           <Pane
             display="flex"
             flexDirection="column"

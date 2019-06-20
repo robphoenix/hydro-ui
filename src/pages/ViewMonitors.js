@@ -20,7 +20,7 @@ const ViewMonitors = () => {
       // It feels really awkward if the redirect is too quick
       setTimeout(() => navigate(`/monitors/add`), 500)
     }
-  }, [errors.monitors, isLoading])
+  }, [errors.monitors])
 
   return (
     <Pane display="flex" justifyContent="center">
