@@ -15,6 +15,7 @@ import Logo from './Logo'
 import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
+import { version } from '../../package.json'
 
 const MenuButton = (props) => (
   <Button
@@ -58,9 +59,15 @@ const NavBar = () => {
       zIndex="2"
     >
       <Logo height="40px" />
-      <Heading is="h1" size={700} marginLeft={majorScale(2)}>
+      <Heading
+        is="h1"
+        size={700}
+        marginLeft={majorScale(2)}
+        marginRight={majorScale(4)}
+      >
         HYDRO
       </Heading>
+      <Text size={400}>v{version}</Text>
       <Pane is="nav" display="flex" width="100%">
         <Popover
           position={Position.BOTTOM_LEFT}

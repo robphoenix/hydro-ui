@@ -14,6 +14,8 @@ import ViewFeedTypes from '../pages/ViewFeedTypes'
 import NotFound from '../pages/NotFound'
 import AddAction from '../pages/AddAction'
 
+import { version } from '../../package.json'
+
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
 
