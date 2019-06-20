@@ -5,8 +5,6 @@ import {
   majorScale,
   Button,
   Pane,
-  SelectMenu,
-  Position,
   Switch,
   SegmentedControl,
   TextInput,
@@ -15,20 +13,10 @@ import { navigate } from '@reach/router'
 
 import useForm from '../hooks/useForm'
 import { ActionName, ActionDescription, ActionHeading } from './actions'
+import ActionParameters from './actions/ActionParameters'
 
 const CreateBlockActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const parameterOptions = [
-    { label: `IP Address`, value: `sip` },
-    { label: `IP Range`, value: `ipRange` },
-    { label: `Session token`, value: `stk` },
-    { label: `Response Session Token`, value: `rstk` },
-    { label: `UQ ID`, value: `uqid` },
-    { label: `User Name`, value: `uname` },
-    { label: `User Agent`, value: `userAgent` },
-    { label: `X-Forwarded-For`, value: `xForwardedFor` },
-  ]
 
   const blockDurationUnitOptions = [
     { label: `Minutes`, value: `minutes` },
@@ -145,38 +133,11 @@ const CreateBlockActionForm = ({ createAction }) => {
           isInvalid={errors.description && touched.description}
           validationMessage={touched.description && errors.description}
         />
-
-        <FormField
-          label="Parameters"
-          labelFor="parameters"
-          marginBottom={majorScale(3)}
-          isRequired
+        <ActionParameters
+          selectMenuProps={getSelectMenuProps(`parameters`)}
+          inputFieldProps={getInputFieldProps(`parameters`)}
           validationMessage={touched.parameters && errors.parameters}
-        >
-          <SelectMenu
-            hasTitle={false}
-            hasFilter={false}
-            isMultiSelect
-            position={Position.BOTTOM_LEFT}
-            title="Select parameters"
-            options={parameterOptions}
-            {...getSelectMenuProps(`parameters`)}
-            width={400}
-          >
-            <Button type="button" {...getInputFieldProps(`parameters`)}>
-              {getSelectMenuProps(`parameters`) &&
-              getSelectMenuProps(`parameters`).selected.length
-                ? `${
-                    getSelectMenuProps(`parameters`).selected.length
-                  } parameter${
-                    getSelectMenuProps(`parameters`).selected.length > 1
-                      ? `s`
-                      : ``
-                  } selected`
-                : `Select Parameters`}
-            </Button>
-          </SelectMenu>
-        </FormField>
+        />
 
         <FormField
           label="Block Permanently"
