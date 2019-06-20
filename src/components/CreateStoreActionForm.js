@@ -1,15 +1,22 @@
 import React from 'react'
 import { navigate } from '@reach/router'
-import { toaster, Pane, majorScale, Button } from 'evergreen-ui'
+import { toaster, Pane, Button, majorScale, RadioGroup } from 'evergreen-ui'
 import useForm from '../hooks/useForm'
 import { ActionHeading, ActionName, ActionDescription } from './actions'
 
-const CreateMiscActionForm = ({ createAction }) => {
+const CreateStoreActionForm = ({ createAction }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
 
+  const storeOptions = [
+    { label: `Store in Database`, value: `storeDB` },
+    { label: `Store Logins`, value: `storeLogins` },
+    { label: `Store Analysis`, value: `storeAnalysis` },
+  ]
+
   const initialValues = {
-    name: '',
-    description: '',
+    name: ``,
+    description: ``,
+    actionType: storeOptions[0].value,
   }
 
   const validate = (values) => {
@@ -24,17 +31,18 @@ const CreateMiscActionForm = ({ createAction }) => {
   }
 
   const onSubmit = async (values) => {
-    const { name, description } = values
-    const actionType = `misc`
+    const { name, description, actionType } = values
+    const metadata = {}
 
-    await createAction({ name, description, actionType })
+    await createAction({ name, description, actionType, metadata })
     navigate(`/monitors/view`)
-    toaster.success(`Action created: ${name}`)
+    toaster.success(`Action created: ${values.name}`)
   }
 
   const {
     handleSubmit,
     getInputFieldProps,
+    getRadioGroupProps,
     errors,
     touched,
     submitError,
@@ -59,7 +67,7 @@ const CreateMiscActionForm = ({ createAction }) => {
 
   return (
     <Pane>
-      <ActionHeading>Miscellaneous</ActionHeading>
+      <ActionHeading>Store</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}
@@ -70,6 +78,13 @@ const CreateMiscActionForm = ({ createAction }) => {
           formProps={getInputFieldProps(`description`)}
           isInvalid={errors.description && touched.description}
           validationMessage={touched.description && errors.description}
+        />
+        <RadioGroup
+          size={16}
+          label="Store Options"
+          options={storeOptions}
+          {...getRadioGroupProps(`actionType`)}
+          marginBottom={majorScale(4)}
         />
 
         <Button
@@ -91,4 +106,4 @@ const CreateMiscActionForm = ({ createAction }) => {
   )
 }
 
-export default CreateMiscActionForm
+export default CreateStoreActionForm

@@ -105,6 +105,13 @@ function useForm(props) {
     })
   }
 
+  const handleRadioGroupChange = (fieldName) => (event) => {
+    dispatch({
+      type: 'SET_FIELD_VALUE',
+      payload: { [fieldName]: event },
+    })
+  }
+
   const handleSelect = (fieldName) => (item) => {
     dispatch({
       type: 'SET_FIELD_VALUE',
@@ -166,6 +173,11 @@ function useForm(props) {
     onBlur: handleBlur(fieldName),
   })
 
+  const getRadioGroupProps = (fieldName) => ({
+    value: state.values[fieldName],
+    onChange: handleRadioGroupChange(fieldName),
+  })
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     dispatch({ type: 'SUBMIT_ATTEMPT' })
@@ -191,6 +203,7 @@ function useForm(props) {
     getSegmentedControlFieldProps,
     getSelectMenuProps,
     getQuillEditorProps,
+    getRadioGroupProps,
     ...state,
   }
 }
