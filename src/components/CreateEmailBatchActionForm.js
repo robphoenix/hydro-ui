@@ -7,17 +7,19 @@ import {
   Button,
   Paragraph,
 } from 'evergreen-ui'
-import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
+
 import {
   ActionHeading,
   ActionName,
   ActionDescription,
   ActionEmailAddresses,
   ActionEmailText,
+  ActionEmailSubject,
 } from './actions'
+import useForm from '../hooks/useForm'
 
-const CreateEmailBatchActionForm = ({ createAction }) => {
+const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
 
   const initialValues = {
@@ -27,11 +29,6 @@ const CreateEmailBatchActionForm = ({ createAction }) => {
     emailSubject: ``,
     emailText: ``,
     emailCron: ``,
-  }
-
-  const validEmailAddress = (emailAddress) => {
-    const regex = new RegExp(/\S+\.\S+@bet365\.com/, `gi`)
-    return emailAddress.trim().match(regex)
   }
 
   const validate = (values) => {
@@ -45,7 +42,7 @@ const CreateEmailBatchActionForm = ({ createAction }) => {
     if (values.emailAddresses && !values.emailAddresses.length) {
       errors.emailAddresses = `You must provide at least one email address`
     }
-    if (!values.emailAddresses.every(validEmailAddress)) {
+    if (!values.emailAddresses.every(validateEmailAddress)) {
       errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
     }
     if (values.emailSubject === ``) {
@@ -120,7 +117,7 @@ const CreateEmailBatchActionForm = ({ createAction }) => {
         <ActionEmailAddresses
           formProps={getTagInputFieldProps(`emailAddresses`)}
           validationMessage={touched.emailAddresses && errors.emailAddresses}
-          validate={validEmailAddress}
+          validate={validateEmailAddress}
         />
 
         <TextInputField
@@ -146,13 +143,10 @@ const CreateEmailBatchActionForm = ({ createAction }) => {
           {...getInputFieldProps(`emailCron`)}
         />
 
-        <TextInputField
-          label="Email Subject"
-          placeholder="Email Subject"
+        <ActionEmailSubject
+          formProps={getInputFieldProps(`emailSubject`)}
           isInvalid={errors.emailSubject && touched.emailSubject}
           validationMessage={touched.emailSubject && errors.emailSubject}
-          required
-          {...getInputFieldProps(`emailSubject`)}
         />
 
         <ActionEmailText

@@ -17,9 +17,10 @@ import {
   ActionHeading,
   ActionEmailText,
   ActionEmailAddresses,
+  ActionEmailSubject,
 } from './actions'
 
-const CreateEmailRateActionForm = ({ createAction }) => {
+const CreateEmailRateActionForm = ({ createAction, validateEmailAddress }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
 
   const initialValues = {
@@ -29,11 +30,6 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     emailSubject: ``,
     emailSendLimit: 0,
     emailText: ``,
-  }
-
-  const validEmailAddress = (emailAddress) => {
-    const regex = new RegExp(/\S+\.\S+@bet365\.com/, `gi`)
-    return emailAddress.trim().match(regex)
   }
 
   const validate = (values) => {
@@ -47,7 +43,7 @@ const CreateEmailRateActionForm = ({ createAction }) => {
     if (values.emailAddresses && !values.emailAddresses.length) {
       errors.emailAddresses = `You must provide at least one email address`
     }
-    if (!values.emailAddresses.every(validEmailAddress)) {
+    if (!values.emailAddresses.every(validateEmailAddress)) {
       errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
     }
     if (values.emailSubject === ``) {
@@ -120,16 +116,12 @@ const CreateEmailRateActionForm = ({ createAction }) => {
         <ActionEmailAddresses
           formProps={getTagInputFieldProps(`emailAddresses`)}
           validationMessage={touched.emailAddresses && errors.emailAddresses}
-          validate={validEmailAddress}
+          validate={validateEmailAddress}
         />
-
-        <TextInputField
-          label="Email Subject"
-          placeholder="Email Subject"
+        <ActionEmailSubject
+          formProps={getInputFieldProps(`emailSubject`)}
           isInvalid={errors.emailSubject && touched.emailSubject}
           validationMessage={touched.emailSubject && errors.emailSubject}
-          required
-          {...getInputFieldProps(`emailSubject`)}
         />
 
         <FormField

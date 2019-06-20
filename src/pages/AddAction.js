@@ -29,6 +29,11 @@ const AddAction = () => {
     { label: `Miscellaneous`, value: `misc` },
   ]
 
+  const validateEmailAddress = (emailAddress) => {
+    const regex = new RegExp(/\S+\.\S+@bet365\.com/, `gi`)
+    return emailAddress.trim().match(regex)
+  }
+
   return (
     <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
       <Pane width="50%">
@@ -60,13 +65,22 @@ const AddAction = () => {
               <CreateBlockActionForm createAction={addAction} />
             )}
             {actionType === `emailRate` && (
-              <CreateEmailRateActionForm createAction={addAction} />
+              <CreateEmailRateActionForm
+                createAction={addAction}
+                validateEmailAddress={validateEmailAddress}
+              />
             )}
             {actionType === `emailBatch` && (
-              <CreateEmailBatchActionForm createAction={addAction} />
+              <CreateEmailBatchActionForm
+                createAction={addAction}
+                validateEmailAddress={validateEmailAddress}
+              />
             )}
             {actionType === `emailAlert` && (
-              <CreateEmailAlertActionForm createAction={addAction} />
+              <CreateEmailAlertActionForm
+                createAction={addAction}
+                validateEmailAddress={validateEmailAddress}
+              />
             )}
           </Pane>
         </Pane>

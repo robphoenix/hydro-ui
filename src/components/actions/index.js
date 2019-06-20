@@ -3,6 +3,8 @@ import ActionEmailAddresses from './ActionEmailAddresses'
 import ActionEmailText from './ActionEmailText'
 import ActionHeading from './ActionHeading'
 import ActionName from './ActionName'
+import ActionParameters from './ActionParameters'
+import ActionEmailSubject from './ActionEmailSubject'
 
 export {
   ActionDescription,
@@ -10,4 +12,6 @@ export {
   ActionEmailText,
   ActionHeading,
   ActionName,
+  ActionParameters,
+  ActionEmailSubject,
 }

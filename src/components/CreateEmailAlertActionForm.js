@@ -1,27 +1,27 @@
 import React from 'react'
 import useForm from '../hooks/useForm'
 import { Pane, toaster, Button } from 'evergreen-ui'
-import { ActionHeading, ActionName, ActionDescription } from './actions'
+import {
+  ActionHeading,
+  ActionName,
+  ActionDescription,
+  ActionEmailSubject,
+  ActionEmailText,
+  ActionEmailAddresses,
+} from './actions'
 import ActionParameters from './actions/ActionParameters'
+import { navigate } from '@reach/router'
 
-const CreateEmailAlertActionForm = ({ createAction }) => {
+const CreateEmailAlertActionForm = ({ createAction, validateEmailAddress }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const parameterOptions = [
-    { label: `IP Address`, value: `sip` },
-    { label: `IP Range`, value: `ipRange` },
-    { label: `Session token`, value: `stk` },
-    { label: `Response Session Token`, value: `rstk` },
-    { label: `UQ ID`, value: `uqid` },
-    { label: `User Name`, value: `uname` },
-    { label: `User Agent`, value: `userAgent` },
-    { label: `X-Forwarded-For`, value: `xForwardedFor` },
-  ]
 
   const initialValues = {
     name: '',
     description: '',
     parameters: [],
+    emailAddresses: [],
+    emailSubject: ``,
+    emailText: ``,
   }
 
   const validate = (values) => {
@@ -35,26 +35,37 @@ const CreateEmailAlertActionForm = ({ createAction }) => {
     if (values.parameters && !values.parameters.length) {
       errors.parameters = `You must choose at least one parameter to block on`
     }
+    if (values.emailAddresses && !values.emailAddresses.length) {
+      errors.emailAddresses = `You must provide at least one email address`
+    }
+    if (!values.emailAddresses.every(validateEmailAddress)) {
+      errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
+    }
+    if (values.emailSubject === ``) {
+      errors.emailSubject = `You must specify an email subject`
+    }
+    if (values.emailText === ``) {
+      errors.emailText = `You must provide an email text`
+    }
     return errors
   }
 
   const onSubmit = async (values) => {
-    console.log({ values })
-
-    // const {
-    //   name,
-    //   description,
-    //   parameters,
-    // } = values
-    // await createAction({ name, description, actionType, metadata })
-    // navigate(`/monitors/view`)
-    // toaster.success(`Action created: ${name}`)
+    const emailAddresses = values.emailAddresses.join(`;`)
+    const { name, description, parameters, emailSubject, emailText } = values
+    const actionType = `emailAlert`
+    const metadata = { emailAddresses, emailSubject, emailText, parameters }
+    await createAction({ name, description, actionType, metadata })
+    navigate(`/monitors/view`)
+    toaster.success(`Action created: ${name}`)
   }
 
   const {
     handleSubmit,
     getInputFieldProps,
     getSelectMenuProps,
+    getQuillEditorProps,
+    getTagInputFieldProps,
     errors,
     touched,
     submitError,
@@ -95,6 +106,21 @@ const CreateEmailAlertActionForm = ({ createAction }) => {
           selectMenuProps={getSelectMenuProps(`parameters`)}
           inputFieldProps={getInputFieldProps(`parameters`)}
           validationMessage={touched.parameters && errors.parameters}
+        />
+        <ActionEmailAddresses
+          formProps={getTagInputFieldProps(`emailAddresses`)}
+          validationMessage={touched.emailAddresses && errors.emailAddresses}
+          validate={validateEmailAddress}
+        />
+        <ActionEmailSubject
+          formProps={getInputFieldProps(`emailSubject`)}
+          isInvalid={errors.emailSubject && touched.emailSubject}
+          validationMessage={touched.emailSubject && errors.emailSubject}
+        />
+        <ActionEmailText
+          formProps={getQuillEditorProps(`emailText`)}
+          error={errors.emailText}
+          touched={touched.emailText}
         />
 
         <Button appearance="primary" disabled={disableSubmit}>
