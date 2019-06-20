@@ -71,7 +71,7 @@ const MonitorsTable = ({ monitors }) => {
     let text = `Filter Categories...`
     const numberOfCategories = selectedCategories.length
     if (numberOfCategories === 1) {
-      text = selectedCategories
+      text = selectedCategories[0]
     } else if (numberOfCategories > 1) {
       text = `${numberOfCategories} categories selected`
     }
@@ -115,10 +115,13 @@ const MonitorsTable = ({ monitors }) => {
       <Table>
         <Table.Head>
           <Table.SearchHeaderCell
+            flex="1"
             onChange={setSearchQuery}
             placeholder="Search by monitor name and description..."
           />
-          <Table.HeaderCell />
+          <Table.TextHeaderCell flex="1" padding="0">
+            Categories
+          </Table.TextHeaderCell>
         </Table.Head>
         <Table.Body height={700}>
           {tableItems.map((monitor) => (
