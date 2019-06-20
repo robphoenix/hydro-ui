@@ -4,13 +4,14 @@ import { Link } from '@reach/router'
 import styled from 'styled-components/macro'
 
 const MonitorLink = styled(Link)({
+  padding: '0 8px',
   textDecoration: 'none',
   color: '#234361',
   backgroundImage: 'linear-gradient(180deg, #d2eef3, #d2eef3)',
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: '0 bottom',
-  backgroundSize: '100% 10%',
-  transition: 'background-size 0.2s ease-in-out',
+  backgroundPosition: 'center bottom',
+  backgroundSize: '90% 10%',
+  transition: 'background-size 0.1s ease-in-out',
   '&:hover': {
     backgroundSize: '100% 100%',
   },
@@ -24,7 +25,9 @@ const MonitorNameCell = ({ monitor }) => {
       <Heading size={600} marginBottom={majorScale(2)}>
         <MonitorName to={`/monitors/${monitor.id}`}>{monitor.name}</MonitorName>
       </Heading>
-      <Text size={500}>{monitor.description}</Text>
+      <Text size={500} marginLeft={majorScale(1)}>
+        {monitor.description}
+      </Text>
     </Pane>
   )
 }

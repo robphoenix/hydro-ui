@@ -13,6 +13,7 @@ import CreateBlockActionForm from '../components/CreateBlockActionForm'
 import CreateEmailRateActionForm from '../components/CreateEmailRateActionForm'
 import CreateEmailBatchActionForm from '../components/CreateEmailBatchActionForm'
 import CreateEmailAlertActionForm from '../components/CreateEmailAlertActionForm'
+import CreateMiscActionForm from '../components/CreateMiscActionForm'
 
 const AddAction = () => {
   const [actionType, setActionType] = React.useState(`block`)
@@ -23,9 +24,10 @@ const AddAction = () => {
     { label: `Email Rate`, value: `emailRate` },
     { label: `Email Batch`, value: `emailBatch` },
     { label: `Email Alert`, value: `emailAlert` },
-    { label: `Store in Database`, value: `storeDb` },
-    { label: `Store Logins`, value: `storeLogins` },
-    { label: `Store Analysis`, value: `storeAnalysis` },
+    { label: `Store`, value: `store` },
+    // { label: `Store in Database`, value: `storeDb` },
+    // { label: `Store Logins`, value: `storeLogins` },
+    // { label: `Store Analysis`, value: `storeAnalysis` },
     { label: `Miscellaneous`, value: `misc` },
   ]
 
@@ -81,6 +83,9 @@ const AddAction = () => {
                 createAction={addAction}
                 validateEmailAddress={validateEmailAddress}
               />
+            )}
+            {actionType === `misc` && (
+              <CreateMiscActionForm createAction={addAction} />
             )}
           </Pane>
         </Pane>

@@ -214,8 +214,19 @@ const CreateBlockActionForm = ({ createAction }) => {
           </Pane>
         )}
 
-        <Button appearance="primary" disabled={disableSubmit}>
+        <Button
+          appearance="primary"
+          disabled={disableSubmit}
+          marginRight={majorScale(2)}
+        >
           Submit
+        </Button>
+        <Button
+          type="button"
+          intent="danger"
+          onClick={() => navigate(`/monitors/view`)}
+        >
+          Cancel
         </Button>
       </form>
     </Pane>

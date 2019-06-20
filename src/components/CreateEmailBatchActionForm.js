@@ -155,9 +155,18 @@ const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
           touched={touched.emailText}
         />
 
-        <Button appearance="primary" disabled={disableSubmit}>
+        <Button appearance="primary" disabled={disableSubmit}
+        marginRight={majorScale(2)}
+        >
           Submit
         </Button>
+      <Button
+        type="button"
+        intent="danger"
+        onClick={() => navigate(`/monitors/view`)}
+      >
+        Cancel
+      </Button>
       </form>
     </Pane>
   )
