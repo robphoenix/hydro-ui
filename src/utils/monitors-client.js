@@ -7,7 +7,7 @@ const optionsUrl = (endpoint) => {
   return `${monitorsUrl()}/options/${endpoint}`
 }
 const groupsUrl = optionsUrl(`groups`)
-const actionsUrl = optionsUrl(`actions`)
+const actionsUrl = (id = ``) => optionsUrl(`actions${id ? '/' : ''}${id}`)
 const categoriesUrl = optionsUrl(`categories`)
 const feedTypesUrl = optionsUrl(`feedtypes`)
 
@@ -55,7 +55,12 @@ const getAllCategories = () => {
 }
 
 const getAllActions = () => {
-  return get(actionsUrl)
+  return get(actionsUrl())
+}
+
+const archiveAction = (action) => {
+  action.archived = true
+  return put(actionsUrl(action.id), action)
 }
 
 const addCategories = (categories) => {
@@ -84,5 +89,6 @@ export {
   getAllGroups,
   getAllCategories,
   getAllActions,
+  archiveAction,
   getFeedTypes,
 }

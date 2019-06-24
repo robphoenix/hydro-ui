@@ -13,6 +13,7 @@ import DuplicateMonitor from '../pages/DuplicateMonitor'
 import ViewFeedTypes from '../pages/ViewFeedTypes'
 import NotFound from '../pages/NotFound'
 import AddAction from '../pages/AddAction'
+import ViewActions from '../pages/ViewActions'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -34,6 +35,7 @@ const AuthenticatedApp = () => {
           <EditMonitor path="/monitors/:id/edit" />
           <DuplicateMonitor path="/monitors/:id/duplicate" />
           <ViewMonitorById path="/monitors/:id" />
+          <ViewActions path="/actions/view"> </ViewActions>
           <AddAction path="/actions/add" />
           <NotFound default />
         </Router>

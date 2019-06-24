@@ -9,6 +9,7 @@ import {
   disableMonitor,
   enableMonitor,
   archiveMonitor,
+  archiveAction,
   unarchiveMonitor,
   getAllGroups,
   getAllCategories,
@@ -18,7 +19,7 @@ import {
 } from '../utils/monitors-client'
 import { eventBusLiveData, eventBusCachedData } from '../utils/eventbus-client'
 
-const MonitorsContext = React.createContext()
+const MonitorsContext = React.createContext(null)
 
 function useMonitors() {
   const context = React.useContext(MonitorsContext)
@@ -72,6 +73,7 @@ function MonitorsProvider(props) {
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
 
   const fetchMonitors = React.useCallback(async () => {
+    console.log(`fetch`)
     try {
       const monitors = await getMonitors()
       dispatch({ type: 'SUCCESS', payload: { monitors } })
@@ -79,8 +81,6 @@ function MonitorsProvider(props) {
       dispatch({ type: 'SET_ERROR', payload: { monitors: error } })
     }
   }, [])
-
-  const refreshMonitors = fetchMonitors
 
   const fetchMonitorById = React.useCallback(async (id) => {
     try {
@@ -184,10 +184,10 @@ function MonitorsProvider(props) {
         unarchiveMonitor,
         fetchMonitors,
         fetchMonitorById,
-        refreshMonitors,
         fetchGroups,
         fetchCategories,
         fetchActions,
+        archiveAction,
         fetchFeedTypes,
         initLiveDataConnection,
         initCachedDataConnection,

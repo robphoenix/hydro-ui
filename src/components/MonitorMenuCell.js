@@ -3,14 +3,17 @@ import { Popover, Position, Menu, Button } from 'evergreen-ui'
 
 import EnableMonitorMenuItem from './EnableMonitorMenuItem'
 import DisableMonitorMenuItem from './DisableMonitorMenuItem'
-import ArchiveMonitorMenuItem from './ArchiveMonitorMenuItem'
 import UnarchiveMonitorMenuItem from './UnarchiveMonitorMenuItem'
 import { navigate } from '@reach/router'
+import { useMonitors } from '../context/monitors-context'
+import ArchiveMenuItem from './ArchiveMenuItem'
 
 const MonitorMenuCell = ({ monitor }) => {
   const isArchived = monitor.status === `archived`
   const isOnline = monitor.status === `online`
   const isOffline = monitor.status === `offline`
+
+  const { archiveMonitor, fetchMonitors } = useMonitors()
 
   return (
     <Popover
@@ -30,7 +33,14 @@ const MonitorMenuCell = ({ monitor }) => {
             )}
             {isOffline && <EnableMonitorMenuItem monitor={monitor} />}
             {isOnline && <DisableMonitorMenuItem monitor={monitor} />}
-            {!isArchived && <ArchiveMonitorMenuItem monitor={monitor} />}
+            {!isArchived && (
+              <ArchiveMenuItem
+                archive={archiveMonitor}
+                refresh={fetchMonitors}
+                item={monitor}
+                dialogTitle={`Archive Monitor`}
+              />
+            )}
             {isArchived && <UnarchiveMonitorMenuItem monitor={monitor} />}
           </Menu.Group>
         </Menu>
