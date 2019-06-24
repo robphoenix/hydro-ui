@@ -1,66 +1,89 @@
 import React from 'react'
-import { Table, Pane, majorScale, Badge } from 'evergreen-ui'
+import {
+  Table,
+  Pane,
+  majorScale,
+  Badge,
+  SelectMenu,
+  Button,
+} from 'evergreen-ui'
 
 import ActionNameCell from './ActionNameCell'
 import ActionMenuCell from './ActionMenuCell'
 import useSearch from '../hooks/useSearch'
+import ActionTypeBadge from './ActionTypeBadge'
 
 const ActionsTable = ({ actions }) => {
-  const badgeColors = {
-    block: `red`,
-    emailAlert: `orange`,
-    emailRate: `green`,
-    emailBatch: `purple`,
-    storeDB: `yellow`,
-    storeLogins: `teal`,
-    storeAnalysis: `blue`,
-    misc: `neutral`,
-  }
-
-  const actionDisplayName = {
-    block: `block`,
-    emailAlert: `email alert`,
-    emailRate: `email rate`,
-    emailBatch: `email batch`,
-    storeDB: `store in database`,
-    storeLogins: `store logins`,
-    storeAnalysis: `store analysis`,
-    misc: `miscellaneous`,
-  }
-
+  const [selectedActionType, setSelectedActionType] = React.useState({
+    label: `All Action Types`,
+    value: ``,
+  })
   const { setSearchQuery, matchesSearchQuery } = useSearch()
+
+  const isSelectedActionType = (actionType) => {
+    if (!selectedActionType.value) {
+      return true
+    }
+    return selectedActionType.value === actionType
+  }
 
   const filter = (actions) => {
     return actions.filter((action) => {
       const term = `${action.name} ${action.description}`.toLowerCase()
 
-      return matchesSearchQuery(term)
+      return matchesSearchQuery(term) && isSelectedActionType(action.actionType)
     })
   }
+
+  const actionTypeOptions = [
+    { label: `All Action Types`, value: `` },
+    { label: `Block`, value: `block` },
+    { label: `Email Alert`, value: `emailAlert` },
+    { label: `Email Rate`, value: `emailRate` },
+    { label: `Email Batch`, value: `emailBatch` },
+    { label: `Store in Database`, value: `storeDB` },
+    { label: `Store Logins`, value: `storeLogins` },
+    { label: `Store Analysis`, value: `storeAnalysis` },
+    { label: `Miscellaneous`, value: `misc` },
+  ]
 
   const tableItems = filter(actions)
 
   return (
     <Pane>
+      <Pane marginBottom={majorScale(4)}>
+        <SelectMenu
+          title="Select action type"
+          hasFilter={false}
+          hasTitle={false}
+          options={actionTypeOptions}
+          selected={selectedActionType.value}
+          onSelect={(item) => {
+            setSelectedActionType(item)
+          }}
+        >
+          <Button>{`${selectedActionType.label} selected`}</Button>
+        </SelectMenu>
+      </Pane>
+
       <Table>
         <Table.Head>
           <Table.SearchHeaderCell
-            flex="1"
+            flex="3"
             onChange={setSearchQuery}
             placeholder="Search by action name and description..."
           />
           <Table.TextHeaderCell flex="1">Action Type</Table.TextHeaderCell>
+          <Table.TextHeaderCell flex="1" />
         </Table.Head>
         <Table.Body height={700}>
           {tableItems.map((action) => (
             <Table.Row key={action.id} height="auto" padding={majorScale(3)}>
-              <Table.Cell flex="2">
+              <Table.Cell flex="3">
                 <ActionNameCell action={action} />
               </Table.Cell>
-              <Table.Cell>
-                <Badge color={badgeColors[action.actionType]}>
-                  {actionDisplayName[action.actionType]}
-                </Badge>
+              <Table.Cell flex="1">
+                <ActionTypeBadge actionType={action.actionType} />
               </Table.Cell>
               <Table.Cell justifyContent="flex-end" flex="1">
                 <ActionMenuCell action={action} />

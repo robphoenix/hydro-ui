@@ -75,13 +75,12 @@ const MonitorsTable = ({ monitors }) => {
 
   return (
     <Pane>
-      <Pane display="flex">
+      <Pane display="flex" marginBottom={majorScale(4)}>
         <SegmentedControl
           width={240}
           options={monitorsStatusOptions}
           value={monitorsStatus}
           onChange={setMonitorsStatus}
-          marginBottom={majorScale(4)}
           marginRight={majorScale(2)}
         />
 
