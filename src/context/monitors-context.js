@@ -73,7 +73,6 @@ function MonitorsProvider(props) {
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
 
   const fetchMonitors = React.useCallback(async () => {
-    console.log(`fetch`)
     try {
       const monitors = await getMonitors()
       dispatch({ type: 'SUCCESS', payload: { monitors } })

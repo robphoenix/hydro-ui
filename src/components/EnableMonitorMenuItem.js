@@ -4,7 +4,7 @@ import { Menu, Dialog, Text, Strong, toaster } from 'evergreen-ui'
 import { useMonitors } from '../context/monitors-context'
 
 const EnableMonitorMenuItem = ({ monitor }) => {
-  const { refreshMonitors, enableMonitor } = useMonitors()
+  const { fetchMonitors, enableMonitor } = useMonitors()
 
   const [showDialog, setShowDialog] = useState(false)
 
@@ -12,7 +12,7 @@ const EnableMonitorMenuItem = ({ monitor }) => {
     try {
       await enableMonitor(monitor)
       toaster.success(`${monitor.name} has been enabled`)
-      refreshMonitors()
+      fetchMonitors()
     } catch (error) {
       toaster.warning(error)
     }

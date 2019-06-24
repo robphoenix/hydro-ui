@@ -6,12 +6,12 @@ import { useMonitors } from '../context/monitors-context'
 const DisableMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
 
-  const { disableMonitor, refreshMonitors } = useMonitors()
+  const { disableMonitor, fetchMonitors } = useMonitors()
   const handleConfirm = async () => {
     try {
       await disableMonitor(monitor)
       toaster.success(`${monitor.name} has been disabled`)
-      refreshMonitors()
+      fetchMonitors()
     } catch (error) {
       toaster.warning(error)
     }

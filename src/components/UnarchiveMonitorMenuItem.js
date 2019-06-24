@@ -6,13 +6,13 @@ import { useMonitors } from '../context/monitors-context'
 const UnarchiveMonitorMenuItem = ({ monitor }) => {
   const [showDialog, setShowDialog] = useState(false)
 
-  const { unarchiveMonitor, refreshMonitors } = useMonitors()
+  const { unarchiveMonitor, fetchMonitors } = useMonitors()
 
   const handleConfirm = async () => {
     try {
       await unarchiveMonitor(monitor)
       toaster.success(`${monitor.name} has been unarchived`)
-      refreshMonitors()
+      fetchMonitors()
     } catch (error) {
       toaster.warning(error)
     }

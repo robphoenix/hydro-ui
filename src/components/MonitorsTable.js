@@ -12,9 +12,9 @@ import {
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
 import MonitorMenuCell from './MonitorMenuCell'
+import useSearch from '../hooks/useSearch'
 
 const MonitorsTable = ({ monitors }) => {
-  const [searchQuery, setSearchQuery] = React.useState('')
   const [monitorsStatus, setMonitorsStatus] = React.useState('online')
   const [selectedCategories, setSelectedCategories] = React.useState([])
   const [
@@ -28,6 +28,8 @@ const MonitorsTable = ({ monitors }) => {
     { label: 'Archived', value: 'archived' },
   ]
 
+  const { setSearchQuery, matchesSearchQuery } = useSearch()
+
   const categoryOptions = Array.from(
     new Set(
       monitors.reduce(
@@ -36,17 +38,6 @@ const MonitorsTable = ({ monitors }) => {
       ),
     ),
   ).map((label) => ({ label, value: label }))
-
-  const matchesSearchQuery = (monitor) => {
-    const query = searchQuery.trim()
-    if (query === '') {
-      return true
-    }
-    const regex = new RegExp(query.toLowerCase(), 'gi')
-    const term = `${monitor.name} ${monitor.description}`.toLowerCase()
-    const match = term.match(regex)
-    return match && match.length > 0
-  }
 
   const hasSelectedCategories = (categories, selected) => {
     if (!selected || !selected.length) {
@@ -59,9 +50,11 @@ const MonitorsTable = ({ monitors }) => {
 
   const filter = (monitors) => {
     return monitors.filter((monitor) => {
+      const term = `${monitor.name} ${monitor.description}`.toLowerCase()
+
       return (
         monitor.status === monitorsStatus &&
-        matchesSearchQuery(monitor) &&
+        matchesSearchQuery(term) &&
         hasSelectedCategories(monitor.categories, selectedCategories)
       )
     })

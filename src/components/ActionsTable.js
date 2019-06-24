@@ -3,10 +3,9 @@ import { Table, Pane, majorScale, Badge } from 'evergreen-ui'
 
 import ActionNameCell from './ActionNameCell'
 import ActionMenuCell from './ActionMenuCell'
+import useSearch from '../hooks/useSearch'
 
 const ActionsTable = ({ actions }) => {
-  const [searchQuery, setSearchQuery] = React.useState('')
-
   const badgeColors = {
     block: `red`,
     emailAlert: `orange`,
@@ -29,7 +28,17 @@ const ActionsTable = ({ actions }) => {
     misc: `miscellaneous`,
   }
 
-  const tableItems = actions
+  const { setSearchQuery, matchesSearchQuery } = useSearch()
+
+  const filter = (actions) => {
+    return actions.filter((action) => {
+      const term = `${action.name} ${action.description}`.toLowerCase()
+
+      return matchesSearchQuery(term)
+    })
+  }
+
+  const tableItems = filter(actions)
 
   return (
     <Pane>
