@@ -75,9 +75,9 @@ const NavBar = () => {
             <Menu>
               <Menu.Group>
                 {monitorsLinks.map((link) => (
-                  <Menu.Item key={link.to} onSelect={close}>
-                    <NavLink to={link.to}>{link.label}</NavLink>
-                  </Menu.Item>
+                  <NavLink key={link.to} to={link.to}>
+                    <Menu.Item onSelect={close}>{link.label}</Menu.Item>
+                  </NavLink>
                 ))}
               </Menu.Group>
             </Menu>
@@ -94,9 +94,9 @@ const NavBar = () => {
             <Menu>
               <Menu.Group>
                 {actionsLinks.map((link) => (
-                  <Menu.Item key={link.to} onSelect={close}>
-                    <NavLink to={link.to}>{link.label}</NavLink>
-                  </Menu.Item>
+                  <NavLink key={link.to} to={link.to}>
+                    <Menu.Item onSelect={close}>{link.label}</Menu.Item>
+                  </NavLink>
                 ))}
               </Menu.Group>
             </Menu>
