@@ -72,7 +72,7 @@ const getFeedTypes = () => {
 }
 
 const addAction = (action) => {
-  return post(actionsUrl, action)
+  return post(actionsUrl(), action)
 }
 
 export {

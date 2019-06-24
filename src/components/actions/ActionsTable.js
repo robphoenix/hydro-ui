@@ -1,17 +1,13 @@
 import React from 'react'
-import {
-  Table,
-  Pane,
-  majorScale,
-  Badge,
-  SelectMenu,
-  Button,
-} from 'evergreen-ui'
+import { Table, Pane, majorScale, SelectMenu, Button } from 'evergreen-ui'
 
-import ActionNameCell from './ActionNameCell'
-import ActionMenuCell from './ActionMenuCell'
-import useSearch from '../hooks/useSearch'
-import ActionTypeBadge from './ActionTypeBadge'
+import useSearch from '../../hooks/useSearch'
+import {
+  ActionNameCell,
+  ActionTypeBadge,
+  ActionPropertiesCell,
+  ActionMenuCell,
+} from '.'
 
 const ActionsTable = ({ actions }) => {
   const [selectedActionType, setSelectedActionType] = React.useState({
@@ -69,21 +65,25 @@ const ActionsTable = ({ actions }) => {
       <Table>
         <Table.Head>
           <Table.SearchHeaderCell
-            flex="3"
+            flex="4"
             onChange={setSearchQuery}
             placeholder="Search by action name and description..."
           />
           <Table.TextHeaderCell flex="1">Action Type</Table.TextHeaderCell>
           <Table.TextHeaderCell flex="1" />
+          <Table.TextHeaderCell flex="1" />
         </Table.Head>
         <Table.Body height={700}>
           {tableItems.map((action) => (
             <Table.Row key={action.id} height="auto" padding={majorScale(3)}>
-              <Table.Cell flex="3">
+              <Table.Cell flex="4">
                 <ActionNameCell action={action} />
               </Table.Cell>
               <Table.Cell flex="1">
                 <ActionTypeBadge actionType={action.actionType} />
+              </Table.Cell>
+              <Table.Cell justifyContent="flex-end" flex="1">
+                <ActionPropertiesCell action={action} />
               </Table.Cell>
               <Table.Cell justifyContent="flex-end" flex="1">
                 <ActionMenuCell action={action} />

@@ -2,9 +2,6 @@ import React from 'react'
 import { Menu, Dialog, Strong, toaster, Text } from 'evergreen-ui'
 
 const ArchiveMenuItem = ({ archive, refresh, item, dialogTitle }) => {
-  console.log({ item })
-  console.log({ dialogTitle })
-
   const [showDialog, setShowDialog] = React.useState(false)
 
   const handleConfirm = async () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import { useMonitors } from '../context/monitors-context'
 import { toaster, Pane, Heading, majorScale, Spinner } from 'evergreen-ui'
 import { navigate } from '@reach/router'
-import ActionsTable from '../components/ActionsTable'
+import { ActionsTable } from '../components/actions'
 
 const ViewActions = () => {
   const { allActions, fetchActions, errors, isLoading } = useMonitors()

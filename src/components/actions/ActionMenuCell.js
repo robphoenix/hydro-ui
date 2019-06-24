@@ -2,8 +2,8 @@ import React from 'react'
 import { Popover, Position, Menu, Button } from 'evergreen-ui'
 import { navigate } from '@reach/router/lib/history'
 
-import ArchiveMenuItem from './ArchiveMenuItem'
-import { useMonitors } from '../context/monitors-context'
+import ArchiveMenuItem from '../ArchiveMenuItem'
+import { useMonitors } from '../../context/monitors-context'
 
 const ActionMenuCell = ({ action }) => {
   const { archiveAction, fetchActions } = useMonitors()

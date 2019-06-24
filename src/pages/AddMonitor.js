@@ -36,6 +36,7 @@ const AddMonitor = () => {
         <CreateMonitorForm
           initialValues={initialValues}
           createMonitor={addMonitor}
+          disableNameInput={false}
         />
       </Pane>
     </Pane>

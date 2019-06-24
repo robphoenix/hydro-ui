@@ -63,11 +63,13 @@ const NavBar = () => {
         is="h1"
         size={700}
         marginLeft={majorScale(2)}
-        marginRight={majorScale(4)}
+        marginRight={majorScale(2)}
       >
         HYDRO
       </Heading>
-      <Text size={400}>v{version}</Text>
+      <Text size={400} marginRight={majorScale(3)}>
+        v{version}
+      </Text>
       <Pane is="nav" display="flex" width="100%">
         <Popover
           position={Position.BOTTOM_LEFT}

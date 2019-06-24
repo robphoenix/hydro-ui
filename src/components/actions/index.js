@@ -5,6 +5,12 @@ import ActionHeading from './ActionHeading'
 import ActionName from './ActionName'
 import ActionParameters from './ActionParameters'
 import ActionEmailSubject from './ActionEmailSubject'
+import ActionMenuCell from './ActionMenuCell'
+import ActionNameCell from './ActionNameCell'
+import ActionPropertiesCell from './ActionPropertiesCell'
+import ActionsTable from './ActionsTable'
+import ActionTypeBadge from './ActionTypeBadge'
+import ActionBlockProperties from './ActionBlockProperties'
 
 export {
   ActionDescription,
@@ -14,4 +20,10 @@ export {
   ActionName,
   ActionParameters,
   ActionEmailSubject,
+  ActionMenuCell,
+  ActionNameCell,
+  ActionPropertiesCell,
+  ActionsTable,
+  ActionTypeBadge,
+  ActionBlockProperties,
 }
