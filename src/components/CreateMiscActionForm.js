@@ -28,7 +28,7 @@ const CreateMiscActionForm = ({ createAction }) => {
     const actionType = `misc`
 
     await createAction({ name, description, actionType })
-    navigate(`/monitors/view`)
+    navigate(`/actions/view`)
     toaster.success(`Action created: ${name}`)
   }
 
@@ -82,7 +82,7 @@ const CreateMiscActionForm = ({ createAction }) => {
         <Button
           type="button"
           intent="danger"
-          onClick={() => navigate(`/monitors/view`)}
+          onClick={() => navigate(`/actions/view`)}
         >
           Cancel
         </Button>

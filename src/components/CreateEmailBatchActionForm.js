@@ -69,7 +69,7 @@ const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
       actionType,
       metadata,
     })
-    navigate(`/monitors/view`)
+    navigate(`/actions/view`)
     toaster.success(`Action created: ${name}`)
   }
 
@@ -155,18 +155,20 @@ const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
           touched={touched.emailText}
         />
 
-        <Button appearance="primary" disabled={disableSubmit}
-        marginRight={majorScale(2)}
+        <Button
+          appearance="primary"
+          disabled={disableSubmit}
+          marginRight={majorScale(2)}
         >
           Submit
         </Button>
-      <Button
-        type="button"
-        intent="danger"
-        onClick={() => navigate(`/monitors/view`)}
-      >
-        Cancel
-      </Button>
+        <Button
+          type="button"
+          intent="danger"
+          onClick={() => navigate(`/actions/view`)}
+        >
+          Cancel
+        </Button>
       </form>
     </Pane>
   )

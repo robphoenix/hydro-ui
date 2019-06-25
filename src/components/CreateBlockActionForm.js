@@ -91,7 +91,7 @@ const CreateBlockActionForm = ({ createAction }) => {
         }
 
     await createAction({ name, description, actionType, metadata })
-    navigate(`/monitors/view`)
+    navigate(`/actions/view`)
     toaster.success(`Action created: ${name}`)
   }
 
@@ -224,7 +224,7 @@ const CreateBlockActionForm = ({ createAction }) => {
         <Button
           type="button"
           intent="danger"
-          onClick={() => navigate(`/monitors/view`)}
+          onClick={() => navigate(`/actions/view`)}
         >
           Cancel
         </Button>

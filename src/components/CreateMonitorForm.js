@@ -387,7 +387,7 @@ const CreateMonitorForm = ({
         disabled={!!Object.keys(errors).length}
         marginRight={majorScale(2)}
       >
-        Submit
+        Save
       </Button>
 
       <Button

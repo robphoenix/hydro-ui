@@ -67,7 +67,7 @@ const CreateEmailRateActionForm = ({ createAction, validateEmailAddress }) => {
       actionType,
       metadata,
     })
-    navigate(`/monitors/view`)
+    navigate(`/actions/view`)
     toaster.success(`Action created: ${name}`)
   }
 
@@ -158,7 +158,7 @@ const CreateEmailRateActionForm = ({ createAction, validateEmailAddress }) => {
         <Button
           type="button"
           intent="danger"
-          onClick={() => navigate(`/monitors/view`)}
+          onClick={() => navigate(`/actions/view`)}
         >
           Cancel
         </Button>
