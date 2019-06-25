@@ -7,15 +7,15 @@ import { useAuth } from '../context/auth-context'
 const LoginForm = () => {
   const { login } = useAuth()
 
-  const initialValues = { username: '', password: '' }
+  const initialValues = { username: ``, password: `` }
   const onSubmit = async (values) => await login(values)
   const validate = (values) => {
     let errors = {}
-    if (values.username === '') {
-      errors.username = 'You must enter your Bet365 username'
+    if (values.username === ``) {
+      errors.username = `You must enter your Bet365 username`
     }
-    if (values.password === '') {
-      errors.password = 'You must enter your Bet365 password'
+    if (values.password === ``) {
+      errors.password = `You must enter your Bet365 password`
     }
     return errors
   }
@@ -36,7 +36,7 @@ const LoginForm = () => {
         label="Username"
         name="username"
         required
-        {...getInputFieldProps('username')}
+        {...getInputFieldProps(`username`)}
         isInvalid={errors.username && touched.username}
         validationMessage={touched.username && errors.username}
       />
@@ -46,14 +46,14 @@ const LoginForm = () => {
         label="Password"
         type="password"
         name="password"
-        {...getInputFieldProps('password')}
+        {...getInputFieldProps(`password`)}
         required
         isInvalid={errors.password && touched.password}
         validationMessage={touched.password && errors.password}
       />
 
-      <Button type="submit" appearance="primary">
-        LOG IN
+      <Button type="submit" appearance="primary" textTransform="uppercase">
+        log in
       </Button>
       {submitError && (
         <Alert

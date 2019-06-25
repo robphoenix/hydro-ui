@@ -3,9 +3,9 @@ import { navigate } from '@reach/router'
 
 import * as auth from '../utils/auth'
 
-const AuthContext = React.createContext()
+const AuthContext = React.createContext(null)
 
-function useAuth() {
+const useAuth = () => {
   const context = React.useContext(AuthContext)
   if (context === undefined) {
     throw new Error(`useAuth must be used within a AuthProvider`)
@@ -13,18 +13,17 @@ function useAuth() {
   return context
 }
 
-function onAuthenticationChange(path) {
+const onAuthenticationChange = (path) => {
   navigate(path)
   window.location.reload()
 }
 
 function AuthProvider(props) {
-  const isLoggedIn = () => auth.isLoggedIn()
+  const isLoggedIn = auth.isLoggedIn()
   const login = (form) =>
     auth.login(form).then(() => onAuthenticationChange(`/monitors/view`))
   const initTokenRefreshInterval = () => auth.initTokenRefreshInterval()
-  const logout = () =>
-    auth.logout().then(() => onAuthenticationChange(`/login`))
+  const logout = () => auth.logout().then(() => onAuthenticationChange(`/`))
   const user = auth.getDecodedToken()
   const token = auth.getToken()
 

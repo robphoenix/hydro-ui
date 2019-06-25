@@ -3,8 +3,14 @@ import { Pane, Heading, majorScale, Text } from 'evergreen-ui'
 
 import LoginForm from '../components/LoginForm'
 import Logo from '../components/Logo'
+import { navigate } from '@reach/router'
 
 const Login = () => {
+  React.useEffect(() => {
+    // change the URL, for instance if a user has logged out from another page
+    navigate(`/login`)
+  }, [])
+
   return (
     <Pane display="flex" justifyContent="center" marginTop={majorScale(5)}>
       <Pane width={300}>

@@ -35,7 +35,7 @@ const AuthenticatedApp = () => {
           <EditMonitor path="/monitors/:id/edit" />
           <DuplicateMonitor path="/monitors/:id/duplicate" />
           <ViewMonitorById path="/monitors/:id" />
-          <ViewActions path="/actions/view"> </ViewActions>
+          <ViewActions path="/actions/view" />
           <AddAction path="/actions/add" />
           <NotFound default />
         </Router>

@@ -2,12 +2,35 @@ import React from 'react'
 import axios from 'axios'
 
 import { useAuth } from './context/auth-context'
-import AuthenticatedApp from './components/AuthenticatedApp'
-import UnauthenticatedApp from './components/UnauthenticatedApp'
+import { Spinner, Pane } from 'evergreen-ui'
 
-function App() {
+const loadAuthenticatedApp = () => import('./components/AuthenticatedApp')
+const AuthenticatedApp = React.lazy(loadAuthenticatedApp)
+const UnauthenticatedApp = React.lazy(() =>
+  import('./components/UnauthenticatedApp'),
+)
+
+const FullPageSpinner = () => {
+  return (
+    <Pane
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      height={800}
+    >
+      <Spinner />
+    </Pane>
+  )
+}
+
+const App = () => {
   const { isLoggedIn, token } = useAuth()
-  const authenticated = isLoggedIn()
+
+  // pre-load the authenticated side in the background while the user's
+  // filling out the login form.
+  React.useEffect(() => {
+    loadAuthenticatedApp()
+  }, [])
 
   // TODO: move into own file
   axios.interceptors.response.use(
@@ -34,7 +57,9 @@ function App() {
   })
 
   return (
-    <div>{authenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}</div>
+    <React.Suspense fallback={<FullPageSpinner />}>
+      {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+    </React.Suspense>
   )
 }
 
