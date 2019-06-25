@@ -15,37 +15,19 @@ import MonitorMenuCell from './MonitorMenuCell'
 import useSearch from '../hooks/useSearch'
 
 const MonitorsTable = ({ monitors }) => {
-  const [selectedCategories, setSelectedCategories] = React.useState([])
-  const [
-    filterCategoriesButtonText,
-    setFilterCategoriesButtonText,
-  ] = React.useState(``)
-
   const {
     handleSearchChange,
     matchesSearchQuery,
     statusOptions,
     status,
     handleStatusChange,
-  } = useSearch()
-
-  const categoryOptions = Array.from(
-    new Set(
-      monitors.reduce(
-        (prev, monitor) => [...prev, ...monitor.categories.map((c) => c.name)],
-        [],
-      ),
-    ),
-  ).map((label) => ({ label, value: label }))
-
-  const hasSelectedCategories = (categories, selected) => {
-    if (!selected || !selected.length) {
-      return true
-    }
-    return categories
-      .map((category) => category.name)
-      .some((name) => selected.includes(name))
-  }
+    categoryOptions,
+    hasSelectedCategories,
+    categoriesButtonText,
+    handleCategorySelect,
+    handleCategoryDeselect,
+    selectedCategories,
+  } = useSearch(monitors)
 
   const filter = (monitors) => {
     return monitors.filter((monitor) => {
@@ -58,17 +40,6 @@ const MonitorsTable = ({ monitors }) => {
       )
     })
   }
-
-  React.useEffect(() => {
-    let text = `Filter Categories...`
-    const numberOfCategories = selectedCategories.length
-    if (numberOfCategories === 1) {
-      text = selectedCategories[0]
-    } else if (numberOfCategories > 1) {
-      text = `${numberOfCategories} categories selected`
-    }
-    setFilterCategoriesButtonText(text)
-  }, [selectedCategories])
 
   const tableItems = filter(monitors)
 
@@ -88,18 +59,10 @@ const MonitorsTable = ({ monitors }) => {
           title="Select multiple categories"
           options={categoryOptions}
           selected={selectedCategories}
-          onSelect={(item) =>
-            setSelectedCategories([...selectedCategories, item.value])
-          }
-          onDeselect={(item) => {
-            const deselectedItemIndex = selectedCategories.indexOf(item.value)
-            const selectedItems = selectedCategories.filter(
-              (_item, i) => i !== deselectedItemIndex,
-            )
-            setSelectedCategories(selectedItems)
-          }}
+          onSelect={handleCategorySelect}
+          onDeselect={handleCategoryDeselect}
         >
-          <Button>{filterCategoriesButtonText}</Button>
+          <Button>{categoriesButtonText}</Button>
         </SelectMenu>
       </Pane>
 
