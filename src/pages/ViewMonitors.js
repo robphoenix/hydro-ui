@@ -1,9 +1,10 @@
 import React from 'react'
-import { Pane, Heading, majorScale, Spinner, toaster } from 'evergreen-ui'
+import { Pane, Heading, majorScale, toaster } from 'evergreen-ui'
 
 import MonitorsTable from '../components/MonitorsTable'
 import { useMonitors } from '../context/monitors-context'
 import { navigate } from '@reach/router'
+import FullPageSpinner from '../components/FullPageSpinner'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
@@ -33,19 +34,8 @@ const ViewMonitors = () => {
         >
           Monitors
         </Heading>
-        {isLoading && (
-          <Pane
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height={400}
-          >
-            <Spinner />
-          </Pane>
-        )}
-        {!isLoading && !errors.monitors && (
-          <MonitorsTable monitors={monitors} />
-        )}
+        {isLoading && <FullPageSpinner height={majorScale(40)} />}
+        {!isLoading && <MonitorsTable monitors={monitors} />}
       </Pane>
     </Pane>
   )
