@@ -134,6 +134,9 @@ const MonitorsTable = ({ monitors }) => {
                     {category.name}
                   </Badge>
                 ))}
+                {!monitor.categories.length && (
+                  <Badge color="yellow">no categories</Badge>
+                )}
               </Table.Cell>
               <Table.Cell justifyContent="flex-end" flex="1">
                 <MonitorMenuCell monitor={monitor} />

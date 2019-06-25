@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Pane, Dialog, Text, Strong } from 'evergreen-ui'
+import { Button, Pane, Dialog } from 'evergreen-ui'
 import { ActionBlockProperties } from '.'
 
 const ActionPropertiesCell = ({ action }) => {
