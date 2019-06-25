@@ -3,6 +3,8 @@ import React from 'react'
 function useSearch() {
   const [searchQuery, setSearchQuery] = React.useState(``)
 
+  const handleSearchChange = (value) => setSearchQuery(value)
+
   const matchesSearchQuery = (term) => {
     const query = searchQuery.trim()
     if (query === '') {
@@ -14,7 +16,7 @@ function useSearch() {
   }
 
   return {
-    setSearchQuery,
+    handleSearchChange,
     matchesSearchQuery,
   }
 }

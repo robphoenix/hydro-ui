@@ -28,7 +28,7 @@ const MonitorsTable = ({ monitors }) => {
     { label: 'Archived', value: 'archived' },
   ]
 
-  const { setSearchQuery, matchesSearchQuery } = useSearch()
+  const { handleSearchChange, matchesSearchQuery } = useSearch()
 
   const categoryOptions = Array.from(
     new Set(
@@ -108,7 +108,7 @@ const MonitorsTable = ({ monitors }) => {
         <Table.Head>
           <Table.SearchHeaderCell
             flex="1"
-            onChange={setSearchQuery}
+            onChange={handleSearchChange}
             placeholder="Search by monitor name and description..."
           />
           <Table.TextHeaderCell flex="1" padding="0">
