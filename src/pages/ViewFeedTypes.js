@@ -7,12 +7,14 @@ import {
   UnorderedList,
   ListItem,
   Button,
+  Text,
 } from 'evergreen-ui'
 import FeedTypesTable from '../components/FeedTypesTable'
 
 const ViewFeedTypes = () => {
   const { feedTypes, fetchFeedTypes } = useMonitors()
   const [esperDataTypes, setEsperDataTypes] = React.useState([])
+  const [esperDataTypeFields, setEsperDataTypeFields] = React.useState([])
   const [currentFeedType, setCurrentFeedType] = React.useState(``)
 
   React.useEffect(() => {
@@ -29,6 +31,13 @@ const ViewFeedTypes = () => {
     }
   }, [currentFeedType, feedTypes])
 
+  React.useEffect(() => {
+    const dataTypes = Object.keys(feedTypes)
+    if (dataTypes && dataTypes.length && currentFeedType) {
+      setEsperDataTypeFields(feedTypes[currentFeedType])
+    }
+  }, [currentFeedType, feedTypes])
+
   return (
     <Pane display="flex" alignItems="center" flexDirection="column">
       <Pane width="60%">
@@ -41,20 +50,21 @@ const ViewFeedTypes = () => {
           Monitor Feed Types
         </Heading>
       </Pane>
-      <Pane width="80%">
+      <Pane width="60%">
         {esperDataTypes && !!esperDataTypes.length && (
           <Pane display="flex" width="100%">
-            <UnorderedList listStyle="none" flex="1">
+            <UnorderedList listStyle="none" flex="1" paddingX={majorScale(3)}>
               {esperDataTypes.map((option) => (
                 <ListItem key={option.value}>
                   <Button
                     type="button"
                     appearance="minimal"
                     color="muted"
+                    height={majorScale(6)}
+                    width="100%"
                     onClick={() => {
-                      console.log({ option })
-
                       setCurrentFeedType(option.value)
+                      setEsperDataTypeFields(feedTypes[currentFeedType])
                     }}
                   >
                     {option.label}
@@ -63,10 +73,17 @@ const ViewFeedTypes = () => {
               ))}
             </UnorderedList>
 
-            <FeedTypesTable
-              esperDataTypes={feedTypes[currentFeedType]}
-              feedName={currentFeedType}
-            />
+            <Pane flex="5">
+              <Heading is="h3" size={600} marginBottom={majorScale(3)}>
+                {currentFeedType}
+              </Heading>
+              {!!esperDataTypeFields.length && (
+                <FeedTypesTable fields={esperDataTypeFields} />
+              )}
+              {!esperDataTypeFields.length && (
+                <Text>This feed type currently has no fields.</Text>
+              )}
+            </Pane>
           </Pane>
         )}
       </Pane>
