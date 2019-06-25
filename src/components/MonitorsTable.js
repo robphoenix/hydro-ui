@@ -15,14 +15,19 @@ import MonitorMenuCell from './MonitorMenuCell'
 import useSearch from '../hooks/useSearch'
 
 const MonitorsTable = ({ monitors }) => {
-  const [monitorsStatus, setMonitorsStatus] = React.useState('online')
   const [selectedCategories, setSelectedCategories] = React.useState([])
   const [
     filterCategoriesButtonText,
     setFilterCategoriesButtonText,
   ] = React.useState(``)
 
-  const { handleSearchChange, matchesSearchQuery, statusOptions } = useSearch()
+  const {
+    handleSearchChange,
+    matchesSearchQuery,
+    statusOptions,
+    status,
+    handleStatusChange,
+  } = useSearch()
 
   const categoryOptions = Array.from(
     new Set(
@@ -47,7 +52,7 @@ const MonitorsTable = ({ monitors }) => {
       const term = `${monitor.name} ${monitor.description}`.toLowerCase()
 
       return (
-        monitor.status === monitorsStatus &&
+        monitor.status === status &&
         matchesSearchQuery(term) &&
         hasSelectedCategories(monitor.categories, selectedCategories)
       )
@@ -73,8 +78,8 @@ const MonitorsTable = ({ monitors }) => {
         <SegmentedControl
           width={240}
           options={statusOptions}
-          value={monitorsStatus}
-          onChange={setMonitorsStatus}
+          value={status}
+          onChange={handleStatusChange}
           marginRight={majorScale(2)}
         />
 

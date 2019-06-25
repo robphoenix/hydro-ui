@@ -35,8 +35,8 @@ const useSearch = () => {
     return match && match.length > 0
   }
 
-  const handleStatusChange = (item) => {
-    dispatch({ type: `SET_VALUE`, payload: { status: item.value } })
+  const handleStatusChange = (value) => {
+    dispatch({ type: `SET_VALUE`, payload: { status: value } })
   }
 
   const statusOptions = [
