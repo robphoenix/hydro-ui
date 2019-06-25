@@ -2,7 +2,7 @@ import React from 'react'
 
 import { setNestedObjectValues } from '../utils/utils'
 
-// https://codesandbox.io/s/pp3k64jj1x
+// derived from https://codesandbox.io/s/pp3k64jj1x
 
 function reducer(state, action) {
   switch (action.type) {
