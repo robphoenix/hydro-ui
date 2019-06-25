@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table, Pane, majorScale, SelectMenu, Button } from 'evergreen-ui'
 
-import useSearch from '../../hooks/useSearch'
+import useMonitorsFilters from '../../hooks/useMonitorsFilters'
 import {
   ActionNameCell,
   ActionTypeBadge,
@@ -14,7 +14,7 @@ const ActionsTable = ({ actions }) => {
     label: `All Action Types`,
     value: ``,
   })
-  const { setSearchQuery, matchesSearchQuery } = useSearch()
+  const { setSearchQuery, matchesSearchQuery } = useMonitorsFilters()
 
   const isSelectedActionType = (actionType) => {
     if (!selectedActionType.value) {

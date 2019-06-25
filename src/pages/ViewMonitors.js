@@ -6,7 +6,7 @@ import MonitorsTable from '../components/MonitorsTable'
 import { useMonitors } from '../context/monitors-context'
 import FullPageSpinner from '../components/FullPageSpinner'
 import MonitorsToolbar from '../components/MonitorsToolbar'
-import useSearch from '../hooks/useSearch'
+import useMonitorsFilters from '../hooks/useMonitorsFilters'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
@@ -16,7 +16,7 @@ const ViewMonitors = () => {
     getStatusProps,
     getCategoriesProps,
     categoriesButtonText,
-  } = useSearch(monitors)
+  } = useMonitorsFilters(monitors)
 
   React.useEffect(() => {
     fetchMonitors()

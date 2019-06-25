@@ -12,7 +12,7 @@ const reducer = (state, action) => {
   }
 }
 
-const useSearch = (monitors) => {
+const useMonitorsFilters = (monitors) => {
   const [state, dispatch] = React.useReducer(reducer, {
     searchQuery: ``,
     status: `online`,
@@ -161,4 +161,4 @@ const useSearch = (monitors) => {
   }
 }
 
-export default useSearch
+export default useMonitorsFilters
