@@ -17,31 +17,16 @@ import useSearch from '../hooks/useSearch'
 const MonitorsTable = ({ monitors }) => {
   const {
     handleSearchChange,
-    matchesSearchQuery,
     statusOptions,
     status,
     handleStatusChange,
     categoryOptions,
-    hasSelectedCategories,
     categoriesButtonText,
     handleCategorySelect,
     handleCategoryDeselect,
     selectedCategories,
+    filtered,
   } = useSearch(monitors)
-
-  const filter = (monitors) => {
-    return monitors.filter((monitor) => {
-      const term = `${monitor.name} ${monitor.description}`.toLowerCase()
-
-      return (
-        monitor.status === status &&
-        matchesSearchQuery(term) &&
-        hasSelectedCategories(monitor.categories, selectedCategories)
-      )
-    })
-  }
-
-  const tableItems = filter(monitors)
 
   return (
     <Pane>
@@ -78,7 +63,7 @@ const MonitorsTable = ({ monitors }) => {
           </Table.TextHeaderCell>
         </Table.Head>
         <Table.Body height={700}>
-          {tableItems.map((monitor) => (
+          {filtered.map((monitor) => (
             <Table.Row key={monitor.id} height="auto" padding={majorScale(3)}>
               <Table.Cell flex="2">
                 <MonitorNameCell monitor={monitor} />

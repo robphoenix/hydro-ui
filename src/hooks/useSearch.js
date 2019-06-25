@@ -18,6 +18,7 @@ const useSearch = (monitors) => {
     status: `online`,
     selectedCategories: [],
     categoriesButtonText: `Filter Categories...`,
+    filtered: monitors,
   })
 
   const handleSearchChange = (value) => {
@@ -27,15 +28,18 @@ const useSearch = (monitors) => {
     })
   }
 
-  const matchesSearchQuery = (term) => {
-    const query = state.searchQuery.trim()
-    if (query === '') {
-      return true
-    }
-    const regex = new RegExp(query.toLowerCase(), 'gi')
-    const match = term.match(regex)
-    return match && match.length > 0
-  }
+  const matchesSearchQuery = React.useCallback(
+    (term) => {
+      const query = state.searchQuery.trim()
+      if (query === '') {
+        return true
+      }
+      const regex = new RegExp(query.toLowerCase(), 'gi')
+      const match = term.match(regex)
+      return match && match.length > 0
+    },
+    [state.searchQuery],
+  )
 
   const handleStatusChange = (value) => {
     dispatch({ type: `SET_VALUE`, payload: { status: value } })
@@ -113,13 +117,33 @@ const useSearch = (monitors) => {
       .some((name) => selected.includes(name))
   }
 
+  const filter = React.useCallback(
+    (monitors) => {
+      return monitors.filter((monitor) => {
+        const term = `${monitor.name} ${monitor.description}`.toLowerCase()
+
+        return (
+          monitor.status === state.status &&
+          matchesSearchQuery(term) &&
+          hasSelectedCategories(monitor.categories, state.selectedCategories)
+        )
+      })
+    },
+    [matchesSearchQuery, state.selectedCategories, state.status],
+  )
+
+  React.useEffect(() => {
+    dispatch({
+      type: `SET_VALUE`,
+      payload: { filtered: filter(monitors) },
+    })
+  }, [filter, monitors, state])
+
   return {
     handleSearchChange,
     handleStatusChange,
-    matchesSearchQuery,
     statusOptions,
     categoryOptions,
-    hasSelectedCategories,
     handleCategorySelect,
     handleCategoryDeselect,
     ...state,
