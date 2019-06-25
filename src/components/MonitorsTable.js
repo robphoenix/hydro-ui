@@ -22,13 +22,7 @@ const MonitorsTable = ({ monitors }) => {
     setFilterCategoriesButtonText,
   ] = React.useState(``)
 
-  const monitorsStatusOptions = [
-    { label: 'Online', value: 'online' },
-    { label: 'Offline', value: 'offline' },
-    { label: 'Archived', value: 'archived' },
-  ]
-
-  const { handleSearchChange, matchesSearchQuery } = useSearch()
+  const { handleSearchChange, matchesSearchQuery, statusOptions } = useSearch()
 
   const categoryOptions = Array.from(
     new Set(
@@ -78,7 +72,7 @@ const MonitorsTable = ({ monitors }) => {
       <Pane display="flex" marginBottom={majorScale(4)}>
         <SegmentedControl
           width={240}
-          options={monitorsStatusOptions}
+          options={statusOptions}
           value={monitorsStatus}
           onChange={setMonitorsStatus}
           marginRight={majorScale(2)}

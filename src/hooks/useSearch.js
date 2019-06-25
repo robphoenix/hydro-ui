@@ -2,10 +2,10 @@ import React from 'react'
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case `SET_SEARCH`:
+    case `SET_VALUE`:
       return {
         ...state,
-        searchQuery: action.payload,
+        ...action.payload,
       }
     default:
       return state
@@ -20,8 +20,8 @@ const useSearch = () => {
 
   const handleSearchChange = (value) => {
     dispatch({
-      type: `SET_SEARCH`,
-      payload: value,
+      type: `SET_VALUE`,
+      payload: { searchQuery: value },
     })
   }
 
@@ -35,9 +35,22 @@ const useSearch = () => {
     return match && match.length > 0
   }
 
+  const handleStatusChange = (item) => {
+    dispatch({ type: `SET_VALUE`, payload: { status: item.value } })
+  }
+
+  const statusOptions = [
+    { label: 'Online', value: 'online' },
+    { label: 'Offline', value: 'offline' },
+    { label: 'Archived', value: 'archived' },
+  ]
+
   return {
     handleSearchChange,
+    handleStatusChange,
     matchesSearchQuery,
+    statusOptions,
+    ...state,
   }
 }
 
