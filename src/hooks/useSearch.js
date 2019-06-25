@@ -51,6 +51,12 @@ const useSearch = (monitors) => {
     { label: 'Archived', value: 'archived' },
   ]
 
+  const getStatusProps = () => ({
+    options: statusOptions,
+    value: state.status,
+    onChange: handleStatusChange,
+  })
+
   const handleCategorySelect = (item) => {
     dispatch({
       type: `SET_VALUE`,
@@ -117,6 +123,14 @@ const useSearch = (monitors) => {
       .some((name) => selected.includes(name))
   }
 
+  const getCategoriesProps = () => ({
+    title: `Select multiple categories`,
+    options: categoryOptions,
+    selected: state.selectedCategories,
+    onSelect: handleCategorySelect,
+    onDeselect: handleCategoryDeselect,
+  })
+
   const filter = React.useCallback(
     (monitors) => {
       return monitors.filter((monitor) => {
@@ -140,12 +154,9 @@ const useSearch = (monitors) => {
   }, [filter, monitors, state])
 
   return {
+    getStatusProps,
+    getCategoriesProps,
     handleSearchChange,
-    handleStatusChange,
-    statusOptions,
-    categoryOptions,
-    handleCategorySelect,
-    handleCategoryDeselect,
     ...state,
   }
 }

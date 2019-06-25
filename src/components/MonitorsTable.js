@@ -17,14 +17,9 @@ import useSearch from '../hooks/useSearch'
 const MonitorsTable = ({ monitors }) => {
   const {
     handleSearchChange,
-    statusOptions,
-    status,
-    handleStatusChange,
-    categoryOptions,
+    getStatusProps,
+    getCategoriesProps,
     categoriesButtonText,
-    handleCategorySelect,
-    handleCategoryDeselect,
-    selectedCategories,
     filtered,
   } = useSearch(monitors)
 
@@ -33,20 +28,11 @@ const MonitorsTable = ({ monitors }) => {
       <Pane display="flex" marginBottom={majorScale(4)}>
         <SegmentedControl
           width={240}
-          options={statusOptions}
-          value={status}
-          onChange={handleStatusChange}
+          {...getStatusProps()}
           marginRight={majorScale(2)}
         />
 
-        <SelectMenu
-          isMultiSelect
-          title="Select multiple categories"
-          options={categoryOptions}
-          selected={selectedCategories}
-          onSelect={handleCategorySelect}
-          onDeselect={handleCategoryDeselect}
-        >
+        <SelectMenu isMultiSelect {...getCategoriesProps()}>
           <Button>{categoriesButtonText}</Button>
         </SelectMenu>
       </Pane>
