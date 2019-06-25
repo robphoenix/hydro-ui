@@ -1,13 +1,22 @@
 import React from 'react'
 import { Pane, Heading, majorScale, toaster } from 'evergreen-ui'
+import { navigate } from '@reach/router'
 
 import MonitorsTable from '../components/MonitorsTable'
 import { useMonitors } from '../context/monitors-context'
-import { navigate } from '@reach/router'
 import FullPageSpinner from '../components/FullPageSpinner'
+import MonitorsToolbar from '../components/MonitorsToolbar'
+import useSearch from '../hooks/useSearch'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
+  const {
+    handleSearchChange,
+    filtered,
+    getStatusProps,
+    getCategoriesProps,
+    categoriesButtonText,
+  } = useSearch(monitors)
 
   React.useEffect(() => {
     fetchMonitors()
@@ -17,7 +26,6 @@ const ViewMonitors = () => {
     if (errors.monitors) {
       const { message, cause } = errors.monitors
       toaster.warning(message, { description: cause, duration: 7 })
-
       // It feels really awkward if the redirect is too quick
       setTimeout(() => navigate(`/monitors/add`), 500)
     }
@@ -35,7 +43,19 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
         {isLoading && <FullPageSpinner height={majorScale(40)} />}
-        {!isLoading && <MonitorsTable monitors={monitors} />}
+        {!isLoading && (
+          <Pane>
+            <MonitorsToolbar
+              getStatusProps={getStatusProps}
+              getCategoriesProps={getCategoriesProps}
+              categoriesButtonText={categoriesButtonText}
+            />
+            <MonitorsTable
+              monitors={filtered}
+              handleSearchChange={handleSearchChange}
+            />
+          </Pane>
+        )}
       </Pane>
     </Pane>
   )
