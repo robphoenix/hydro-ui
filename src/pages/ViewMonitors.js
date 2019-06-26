@@ -16,7 +16,7 @@ const ViewMonitors = () => {
     status: `online`,
     selectedCategories: [],
     categoriesButtonText: `Filter Categories...`,
-    filtered: monitors,
+    original: monitors,
   }
 
   const {
@@ -25,7 +25,7 @@ const ViewMonitors = () => {
     getStatusProps,
     getCategoriesProps,
     categoriesButtonText,
-  } = useMonitorsFilters({ monitors, initialValues })
+  } = useMonitorsFilters(initialValues)
 
   const statusOptions = [
     { label: 'Online', value: 'online' },
@@ -67,7 +67,7 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
         {isLoading && <FullPageSpinner height={majorScale(40)} />}
-        {!isLoading && (
+        {!isLoading && monitors.length && (
           <Pane>
             <MonitorsToolbar
               getStatusProps={getStatusProps}

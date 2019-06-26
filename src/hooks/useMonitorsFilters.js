@@ -12,8 +12,15 @@ const reducer = (state, action) => {
   }
 }
 
-const useMonitorsFilters = ({ monitors, initialValues }) => {
+const useMonitorsFilters = (initialValues) => {
   const [state, dispatch] = React.useReducer(reducer, initialValues)
+
+  React.useEffect(() => {
+    dispatch({
+      type: `SET_VALUE`,
+      payload: { original: initialValues.original },
+    })
+  }, [initialValues.original])
 
   const handleSearchChange = (value) => {
     dispatch({
@@ -107,27 +114,24 @@ const useMonitorsFilters = ({ monitors, initialValues }) => {
     onDeselect: handleCategoryDeselect,
   })
 
-  const filter = React.useCallback(
-    (monitors) => {
-      return monitors.filter((monitor) => {
-        const term = `${monitor.name} ${monitor.description}`.toLowerCase()
+  const filter = React.useCallback((original) => {
+    return original.filter((monitor) => {
+      const term = `${monitor.name} ${monitor.description}`.toLowerCase()
 
-        return (
-          monitor.status === state.status &&
-          matchesSearchQuery(term) &&
-          hasSelectedCategories(monitor.categories, state.selectedCategories)
-        )
-      })
-    },
-    [matchesSearchQuery, state.selectedCategories, state.status],
-  )
+      return (
+        monitor.status === state.status &&
+        matchesSearchQuery(term) &&
+        hasSelectedCategories(monitor.categories, state.selectedCategories)
+      )
+    })
+  }, [matchesSearchQuery, state.selectedCategories, state.status])
 
   React.useEffect(() => {
     dispatch({
       type: `SET_VALUE`,
-      payload: { filtered: filter(monitors) },
+      payload: { filtered: filter(state.original) },
     })
-  }, [filter, monitors, state])
+  }, [filter, state.original])
 
   return {
     getStatusProps,
