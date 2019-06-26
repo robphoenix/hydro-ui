@@ -6,11 +6,20 @@ import MonitorsTable from '../components/MonitorsTable'
 import { useMonitors } from '../context/monitors-context'
 import FullPageSpinner from '../components/FullPageSpinner'
 import MonitorsToolbar from '../components/MonitorsToolbar'
-import useMonitorsFilters from '../hooks/useMonitorsFilters'
+import useFilter from '../hooks/useFilter'
+import {
+  isStatus,
+  matchesSearchQuery,
+  hasSelectedCategories,
+} from '../utils/filters'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
   const [buttonText, setButtonText] = React.useState(`Filter Categories...`)
+
+  React.useEffect(() => {
+    fetchMonitors()
+  }, [fetchMonitors])
 
   const initialValues = {
     searchQuery: ``,
@@ -19,13 +28,25 @@ const ViewMonitors = () => {
     original: monitors,
   }
 
+  const onFilter = (item, state) => {
+    const { status, searchQuery, categories } = state
+    return (
+      isStatus(item, status) &&
+      matchesSearchQuery(
+        `${item.name} ${item.description}`.toLowerCase(),
+        searchQuery,
+      ) &&
+      hasSelectedCategories(item.categories, categories)
+    )
+  }
+
   const {
     handleTableSearchChange,
     filtered,
     getSegmentedControlProps,
     getSelectMenuProps,
     categories,
-  } = useMonitorsFilters(initialValues)
+  } = useFilter({ initialValues, onFilter })
 
   const statusOptions = [
     { label: 'Online', value: 'online' },
@@ -55,10 +76,6 @@ const ViewMonitors = () => {
         break
     }
   }, [categories])
-
-  React.useEffect(() => {
-    fetchMonitors()
-  }, [fetchMonitors])
 
   React.useEffect(() => {
     if (errors.monitors) {

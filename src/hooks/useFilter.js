@@ -1,9 +1,4 @@
 import React from 'react'
-import {
-  matchesSearchQuery,
-  hasSelectedCategories,
-  isStatus,
-} from '../utils/filters'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -17,7 +12,8 @@ const reducer = (state, action) => {
   }
 }
 
-const useMonitorsFilters = (initialValues) => {
+const useFilter = (props) => {
+  const { initialValues, onFilter } = props
   const [state, dispatch] = React.useReducer(reducer, {
     ...initialValues,
     filtered: initialValues.original,
@@ -70,27 +66,16 @@ const useMonitorsFilters = (initialValues) => {
     onDeselect: handleDeselect(fieldName),
   })
 
-  const filter = React.useCallback(
-    (original) => {
-      return original.filter((item) => {
-        const term = `${item.name} ${item.description}`.toLowerCase()
-
-        return (
-          isStatus(item, state.status) &&
-          matchesSearchQuery(term, state.searchQuery) &&
-          hasSelectedCategories(item.categories, state.selectedCategories)
-        )
-      })
-    },
-    [state.searchQuery, state.selectedCategories, state.status],
-  )
-
   React.useEffect(() => {
+    const filter = (original) => {
+      return original.filter((item) => onFilter(item, state))
+    }
+
     dispatch({
       type: `SET_VALUE`,
       payload: { filtered: filter(state.original) },
     })
-  }, [filter, state.original])
+  }, [onFilter, state])
 
   return {
     getSegmentedControlProps,
@@ -100,4 +85,4 @@ const useMonitorsFilters = (initialValues) => {
   }
 }
 
-export default useMonitorsFilters
+export default useFilter

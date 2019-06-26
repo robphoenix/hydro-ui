@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table, Pane, majorScale, SelectMenu, Button } from 'evergreen-ui'
 
-import useMonitorsFilters from '../../hooks/useMonitorsFilters'
+import useMonitorsFilters from '../../hooks/useFilter'
 import {
   ActionNameCell,
   ActionTypeBadge,
