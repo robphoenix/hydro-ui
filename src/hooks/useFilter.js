@@ -13,7 +13,7 @@ const reducer = (state, action) => {
 }
 
 const useFilter = (props) => {
-  const { initialValues, onFilter } = props
+  const { initialValues } = props
   const [state, dispatch] = React.useReducer(reducer, {
     ...initialValues,
     filtered: initialValues.original,
@@ -80,21 +80,6 @@ const useFilter = (props) => {
       onSelect: handleSelect(fieldName),
     }
   }
-
-  const filter = React.useCallback(
-    (original) => {
-      return original.filter((item) => onFilter(item, state))
-    },
-    [onFilter, state],
-  )
-
-  React.useEffect(() => {
-    const filtered = filter(state.original)
-    dispatch({
-      type: `SET_VALUE`,
-      payload: { filtered },
-    })
-  }, [filter, state.original])
 
   return {
     getSegmentedControlProps,

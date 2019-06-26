@@ -21,32 +21,33 @@ const ViewMonitors = () => {
     fetchMonitors()
   }, [fetchMonitors])
 
-  const initialValues = {
-    searchQuery: ``,
-    status: `online`,
-    categories: [],
-    original: monitors,
-  }
-
-  const onFilter = (item, state) => {
-    const { status, searchQuery, categories } = state
-    return (
-      isStatus(item, status) &&
-      matchesSearchQuery(
-        `${item.name} ${item.description}`.toLowerCase(),
-        searchQuery,
-      ) &&
-      hasSelectedCategories(item.categories, categories)
-    )
+  const filter = (monitors) => {
+    return monitors.filter((monitor) => {
+      return (
+        isStatus(monitor, status) &&
+        matchesSearchQuery(
+          `${monitor.name} ${monitor.description}`.toLowerCase(),
+          searchQuery,
+        ) &&
+        hasSelectedCategories(monitor.categories, categories)
+      )
+    })
   }
 
   const {
     handleTableSearchChange,
-    filtered,
     getSegmentedControlProps,
     getMultiSelectMenuProps,
     categories,
-  } = useFilter({ initialValues, onFilter })
+    status,
+    searchQuery,
+  } = useFilter({
+    searchQuery: ``,
+    status: `online`,
+    categories: [],
+  })
+
+  const filtered = filter(monitors)
 
   const statusOptions = [
     { label: 'Online', value: 'online' },
@@ -64,17 +65,20 @@ const ViewMonitors = () => {
   ).map((label) => ({ label, value: label }))
 
   React.useEffect(() => {
-    switch (categories.length) {
-      case 0:
-        setButtonText(`Filter Categories...`)
-        break
-      case 1:
-        setButtonText(`${categories[0]} selected`)
-        break
-      default:
-        setButtonText(`${categories.length} categories selected`)
-        break
+    const getCategoriesButtonText = () => {
+      switch (categories.length) {
+        case 0:
+          setButtonText(`Filter Categories...`)
+          break
+        case 1:
+          setButtonText(`${categories[0]} selected`)
+          break
+        default:
+          setButtonText(`${categories.length} categories selected`)
+          break
+      }
     }
+    getCategoriesButtonText()
   }, [categories])
 
   React.useEffect(() => {
