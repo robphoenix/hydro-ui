@@ -21,19 +21,6 @@ const ViewMonitors = () => {
     fetchMonitors()
   }, [fetchMonitors])
 
-  const filter = (monitors) => {
-    return monitors.filter((monitor) => {
-      return (
-        isStatus(monitor, status) &&
-        matchesSearchQuery(
-          `${monitor.name} ${monitor.description}`.toLowerCase(),
-          searchQuery,
-        ) &&
-        hasSelectedCategories(monitor.categories, categories)
-      )
-    })
-  }
-
   const {
     handleTableSearchChange,
     getSegmentedControlProps,
@@ -46,6 +33,19 @@ const ViewMonitors = () => {
     status: `online`,
     categories: [],
   })
+
+  const filter = (monitors) => {
+    return monitors.filter((monitor) => {
+      return (
+        isStatus(monitor, status) &&
+        matchesSearchQuery(
+          `${monitor.name} ${monitor.description}`.toLowerCase(),
+          searchQuery,
+        ) &&
+        hasSelectedCategories(monitor.categories, categories)
+      )
+    })
+  }
 
   const filtered = filter(monitors)
 

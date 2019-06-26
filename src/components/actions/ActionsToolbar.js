@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pane, majorScale, SelectMenu, Button } from 'evergreen-ui'
 
-const ActionsToolbar = ({ options, selected, handleSelect }) => {
+const ActionsToolbar = ({ options, getProps, actionType }) => {
   return (
     <Pane marginBottom={majorScale(4)}>
       <SelectMenu
@@ -9,10 +9,9 @@ const ActionsToolbar = ({ options, selected, handleSelect }) => {
         hasFilter={false}
         title="Select action type"
         options={options}
-        selected={selected.value}
-        onSelect={handleSelect}
+        {...getProps(`actionType`)}
       >
-        <Button>{`${selected.label} selected`}</Button>
+        <Button>{`${actionType.label} selected`}</Button>
       </SelectMenu>
     </Pane>
   )

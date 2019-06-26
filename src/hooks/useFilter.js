@@ -12,19 +12,10 @@ const reducer = (state, action) => {
   }
 }
 
-const useFilter = (props) => {
-  const { initialValues } = props
+const useFilter = (initialValues) => {
   const [state, dispatch] = React.useReducer(reducer, {
     ...initialValues,
-    filtered: initialValues.original,
   })
-
-  React.useEffect(() => {
-    dispatch({
-      type: `SET_VALUE`,
-      payload: { original: initialValues.original },
-    })
-  }, [initialValues.original])
 
   const handleTableSearchChange = (value) => {
     dispatch({
@@ -70,13 +61,13 @@ const useFilter = (props) => {
   const handleSelect = (fieldName) => (item) => {
     dispatch({
       type: `SET_VALUE`,
-      payload: { [fieldName]: item.value },
+      payload: { [fieldName]: item },
     })
   }
 
   const getSelectMenuProps = (fieldName) => {
     return {
-      selected: state[fieldName],
+      selected: state[fieldName].value,
       onSelect: handleSelect(fieldName),
     }
   }

@@ -5,6 +5,7 @@ import { navigate } from '@reach/router'
 import { ActionsTable } from '../components/actions'
 import ActionsToolbar from '../components/actions/ActionsToolbar'
 import { isSelectedActionType, matchesSearchQuery } from '../utils/filters'
+import useFilter from '../hooks/useFilter'
 
 const ViewActions = () => {
   const { allActions, fetchActions, errors, isLoading } = useMonitors()
@@ -35,17 +36,22 @@ const ViewActions = () => {
     { label: `Miscellaneous`, value: `misc` },
   ]
 
-  const [selectedActionType, setSelectedActionType] = React.useState(
-    actionTypeOptions[0],
-  )
-  const [searchQuery, setSearchQuery] = React.useState(``)
+  const {
+    handleTableSearchChange,
+    getSelectMenuProps,
+    actionType,
+    searchQuery,
+  } = useFilter({
+    searchQuery: ``,
+    actionType: actionTypeOptions[0],
+  })
 
   const filter = (actions) => {
     return actions.filter((action) => {
       const term = `${action.name} ${action.description}`.toLowerCase()
       return (
         matchesSearchQuery(term, searchQuery) &&
-        isSelectedActionType(action.actionType, selectedActionType)
+        isSelectedActionType(action.actionType, actionType)
       )
     })
   }
@@ -77,12 +83,13 @@ const ViewActions = () => {
           <Pane>
             <ActionsToolbar
               options={actionTypeOptions}
-              selected={selectedActionType}
-              handleSelect={(item) => {
-                setSelectedActionType(item)
-              }}
+              getProps={getSelectMenuProps}
+              actionType={actionType}
             />
-            <ActionsTable actions={filtered} handleChange={setSearchQuery} />
+            <ActionsTable
+              actions={filtered}
+              handleChange={handleTableSearchChange}
+            />
           </Pane>
         )}
       </Pane>
