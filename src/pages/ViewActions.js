@@ -4,7 +4,7 @@ import { toaster, Pane, Heading, majorScale, Spinner } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 import { ActionsTable } from '../components/actions'
 import ActionsToolbar from '../components/actions/ActionsToolbar'
-import useSearch from '../hooks/useSearch'
+import { isSelectedActionType, matchesSearchQuery } from '../utils/filters'
 
 const ViewActions = () => {
   const { allActions, fetchActions, errors, isLoading } = useMonitors()
@@ -23,27 +23,6 @@ const ViewActions = () => {
     }
   }, [errors.allActions])
 
-  const [selectedActionType, setSelectedActionType] = React.useState({
-    label: `All Action Types`,
-    value: ``,
-  })
-  const { setSearchQuery, matchesSearchQuery } = useSearch()
-
-  const isSelectedActionType = (actionType) => {
-    if (!selectedActionType.value) {
-      return true
-    }
-    return selectedActionType.value === actionType
-  }
-
-  const filter = (actions) => {
-    return actions.filter((action) => {
-      const term = `${action.name} ${action.description}`.toLowerCase()
-
-      return matchesSearchQuery(term) && isSelectedActionType(action.actionType)
-    })
-  }
-
   const actionTypeOptions = [
     { label: `All Action Types`, value: `` },
     { label: `Block`, value: `block` },
@@ -55,6 +34,21 @@ const ViewActions = () => {
     { label: `Store Analysis`, value: `storeAnalysis` },
     { label: `Miscellaneous`, value: `misc` },
   ]
+
+  const [selectedActionType, setSelectedActionType] = React.useState(
+    actionTypeOptions[0],
+  )
+  const [searchQuery, setSearchQuery] = React.useState(``)
+
+  const filter = (actions) => {
+    return actions.filter((action) => {
+      const term = `${action.name} ${action.description}`.toLowerCase()
+      return (
+        matchesSearchQuery(term, searchQuery) &&
+        isSelectedActionType(action.actionType, selectedActionType)
+      )
+    })
+  }
 
   const filtered = filter(allActions)
 
