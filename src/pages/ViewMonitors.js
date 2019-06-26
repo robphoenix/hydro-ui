@@ -10,13 +10,22 @@ import useMonitorsFilters from '../hooks/useMonitorsFilters'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
+
+  const initialValues = {
+    searchQuery: ``,
+    status: `online`,
+    selectedCategories: [],
+    categoriesButtonText: `Filter Categories...`,
+    filtered: monitors,
+  }
+
   const {
     handleSearchChange,
     filtered,
     getStatusProps,
     getCategoriesProps,
     categoriesButtonText,
-  } = useMonitorsFilters(monitors)
+  } = useMonitorsFilters({ monitors, initialValues })
 
   const statusOptions = [
     { label: 'Online', value: 'online' },

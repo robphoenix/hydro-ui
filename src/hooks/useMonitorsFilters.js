@@ -12,14 +12,8 @@ const reducer = (state, action) => {
   }
 }
 
-const useMonitorsFilters = (monitors) => {
-  const [state, dispatch] = React.useReducer(reducer, {
-    searchQuery: ``,
-    status: `online`,
-    selectedCategories: [],
-    categoriesButtonText: `Filter Categories...`,
-    filtered: monitors,
-  })
+const useMonitorsFilters = ({ monitors, initialValues }) => {
+  const [state, dispatch] = React.useReducer(reducer, initialValues)
 
   const handleSearchChange = (value) => {
     dispatch({
