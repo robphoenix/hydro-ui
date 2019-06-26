@@ -44,7 +44,7 @@ const ViewMonitors = () => {
     handleTableSearchChange,
     filtered,
     getSegmentedControlProps,
-    getSelectMenuProps,
+    getMultiSelectMenuProps,
     categories,
   } = useFilter({ initialValues, onFilter })
 
@@ -103,7 +103,7 @@ const ViewMonitors = () => {
             <MonitorsToolbar
               getStatusProps={getSegmentedControlProps}
               statusOptions={statusOptions}
-              getCategoriesProps={getSelectMenuProps}
+              getCategoriesProps={getMultiSelectMenuProps}
               categoriesButtonText={buttonText}
               categoriesOptions={categoryOptions}
             />

@@ -44,7 +44,7 @@ const useFilter = (props) => {
     }
   }
 
-  const handleSelect = (fieldName) => (item) => {
+  const handleMultiSelect = (fieldName) => (item) => {
     dispatch({
       type: `SET_VALUE`,
       payload: {
@@ -53,32 +53,52 @@ const useFilter = (props) => {
     })
   }
 
-  const handleDeselect = (fieldName) => (item) => {
+  const handleMultiDeselect = (fieldName) => (item) => {
     const current = state[fieldName]
     const updated = current.filter((_, i) => i !== current.indexOf(item.value))
-
     dispatch({ type: `SET_VALUE`, payload: { [fieldName]: updated } })
   }
 
-  const getSelectMenuProps = (fieldName) => ({
-    selected: state[fieldName],
-    onSelect: handleSelect(fieldName),
-    onDeselect: handleDeselect(fieldName),
-  })
-
-  React.useEffect(() => {
-    const filter = (original) => {
-      return original.filter((item) => onFilter(item, state))
+  const getMultiSelectMenuProps = (fieldName) => {
+    return {
+      selected: state[fieldName],
+      onSelect: handleMultiSelect(fieldName),
+      onDeselect: handleMultiDeselect(fieldName),
     }
+  }
 
+  const handleSelect = (fieldName) => (item) => {
     dispatch({
       type: `SET_VALUE`,
-      payload: { filtered: filter(state.original) },
+      payload: { [fieldName]: item.value },
     })
-  }, [onFilter, state])
+  }
+
+  const getSelectMenuProps = (fieldName) => {
+    return {
+      selected: state[fieldName],
+      onSelect: handleSelect(fieldName),
+    }
+  }
+
+  const filter = React.useCallback(
+    (original) => {
+      return original.filter((item) => onFilter(item, state))
+    },
+    [onFilter, state],
+  )
+
+  React.useEffect(() => {
+    const filtered = filter(state.original)
+    dispatch({
+      type: `SET_VALUE`,
+      payload: { filtered },
+    })
+  }, [filter, state.original])
 
   return {
     getSegmentedControlProps,
+    getMultiSelectMenuProps,
     getSelectMenuProps,
     handleTableSearchChange,
     ...state,

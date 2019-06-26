@@ -21,4 +21,16 @@ const isStatus = (monitor, status) => {
   return monitor.status === status
 }
 
-export { matchesSearchQuery, hasSelectedCategories, isStatus }
+const isSelectedActionType = (actionType, selected) => {
+  if (!selected.value) {
+    return true
+  }
+  return selected.value === actionType
+}
+
+export {
+  matchesSearchQuery,
+  hasSelectedCategories,
+  isStatus,
+  isSelectedActionType,
+}
