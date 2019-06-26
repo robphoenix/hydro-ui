@@ -19,7 +19,7 @@ const MonitorsToolbar = ({
       <SegmentedControl
         width={240}
         options={statusOptions}
-        {...getStatusProps()}
+        {...getStatusProps(`status`)}
         marginRight={majorScale(2)}
       />
 
@@ -27,7 +27,7 @@ const MonitorsToolbar = ({
         isMultiSelect
         title="Select multiple categories"
         options={categoriesOptions}
-        {...getCategoriesProps()}
+        {...getCategoriesProps(`categories`)}
       >
         <Button>{categoriesButtonText}</Button>
       </SelectMenu>

@@ -1,4 +1,9 @@
 import React from 'react'
+import {
+  matchesSearchQuery,
+  hasSelectedCategories,
+  isStatus,
+} from '../utils/filters'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -13,7 +18,10 @@ const reducer = (state, action) => {
 }
 
 const useMonitorsFilters = (initialValues) => {
-  const [state, dispatch] = React.useReducer(reducer, initialValues)
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...initialValues,
+    filtered: initialValues.original,
+  })
 
   React.useEffect(() => {
     dispatch({
@@ -22,109 +30,60 @@ const useMonitorsFilters = (initialValues) => {
     })
   }, [initialValues.original])
 
-  const handleSearchChange = (value) => {
+  const handleTableSearchChange = (value) => {
     dispatch({
       type: `SET_VALUE`,
       payload: { searchQuery: value },
     })
   }
 
-  const matchesSearchQuery = React.useCallback(
-    (term) => {
-      const query = state.searchQuery.trim()
-      if (query === '') {
-        return true
-      }
-      const regex = new RegExp(query.toLowerCase(), 'gi')
-      const match = term.match(regex)
-      return match && match.length > 0
+  const handleSegmentedControlChange = (fieldName) => (value) => {
+    dispatch({ type: `SET_VALUE`, payload: { [fieldName]: value } })
+  }
+
+  const getSegmentedControlProps = (fieldName) => {
+    return {
+      value: state[fieldName],
+      onChange: handleSegmentedControlChange(fieldName),
+    }
+  }
+
+  const handleSelect = (fieldName) => (item) => {
+    dispatch({
+      type: `SET_VALUE`,
+      payload: {
+        [fieldName]: [...state[fieldName], item.value],
+      },
+    })
+  }
+
+  const handleDeselect = (fieldName) => (item) => {
+    const current = state[fieldName]
+    const updated = current.filter((_, i) => i !== current.indexOf(item.value))
+
+    dispatch({ type: `SET_VALUE`, payload: { [fieldName]: updated } })
+  }
+
+  const getSelectMenuProps = (fieldName) => ({
+    selected: state[fieldName],
+    onSelect: handleSelect(fieldName),
+    onDeselect: handleDeselect(fieldName),
+  })
+
+  const filter = React.useCallback(
+    (original) => {
+      return original.filter((item) => {
+        const term = `${item.name} ${item.description}`.toLowerCase()
+
+        return (
+          isStatus(item, state.status) &&
+          matchesSearchQuery(term, state.searchQuery) &&
+          hasSelectedCategories(item.categories, state.selectedCategories)
+        )
+      })
     },
-    [state.searchQuery],
+    [state.searchQuery, state.selectedCategories, state.status],
   )
-
-  const handleStatusChange = (value) => {
-    dispatch({ type: `SET_VALUE`, payload: { status: value } })
-  }
-
-  const getStatusProps = () => ({
-    value: state.status,
-    onChange: handleStatusChange,
-  })
-
-  const handleCategorySelect = (item) => {
-    dispatch({
-      type: `SET_VALUE`,
-      payload: {
-        selectedCategories: [...state.selectedCategories, item.value],
-      },
-    })
-  }
-
-  const handleCategoryDeselect = (item) => {
-    const deselectedItemIndex = state.selectedCategories.indexOf(item.value)
-    const selectedCategories = state.selectedCategories.filter(
-      (_item, i) => i !== deselectedItemIndex,
-    )
-    dispatch({
-      type: `SET_VALUE`,
-      payload: {
-        selectedCategories,
-      },
-    })
-  }
-
-  React.useEffect(() => {
-    const numberOfCategories = state.selectedCategories.length
-    if (!numberOfCategories) {
-      dispatch({
-        type: `SET_VALUE`,
-        payload: { categoriesButtonText: `Filter Categories...` },
-      })
-    }
-    if (numberOfCategories === 1) {
-      dispatch({
-        type: `SET_VALUE`,
-        payload: {
-          categoriesButtonText: `${state.selectedCategories[0]} selected`,
-        },
-      })
-    }
-    if (numberOfCategories > 1) {
-      dispatch({
-        type: `SET_VALUE`,
-        payload: {
-          categoriesButtonText: `${numberOfCategories} categories selected`,
-        },
-      })
-    }
-  }, [state.selectedCategories])
-
-  const hasSelectedCategories = (categories, selected) => {
-    if (!selected || !selected.length) {
-      return true
-    }
-    return categories
-      .map((category) => category.name)
-      .some((name) => selected.includes(name))
-  }
-
-  const getCategoriesProps = () => ({
-    selected: state.selectedCategories,
-    onSelect: handleCategorySelect,
-    onDeselect: handleCategoryDeselect,
-  })
-
-  const filter = React.useCallback((original) => {
-    return original.filter((monitor) => {
-      const term = `${monitor.name} ${monitor.description}`.toLowerCase()
-
-      return (
-        monitor.status === state.status &&
-        matchesSearchQuery(term) &&
-        hasSelectedCategories(monitor.categories, state.selectedCategories)
-      )
-    })
-  }, [matchesSearchQuery, state.selectedCategories, state.status])
 
   React.useEffect(() => {
     dispatch({
@@ -134,9 +93,9 @@ const useMonitorsFilters = (initialValues) => {
   }, [filter, state.original])
 
   return {
-    getStatusProps,
-    getCategoriesProps,
-    handleSearchChange,
+    getSegmentedControlProps,
+    getSelectMenuProps,
+    handleTableSearchChange,
     ...state,
   }
 }

@@ -10,21 +10,21 @@ import useMonitorsFilters from '../hooks/useMonitorsFilters'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
+  const [buttonText, setButtonText] = React.useState(`Filter Categories...`)
 
   const initialValues = {
     searchQuery: ``,
     status: `online`,
-    selectedCategories: [],
-    categoriesButtonText: `Filter Categories...`,
+    categories: [],
     original: monitors,
   }
 
   const {
-    handleSearchChange,
+    handleTableSearchChange,
     filtered,
-    getStatusProps,
-    getCategoriesProps,
-    categoriesButtonText,
+    getSegmentedControlProps,
+    getSelectMenuProps,
+    categories,
   } = useMonitorsFilters(initialValues)
 
   const statusOptions = [
@@ -41,6 +41,20 @@ const ViewMonitors = () => {
       ),
     ),
   ).map((label) => ({ label, value: label }))
+
+  React.useEffect(() => {
+    switch (categories.length) {
+      case 0:
+        setButtonText(`Filter Categories...`)
+        break
+      case 1:
+        setButtonText(`${categories[0]} selected`)
+        break
+      default:
+        setButtonText(`${categories.length} categories selected`)
+        break
+    }
+  }, [categories])
 
   React.useEffect(() => {
     fetchMonitors()
@@ -67,18 +81,18 @@ const ViewMonitors = () => {
           Monitors
         </Heading>
         {isLoading && <FullPageSpinner height={majorScale(40)} />}
-        {!isLoading && monitors.length && (
+        {!isLoading && (
           <Pane>
             <MonitorsToolbar
-              getStatusProps={getStatusProps}
+              getStatusProps={getSegmentedControlProps}
               statusOptions={statusOptions}
-              getCategoriesProps={getCategoriesProps}
-              categoriesButtonText={categoriesButtonText}
+              getCategoriesProps={getSelectMenuProps}
+              categoriesButtonText={buttonText}
               categoriesOptions={categoryOptions}
             />
             <MonitorsTable
               monitors={filtered}
-              handleSearchChange={handleSearchChange}
+              handleSearchChange={handleTableSearchChange}
             />
           </Pane>
         )}
