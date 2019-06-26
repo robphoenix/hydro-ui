@@ -14,6 +14,7 @@ const ActionsTable = ({ actions }) => {
     label: `All Action Types`,
     value: ``,
   })
+  // TODO: create useActionsFilters or add actions to useFilters?
   const { setSearchQuery, matchesSearchQuery } = useMonitorsFilters()
 
   const isSelectedActionType = (actionType) => {

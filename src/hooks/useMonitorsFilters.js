@@ -45,14 +45,7 @@ const useMonitorsFilters = (monitors) => {
     dispatch({ type: `SET_VALUE`, payload: { status: value } })
   }
 
-  const statusOptions = [
-    { label: 'Online', value: 'online' },
-    { label: 'Offline', value: 'offline' },
-    { label: 'Archived', value: 'archived' },
-  ]
-
   const getStatusProps = () => ({
-    options: statusOptions,
     value: state.status,
     onChange: handleStatusChange,
   })
@@ -105,15 +98,6 @@ const useMonitorsFilters = (monitors) => {
     }
   }, [state.selectedCategories])
 
-  const categoryOptions = Array.from(
-    new Set(
-      monitors.reduce(
-        (prev, monitor) => [...prev, ...monitor.categories.map((c) => c.name)],
-        [],
-      ),
-    ),
-  ).map((label) => ({ label, value: label }))
-
   const hasSelectedCategories = (categories, selected) => {
     if (!selected || !selected.length) {
       return true
@@ -124,8 +108,6 @@ const useMonitorsFilters = (monitors) => {
   }
 
   const getCategoriesProps = () => ({
-    title: `Select multiple categories`,
-    options: categoryOptions,
     selected: state.selectedCategories,
     onSelect: handleCategorySelect,
     onDeselect: handleCategoryDeselect,

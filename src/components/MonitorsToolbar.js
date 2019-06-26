@@ -9,18 +9,26 @@ import {
 
 const MonitorsToolbar = ({
   getStatusProps,
+  statusOptions,
   getCategoriesProps,
+  categoriesOptions,
   categoriesButtonText,
 }) => {
   return (
     <Pane display="flex" marginBottom={majorScale(4)}>
       <SegmentedControl
         width={240}
+        options={statusOptions}
         {...getStatusProps()}
         marginRight={majorScale(2)}
       />
 
-      <SelectMenu isMultiSelect {...getCategoriesProps()}>
+      <SelectMenu
+        isMultiSelect
+        title="Select multiple categories"
+        options={categoriesOptions}
+        {...getCategoriesProps()}
+      >
         <Button>{categoriesButtonText}</Button>
       </SelectMenu>
     </Pane>

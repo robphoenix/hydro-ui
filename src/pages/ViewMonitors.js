@@ -18,6 +18,21 @@ const ViewMonitors = () => {
     categoriesButtonText,
   } = useMonitorsFilters(monitors)
 
+  const statusOptions = [
+    { label: 'Online', value: 'online' },
+    { label: 'Offline', value: 'offline' },
+    { label: 'Archived', value: 'archived' },
+  ]
+
+  const categoryOptions = Array.from(
+    new Set(
+      monitors.reduce(
+        (prev, monitor) => [...prev, ...monitor.categories.map((c) => c.name)],
+        [],
+      ),
+    ),
+  ).map((label) => ({ label, value: label }))
+
   React.useEffect(() => {
     fetchMonitors()
   }, [fetchMonitors])
@@ -47,8 +62,10 @@ const ViewMonitors = () => {
           <Pane>
             <MonitorsToolbar
               getStatusProps={getStatusProps}
+              statusOptions={statusOptions}
               getCategoriesProps={getCategoriesProps}
               categoriesButtonText={categoriesButtonText}
+              categoriesOptions={categoryOptions}
             />
             <MonitorsTable
               monitors={filtered}
