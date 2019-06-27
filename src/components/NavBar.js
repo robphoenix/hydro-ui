@@ -19,6 +19,7 @@ const MenuButton = (props) => (
     appearance="minimal"
     iconAfter="caret-down"
     marginLeft={majorScale(1)}
+    color="muted"
     {...props}
   />
 )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Heading, majorScale, Text } from 'evergreen-ui'
+import { Table, Heading, majorScale, Text, Pane } from 'evergreen-ui'
 
 const FeedTypesTable = ({ fields, handleChange, filter }) => {
   return (
@@ -24,6 +24,17 @@ const FeedTypesTable = ({ fields, handleChange, filter }) => {
         </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body height={800}>
+        {!fields ||
+          (!fields.length && (
+            <Pane
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height={majorScale(20)}
+            >
+              <Text size={600}>This feed type has no fields to view</Text>
+            </Pane>
+          ))}
         {fields &&
           !!fields.length &&
           filter(fields).map((esperData) => (
