@@ -1,11 +1,13 @@
 import React from 'react'
 import { useMonitors } from '../context/monitors-context'
-import { toaster, Pane, Heading, majorScale, Spinner } from 'evergreen-ui'
+import { toaster, Pane, Spinner } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 import { ActionsTable } from '../components/actions'
 import ActionsToolbar from '../components/actions/ActionsToolbar'
 import { isSelectedActionType, matchesSearchQuery } from '../utils/filters'
 import useFilter from '../hooks/useFilter'
+import PageHeading from '../components/PageHeading'
+import PageContainer from '../components/PageContainer'
 
 const ViewActions = () => {
   const { allActions, fetchActions, errors, isLoading } = useMonitors()
@@ -59,41 +61,33 @@ const ViewActions = () => {
   const filtered = filter(allActions)
 
   return (
-    <Pane display="flex" justifyContent="center">
-      <Pane width="60%">
-        <Heading
-          is="h2"
-          size={800}
-          marginTop="default"
-          marginBottom={majorScale(3)}
+    <PageContainer>
+      <PageHeading>actions</PageHeading>
+
+      {isLoading && (
+        <Pane
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height={400}
         >
-          Actions
-        </Heading>
-        {isLoading && (
-          <Pane
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height={400}
-          >
-            <Spinner />
-          </Pane>
-        )}
-        {!isLoading && !errors.allActions && (
-          <Pane>
-            <ActionsToolbar
-              options={actionTypeOptions}
-              getProps={getSelectMenuProps}
-              actionType={actionType}
-            />
-            <ActionsTable
-              actions={filtered}
-              handleChange={handleTableSearchChange}
-            />
-          </Pane>
-        )}
-      </Pane>
-    </Pane>
+          <Spinner />
+        </Pane>
+      )}
+      {!isLoading && !errors.allActions && (
+        <Pane>
+          <ActionsToolbar
+            options={actionTypeOptions}
+            getProps={getSelectMenuProps}
+            actionType={actionType}
+          />
+          <ActionsTable
+            actions={filtered}
+            handleChange={handleTableSearchChange}
+          />
+        </Pane>
+      )}
+    </PageContainer>
   )
 }
 

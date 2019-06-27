@@ -1,32 +1,13 @@
 import React from 'react'
 import { Table, Heading, majorScale, Text } from 'evergreen-ui'
 
-const FeedTypesTable = ({ fields }) => {
-  const [searchQuery, setSearchQuery] = React.useState(``)
-
-  const matchesSearchQuery = (esperData) => {
-    const query = searchQuery.trim()
-    if (query === '') {
-      return true
-    }
-    const regex = new RegExp(query.toLowerCase(), 'gi')
-    const term = `${esperData.name} ${esperData.help}`.toLowerCase()
-    const match = term.match(regex)
-    return match && match.length > 0
-  }
-
-  const filter = (fields) => {
-    return fields.filter((esperData) => {
-      return matchesSearchQuery(esperData)
-    })
-  }
-
+const FeedTypesTable = ({ fields, handleChange, filter }) => {
   return (
     <Table flex="5">
       <Table.Head display="flex">
         <Table.SearchHeaderCell
           flex="5"
-          onChange={setSearchQuery}
+          onChange={handleChange}
           placeholder="Search by feed type name and description..."
         />
         <Table.TextHeaderCell flex="1" textAlign="center">
@@ -43,38 +24,40 @@ const FeedTypesTable = ({ fields }) => {
         </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body height={800}>
-        {filter(fields).map((esperData) => (
-          <Table.Row
-            key={`${esperData.name}${esperData.help}`}
-            height="auto"
-            paddingY={majorScale(3)}
-          >
-            <Table.TextCell flex="4" paddingLeft={majorScale(2)}>
-              <Heading size={600} marginBottom={majorScale(2)}>
-                {esperData.name}
-              </Heading>
-              <Text
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-              >
-                {esperData.help}
-              </Text>
-            </Table.TextCell>
-            <Table.TextCell flex="1" textAlign="center">
-              {esperData.type || `-`}
-            </Table.TextCell>
-            <Table.TextCell flex="2" textAlign="center">
-              {esperData.format || `-`}
-            </Table.TextCell>
-            <Table.TextCell flex="1" textAlign="center">
-              {esperData.order || `-`}
-            </Table.TextCell>
-            <Table.TextCell flex="1" textAlign="center">
-              {esperData.javaType || `-`}
-            </Table.TextCell>
-          </Table.Row>
-        ))}
+        {fields &&
+          !!fields.length &&
+          filter(fields).map((esperData) => (
+            <Table.Row
+              key={`${esperData.name}${esperData.help}`}
+              height="auto"
+              paddingY={majorScale(3)}
+            >
+              <Table.TextCell flex="4" paddingLeft={majorScale(2)}>
+                <Heading size={600} marginBottom={majorScale(2)}>
+                  {esperData.name}
+                </Heading>
+                <Text
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                >
+                  {esperData.help}
+                </Text>
+              </Table.TextCell>
+              <Table.TextCell flex="1" textAlign="center">
+                {esperData.type || `-`}
+              </Table.TextCell>
+              <Table.TextCell flex="2" textAlign="center">
+                {esperData.format || `-`}
+              </Table.TextCell>
+              <Table.TextCell flex="1" textAlign="center">
+                {esperData.order || `-`}
+              </Table.TextCell>
+              <Table.TextCell flex="1" textAlign="center">
+                {esperData.javaType || `-`}
+              </Table.TextCell>
+            </Table.Row>
+          ))}
       </Table.Body>
     </Table>
   )

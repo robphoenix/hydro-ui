@@ -13,7 +13,7 @@ const ActionsTable = ({ actions, handleChange }) => {
     <Table>
       <Table.Head>
         <Table.SearchHeaderCell
-          flex="4"
+          flex="3"
           onChange={handleChange}
           placeholder="Search by action name and description..."
         />
@@ -24,7 +24,7 @@ const ActionsTable = ({ actions, handleChange }) => {
       <Table.Body height={700}>
         {actions.map((action) => (
           <Table.Row key={action.id} height="auto" padding={majorScale(3)}>
-            <Table.Cell flex="4">
+            <Table.Cell flex="3">
               <ActionNameCell action={action} />
             </Table.Cell>
             <Table.Cell flex="1">

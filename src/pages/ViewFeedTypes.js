@@ -1,21 +1,19 @@
 import React from 'react'
+import { Pane, toaster } from 'evergreen-ui'
+
 import { useMonitors } from '../context/monitors-context'
-import {
-  Pane,
-  Heading,
-  majorScale,
-  UnorderedList,
-  ListItem,
-  Button,
-  Text,
-} from 'evergreen-ui'
 import FeedTypesTable from '../components/FeedTypesTable'
+import PageHeading from '../components/PageHeading'
+import PageContainer from '../components/PageContainer'
+import FeedTypesToolbar from '../components/FeedTypesToolbar'
+import { matchesSearchQuery } from '../utils/filters'
 
 const ViewFeedTypes = () => {
-  const { feedTypes, fetchFeedTypes } = useMonitors()
+  const { feedTypes, fetchFeedTypes, isLoading, errors } = useMonitors()
   const [esperDataTypes, setEsperDataTypes] = React.useState([])
   const [esperDataTypeFields, setEsperDataTypeFields] = React.useState([])
-  const [currentFeedType, setCurrentFeedType] = React.useState(``)
+  const [selected, setSelected] = React.useState(``)
+  const [searchQuery, setSearchQuery] = React.useState(``)
 
   React.useEffect(() => {
     fetchFeedTypes()
@@ -24,70 +22,59 @@ const ViewFeedTypes = () => {
   React.useEffect(() => {
     const dataTypes = Object.keys(feedTypes)
     if (dataTypes && dataTypes.length) {
-      setEsperDataTypes(dataTypes.map((d) => ({ label: d, value: d })))
-      if (!currentFeedType) {
-        setCurrentFeedType(dataTypes[0])
-      }
+      setEsperDataTypes(dataTypes.map((value) => ({ label: value, value })))
     }
-  }, [currentFeedType, feedTypes])
+  }, [feedTypes])
 
   React.useEffect(() => {
     const dataTypes = Object.keys(feedTypes)
-    if (dataTypes && dataTypes.length && currentFeedType) {
-      setEsperDataTypeFields(feedTypes[currentFeedType])
+    if (dataTypes && dataTypes.length) {
+      setEsperDataTypeFields(feedTypes[selected])
     }
-  }, [currentFeedType, feedTypes])
+  }, [feedTypes, selected])
+
+  React.useEffect(() => {
+    if (errors.allActions) {
+      const { message, cause } = errors.allActions
+      toaster.warning(message, { description: cause, duration: 7 })
+    }
+  }, [errors.allActions])
+
+  const handleSelect = ({ value }) => {
+    setSelected(value)
+  }
+
+  const handleChange = (value) => {
+    setSearchQuery(value)
+  }
+
+  const filter = (fields) => {
+    return fields.filter((esperData) => {
+      const term = `${esperData.name} ${esperData.help}`.toLowerCase()
+      return matchesSearchQuery(term, searchQuery)
+    })
+  }
 
   return (
-    <Pane display="flex" alignItems="center" flexDirection="column">
-      <Pane width="60%">
-        <Heading
-          is="h2"
-          size={800}
-          marginTop="default"
-          marginBottom={majorScale(3)}
-        >
-          Monitor Feed Types
-        </Heading>
-      </Pane>
-      <Pane width="60%">
-        {esperDataTypes && !!esperDataTypes.length && (
-          <Pane display="flex" width="100%">
-            <UnorderedList listStyle="none" flex="1" paddingX={majorScale(3)}>
-              {esperDataTypes.map((option) => (
-                <ListItem key={option.value}>
-                  <Button
-                    type="button"
-                    appearance="minimal"
-                    color="muted"
-                    height={majorScale(6)}
-                    width="100%"
-                    onClick={() => {
-                      setCurrentFeedType(option.value)
-                      setEsperDataTypeFields(feedTypes[currentFeedType])
-                    }}
-                  >
-                    {option.label}
-                  </Button>
-                </ListItem>
-              ))}
-            </UnorderedList>
-
-            <Pane flex="5">
-              <Heading is="h3" size={600} marginBottom={majorScale(3)}>
-                {currentFeedType}
-              </Heading>
-              {!!esperDataTypeFields.length && (
-                <FeedTypesTable fields={esperDataTypeFields} />
-              )}
-              {!esperDataTypeFields.length && (
-                <Text>This feed type currently has no fields.</Text>
-              )}
-            </Pane>
+    <PageContainer>
+      <Pane>
+        <PageHeading>feed types</PageHeading>
+        {!isLoading && (
+          <Pane>
+            <FeedTypesToolbar
+              options={esperDataTypes}
+              handleSelect={handleSelect}
+              selected={selected}
+            />
+            <FeedTypesTable
+              fields={esperDataTypeFields}
+              handleChange={handleChange}
+              filter={filter}
+            />
           </Pane>
         )}
       </Pane>
-    </Pane>
+    </PageContainer>
   )
 }
 

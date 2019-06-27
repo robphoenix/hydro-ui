@@ -7,7 +7,6 @@ const ActionsToolbar = ({ options, getProps, actionType }) => {
       <SelectMenu
         hasTitle={false}
         hasFilter={false}
-        title="Select action type"
         options={options}
         {...getProps(`actionType`)}
       >

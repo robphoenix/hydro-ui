@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pane, Heading, majorScale, toaster } from 'evergreen-ui'
+import { Pane, majorScale, toaster } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 
 import MonitorsTable from '../components/MonitorsTable'
@@ -12,6 +12,8 @@ import {
   matchesSearchQuery,
   hasSelectedCategories,
 } from '../utils/filters'
+import PageHeading from '../components/PageHeading'
+import PageContainer from '../components/PageContainer'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
@@ -91,34 +93,25 @@ const ViewMonitors = () => {
   }, [errors.monitors])
 
   return (
-    <Pane display="flex" justifyContent="center">
-      <Pane width="60%">
-        <Heading
-          is="h2"
-          size={800}
-          marginTop="default"
-          marginBottom={majorScale(3)}
-        >
-          Monitors
-        </Heading>
-        {isLoading && <FullPageSpinner height={majorScale(40)} />}
-        {!isLoading && (
-          <Pane>
-            <MonitorsToolbar
-              getStatusProps={getSegmentedControlProps}
-              statusOptions={statusOptions}
-              getCategoriesProps={getMultiSelectMenuProps}
-              categoriesButtonText={buttonText}
-              categoriesOptions={categoryOptions}
-            />
-            <MonitorsTable
-              monitors={filtered}
-              handleSearchChange={handleTableSearchChange}
-            />
-          </Pane>
-        )}
-      </Pane>
-    </Pane>
+    <PageContainer>
+      <PageHeading>monitors</PageHeading>
+      {isLoading && <FullPageSpinner height={majorScale(40)} />}
+      {!isLoading && (
+        <Pane>
+          <MonitorsToolbar
+            getStatusProps={getSegmentedControlProps}
+            statusOptions={statusOptions}
+            getCategoriesProps={getMultiSelectMenuProps}
+            categoriesButtonText={buttonText}
+            categoriesOptions={categoryOptions}
+          />
+          <MonitorsTable
+            monitors={filtered}
+            handleSearchChange={handleTableSearchChange}
+          />
+        </Pane>
+      )}
+    </PageContainer>
   )
 }
 
