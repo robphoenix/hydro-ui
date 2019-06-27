@@ -76,11 +76,10 @@ function MonitorsProvider(props) {
     try {
       const monitors = await getMonitors()
       dispatch({ type: 'SUCCESS', payload: { monitors } })
-      console.log({ state })
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: { monitors: error } })
     }
-  }, [state])
+  }, [])
 
   const fetchMonitorById = React.useCallback(async (id) => {
     try {
@@ -146,8 +145,9 @@ function MonitorsProvider(props) {
     }
   }, [])
 
-  const closeEventBusConnections = () =>
+  const closeEventBusConnections = () => {
     state.eventBusConnections.map((eb) => eb.close())
+  }
 
   const initCachedDataConnection = React.useCallback((name) => {
     if (name) {

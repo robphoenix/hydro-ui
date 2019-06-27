@@ -2,7 +2,6 @@ import React from 'react'
 import { useMonitors } from '../context/monitors-context'
 import {
   Pane,
-  Heading,
   Text,
   majorScale,
   Button,
@@ -12,10 +11,12 @@ import {
   Code,
   Badge,
   toaster,
-  Spinner,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
+import FullPageSpinner from '../components/FullPageSpinner'
+import PageHeading from '../components/PageHeading'
+import PageContainer from '../components/PageContainer'
 
 const ViewMonitorById = ({ id }) => {
   const [headers, setHeaders] = React.useState([])
@@ -39,12 +40,20 @@ const ViewMonitorById = ({ id }) => {
 
   const togglePause = () => {
     setDataPaused(!dataPaused)
+  }
+
+  React.useEffect(() => {
     if (dataPaused) {
       closeEventBusConnections()
-    } else {
+    }
+    if (!dataPaused) {
       initLiveDataConnection(monitor.name)
     }
-  }
+    // TODO: double check that suppressing this warning is the right thing to
+    // do, see https://github.com/facebook/create-react-app/issues/6880
+    //
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataPaused])
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -61,17 +70,15 @@ const ViewMonitorById = ({ id }) => {
 
   React.useEffect(() => {
     if (monitor) {
-      const { name } = monitor
-      initLiveDataConnection(name)
+      initCachedDataConnection(monitor.name)
     }
-  }, [initLiveDataConnection, monitor])
+  }, [initCachedDataConnection, monitor])
 
   React.useEffect(() => {
     if (monitor) {
-      const { name } = monitor
-      initCachedDataConnection(name)
+      initLiveDataConnection(monitor.name)
     }
-  }, [initCachedDataConnection, monitor])
+  }, [initLiveDataConnection, monitor])
 
   React.useEffect(() => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
@@ -90,106 +97,83 @@ const ViewMonitorById = ({ id }) => {
   }, [cachedDataMessage, isLiveData])
 
   return (
-    <Pane display="flex" justifyContent="center">
-      <Pane width="75%">
-        {isLoading && (
-          <Pane
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height={400}
-          >
-            <Spinner />
+    <PageContainer width="80%">
+      {isLoading && <FullPageSpinner />}
+      {!isLoading && monitor && !!Object.keys(monitor).length && (
+        <Pane>
+          <Pane marginBottom={majorScale(3)}>
+            <PageHeading>{monitor.name}</PageHeading>
+            <Text size={600}>{monitor.description}</Text>
           </Pane>
-        )}
-        {!isLoading && monitor && !!Object.keys(monitor).length && (
-          <Pane
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            marginBottom={majorScale(4)}
-          >
-            <Heading
-              is="h2"
-              size={800}
-              marginTop="default"
-              marginBottom={majorScale(3)}
+          <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
+            <Dialog
+              isShown={showEplQuery}
+              title="EPL Query"
+              onCloseComplete={() => setShowEplQuery(false)}
+              hasFooter={false}
             >
-              {monitor.name}
-            </Heading>
-            <Text size={600} marginBottom={majorScale(3)}>
-              {monitor.description}
-            </Text>
-            <Pane display="flex" alignItems="center">
-              <Dialog
-                isShown={showEplQuery}
-                title="EPL Query"
-                onCloseComplete={() => setShowEplQuery(false)}
-                hasFooter={false}
-              >
-                <Pre maxWidth={1000} whiteSpace="pre-wrap">
-                  <Code appearance="minimal" size={500}>
-                    {monitor.query}
-                  </Code>
-                </Pre>
-              </Dialog>
-              <Button
-                onClick={togglePause}
-                disabled={!isLiveData}
-                marginRight={majorScale(2)}
-                intent="warning"
-              >
-                {dataPaused ? 'Run' : 'Pause'}
-              </Button>
-              <Button
-                onClick={() => setShowEplQuery(true)}
-                marginRight={majorScale(2)}
-              >
-                View EPL Query
-              </Button>
-              <Button
-                onClick={() => navigate(`${monitor.id}/edit`)}
-                appearance="primary"
-              >
-                Edit
-              </Button>
-              {monitor && data && (
-                <Text marginLeft={majorScale(2)}>
-                  Currently viewing{' '}
-                  {isLiveData ? (
-                    <Badge color="green">live</Badge>
-                  ) : (
-                    <Badge color="yellow">cached</Badge>
-                  )}{' '}
-                  data
-                </Text>
-              )}
-              {isLiveData && <Text>, received at {dataReceived}</Text>}
-            </Pane>
+              <Pre maxWidth={1000} whiteSpace="pre-wrap">
+                <Code appearance="minimal" size={500}>
+                  {monitor.query}
+                </Code>
+              </Pre>
+            </Dialog>
+            <Button
+              onClick={togglePause}
+              disabled={!isLiveData}
+              marginRight={majorScale(2)}
+              intent="warning"
+            >
+              {dataPaused ? 'Run' : 'Pause'}
+            </Button>
+            <Button
+              onClick={() => setShowEplQuery(true)}
+              marginRight={majorScale(2)}
+            >
+              View EPL Query
+            </Button>
+            <Button
+              onClick={() => navigate(`${monitor.id}/edit`)}
+              appearance="primary"
+            >
+              Edit
+            </Button>
+            {monitor && data && (
+              <Text marginLeft={majorScale(2)}>
+                Currently viewing{' '}
+                {isLiveData ? (
+                  <Badge color="green">live</Badge>
+                ) : (
+                  <Badge color="yellow">cached</Badge>
+                )}{' '}
+                data
+              </Text>
+            )}
+            {isLiveData && <Text>, received at {dataReceived}</Text>}
           </Pane>
-        )}
-        {monitor && data && (
-          <Table>
-            <Table.Head>
-              {headers.map((header) => (
-                <Table.TextHeaderCell key={header.n}>
-                  {header.n}
-                </Table.TextHeaderCell>
-              ))}
-            </Table.Head>
-            <Table.VirtualBody height={700}>
-              {data.map((row) => (
-                <Table.Row key={row.join('')}>
-                  {row.map((cell) => (
-                    <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
-                  ))}
-                </Table.Row>
-              ))}
-            </Table.VirtualBody>
-          </Table>
-        )}
-      </Pane>
-    </Pane>
+        </Pane>
+      )}
+      {monitor && data && (
+        <Table>
+          <Table.Head>
+            {headers.map((header) => (
+              <Table.TextHeaderCell key={header.n}>
+                {header.n}
+              </Table.TextHeaderCell>
+            ))}
+          </Table.Head>
+          <Table.VirtualBody height={700}>
+            {data.map((row) => (
+              <Table.Row key={row.join('')}>
+                {row.map((cell) => (
+                  <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.VirtualBody>
+        </Table>
+      )}
+    </PageContainer>
   )
 }
 
