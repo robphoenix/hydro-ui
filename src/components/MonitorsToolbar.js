@@ -6,6 +6,7 @@ import {
   SelectMenu,
   Button,
 } from 'evergreen-ui'
+import { navigate } from '@reach/router'
 
 const MonitorsToolbar = ({
   getStatusProps,
@@ -31,6 +32,16 @@ const MonitorsToolbar = ({
       >
         <Button>{categoriesButtonText}</Button>
       </SelectMenu>
+      <Button
+        textTransform="capitalize"
+        marginLeft="auto"
+        appearance="primary"
+        intent="success"
+        iconBefore="add"
+        onClick={() => navigate(`/monitors/add`)}
+      >
+        add new monitor
+      </Button>
     </Pane>
   )
 }
