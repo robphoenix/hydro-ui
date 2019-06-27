@@ -1,9 +1,11 @@
 import React from 'react'
 import axios from 'axios'
+import { Pane } from 'evergreen-ui'
 
 import { useAuth } from './context/auth-context'
 import AuthenticatedApp from './components/AuthenticatedApp'
 import UnauthenticatedApp from './components/UnauthenticatedApp'
+import Footer from './components/Footer'
 
 const App = () => {
   const { isLoggedIn, token } = useAuth()
@@ -32,7 +34,12 @@ const App = () => {
     return config
   })
 
-  return <div>{isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}</div>
+  return (
+    <Pane>
+      {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      <Footer />
+    </Pane>
+  )
 }
 
 export default App
