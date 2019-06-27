@@ -12,13 +12,10 @@ const Login = () => {
   }, [])
 
   return (
-    <Pane display="flex" justifyContent="center" marginTop={majorScale(5)}>
+    <Pane display="flex" justifyContent="center" marginTop={majorScale(6)}>
       <Pane width={300}>
-        <Pane display="flex" alignItems="center" marginBottom={majorScale(5)}>
-          <Logo height="48px" />
-          <Heading is="h1" size={800} marginLeft={majorScale(1)}>
-            HYDRO
-          </Heading>
+        <Pane display="flex" alignItems="center" marginBottom={majorScale(6)}>
+          <Logo />
         </Pane>
 
         <Pane marginBottom={majorScale(4)}>

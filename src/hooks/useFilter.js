@@ -13,16 +13,13 @@ const reducer = (state, action) => {
 }
 
 const useFilter = (initialValues) => {
-  const [state, dispatch] = React.useReducer(reducer, {
-    ...initialValues,
-  })
+  const [state, dispatch] = React.useReducer(reducer, initialValues)
 
-  const handleTableSearchChange = (value) => {
+  const handleTableSearchChange = (value) =>
     dispatch({
       type: `SET_VALUE`,
       payload: { searchQuery: value },
     })
-  }
 
   const handleSegmentedControlChange = (fieldName) => (value) => {
     dispatch({ type: `SET_VALUE`, payload: { [fieldName]: value } })
@@ -50,13 +47,11 @@ const useFilter = (initialValues) => {
     dispatch({ type: `SET_VALUE`, payload: { [fieldName]: updated } })
   }
 
-  const getMultiSelectMenuProps = (fieldName) => {
-    return {
-      selected: state[fieldName],
-      onSelect: handleMultiSelect(fieldName),
-      onDeselect: handleMultiDeselect(fieldName),
-    }
-  }
+  const getMultiSelectMenuProps = (fieldName) => ({
+    selected: state[fieldName],
+    onSelect: handleMultiSelect(fieldName),
+    onDeselect: handleMultiDeselect(fieldName),
+  })
 
   const handleSelect = (fieldName) => (item) => {
     dispatch({
@@ -65,12 +60,10 @@ const useFilter = (initialValues) => {
     })
   }
 
-  const getSelectMenuProps = (fieldName) => {
-    return {
-      selected: state[fieldName].value,
-      onSelect: handleSelect(fieldName),
-    }
-  }
+  const getSelectMenuProps = (fieldName) => ({
+    selected: state[fieldName].value,
+    onSelect: handleSelect(fieldName),
+  })
 
   return {
     getSegmentedControlProps,

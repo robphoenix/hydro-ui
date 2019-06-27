@@ -1,28 +1,24 @@
 import React from 'react'
 import {
   Pane,
-  Heading,
   Button,
   majorScale,
   Popover,
   Position,
   Menu,
   Text,
-  Icon,
 } from 'evergreen-ui'
 
 import Logo from './Logo'
 import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
-import { version } from '../../package.json'
 
 const MenuButton = (props) => (
   <Button
     appearance="minimal"
     iconAfter="caret-down"
-    marginLeft={majorScale(4)}
-    color="muted"
+    marginLeft={majorScale(1)}
     {...props}
   />
 )
@@ -58,19 +54,8 @@ const NavBar = () => {
       backgroundColor="white"
       zIndex="2"
     >
-      <Logo height="40px" />
-      <Heading
-        is="h1"
-        size={700}
-        marginLeft={majorScale(2)}
-        marginRight={majorScale(2)}
-      >
-        HYDRO
-      </Heading>
-      <Text size={400} marginRight={majorScale(3)}>
-        v{version}
-      </Text>
-      <Pane is="nav" display="flex" width="100%">
+      <Logo height="48px" />
+      <Pane is="nav" display="flex" width="100%" justifyContent="flex-end">
         <Popover
           position={Position.BOTTOM_LEFT}
           content={({ close }) => (
@@ -104,25 +89,17 @@ const NavBar = () => {
             </Menu>
           )}
         >
-          <Button
-            appearance="minimal"
-            iconAfter="caret-down"
-            marginLeft={majorScale(4)}
-            color="muted"
-          >
+          <MenuButton>
             <LinkTitle>actions</LinkTitle>
-          </Button>
+          </MenuButton>
         </Popover>
 
         <Button
           appearance="minimal"
-          marginLeft="auto"
           onClick={logout}
-          display="flex"
-          alignItems="center"
+          marginLeft={majorScale(4)}
         >
           <Text>Log Out {user.displayName}</Text>
-          <Icon icon="log-out" color="muted" marginLeft={majorScale(2)} />
         </Button>
       </Pane>
     </Pane>

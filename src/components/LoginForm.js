@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInputField, Button, majorScale, Alert } from 'evergreen-ui'
+import { TextInputField, Button, majorScale, Alert, Pane } from 'evergreen-ui'
 
 import useForm from '../hooks/useForm'
 import { useAuth } from '../context/auth-context'
@@ -30,27 +30,29 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextInputField
-        autoFocus
-        placeholder="Username"
-        label="Username"
-        name="username"
-        required
-        {...getInputFieldProps(`username`)}
-        isInvalid={errors.username && touched.username}
-        validationMessage={touched.username && errors.username}
-      />
+      <Pane marginBottom={majorScale(3)}>
+        <TextInputField
+          autoFocus
+          placeholder="Username"
+          label="Username"
+          name="username"
+          required
+          {...getInputFieldProps(`username`)}
+          isInvalid={errors.username && touched.username}
+          validationMessage={touched.username && errors.username}
+        />
 
-      <TextInputField
-        placeholder="Password"
-        label="Password"
-        type="password"
-        name="password"
-        {...getInputFieldProps(`password`)}
-        required
-        isInvalid={errors.password && touched.password}
-        validationMessage={touched.password && errors.password}
-      />
+        <TextInputField
+          placeholder="Password"
+          label="Password"
+          type="password"
+          name="password"
+          {...getInputFieldProps(`password`)}
+          required
+          isInvalid={errors.password && touched.password}
+          validationMessage={touched.password && errors.password}
+        />
+      </Pane>
 
       <Button type="submit" appearance="primary" textTransform="uppercase">
         log in
