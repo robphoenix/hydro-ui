@@ -19,11 +19,8 @@ import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
 import useCacheWindowDurations from '../hooks/useCacheWindowDurations'
 
-const CreateMonitorForm = ({
-  initialValues,
-  createMonitor,
-  disableNameInput,
-}) => {
+const CreateMonitorForm = (props) => {
+  const { initialValues, createMonitor } = props
   const nameMaxChars = 50
   const categoriesMax = 4
   const priorityOptions = [
@@ -162,10 +159,10 @@ const CreateMonitorForm = ({
     <form onSubmit={handleSubmit}>
       <TextInputField
         autoFocus
-        disabled={disableNameInput}
+        disabled={props.disableNameInput}
         label="Monitor Name"
         description={
-          disableNameInput
+          props.disableNameInput
             ? `Monitor name cannot be edited`
             : `Monitor Name must be unique, and cannot contain punctuation marks`
         }

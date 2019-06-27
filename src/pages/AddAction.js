@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Pane,
-  majorScale,
-  Heading,
-  UnorderedList,
-  ListItem,
-  Button,
-} from 'evergreen-ui'
+import { Pane, UnorderedList, ListItem, Button } from 'evergreen-ui'
 
 import { useMonitors } from '../context/monitors-context'
 import CreateBlockActionForm from '../components/CreateBlockActionForm'
@@ -15,6 +8,8 @@ import CreateEmailBatchActionForm from '../components/CreateEmailBatchActionForm
 import CreateEmailAlertActionForm from '../components/CreateEmailAlertActionForm'
 import CreateMiscActionForm from '../components/CreateMiscActionForm'
 import CreateStoreActionForm from '../components/CreateStoreActionForm'
+import PageContainer from '../components/PageContainer'
+import PageHeading from '../components/PageHeading'
 
 const AddAction = () => {
   const [actionType, setActionType] = React.useState(`block`)
@@ -35,63 +30,54 @@ const AddAction = () => {
   }
 
   return (
-    <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
-      <Pane width="50%">
-        <Heading
-          is="h2"
-          size={800}
-          marginTop="default"
-          marginBottom={majorScale(3)}
-        >
-          Add Action
-        </Heading>
-        <Pane display="flex" width="100%">
-          <UnorderedList listStyle="none" flex="1">
-            {actionTypeOptions.map((option) => (
-              <ListItem key={option.value}>
-                <Button
-                  type="button"
-                  appearance="minimal"
-                  color="muted"
-                  onClick={() => setActionType(option.value)}
-                >
-                  {option.label}
-                </Button>
-              </ListItem>
-            ))}
-          </UnorderedList>
-          <Pane flex="3">
-            {actionType === `block` && (
-              <CreateBlockActionForm createAction={addAction} />
-            )}
-            {actionType === `emailRate` && (
-              <CreateEmailRateActionForm
-                createAction={addAction}
-                validateEmailAddress={validateEmailAddress}
-              />
-            )}
-            {actionType === `emailBatch` && (
-              <CreateEmailBatchActionForm
-                createAction={addAction}
-                validateEmailAddress={validateEmailAddress}
-              />
-            )}
-            {actionType === `emailAlert` && (
-              <CreateEmailAlertActionForm
-                createAction={addAction}
-                validateEmailAddress={validateEmailAddress}
-              />
-            )}
-            {actionType === `store` && (
-              <CreateStoreActionForm createAction={addAction} />
-            )}
-            {actionType === `misc` && (
-              <CreateMiscActionForm createAction={addAction} />
-            )}
-          </Pane>
+    <PageContainer width="50%">
+      <PageHeading>add action</PageHeading>
+      <Pane display="flex" width="100%">
+        <UnorderedList listStyle="none" flex="1">
+          {actionTypeOptions.map((option) => (
+            <ListItem key={option.value}>
+              <Button
+                type="button"
+                appearance="minimal"
+                color="muted"
+                onClick={() => setActionType(option.value)}
+              >
+                {option.label}
+              </Button>
+            </ListItem>
+          ))}
+        </UnorderedList>
+        <Pane flex="3">
+          {actionType === `block` && (
+            <CreateBlockActionForm createAction={addAction} />
+          )}
+          {actionType === `emailRate` && (
+            <CreateEmailRateActionForm
+              createAction={addAction}
+              validateEmailAddress={validateEmailAddress}
+            />
+          )}
+          {actionType === `emailBatch` && (
+            <CreateEmailBatchActionForm
+              createAction={addAction}
+              validateEmailAddress={validateEmailAddress}
+            />
+          )}
+          {actionType === `emailAlert` && (
+            <CreateEmailAlertActionForm
+              createAction={addAction}
+              validateEmailAddress={validateEmailAddress}
+            />
+          )}
+          {actionType === `store` && (
+            <CreateStoreActionForm createAction={addAction} />
+          )}
+          {actionType === `misc` && (
+            <CreateMiscActionForm createAction={addAction} />
+          )}
         </Pane>
       </Pane>
-    </Pane>
+    </PageContainer>
   )
 }
 

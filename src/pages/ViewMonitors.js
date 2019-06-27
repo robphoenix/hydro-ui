@@ -85,6 +85,8 @@ const ViewMonitors = () => {
 
   React.useEffect(() => {
     if (errors.monitors) {
+      console.log(errors.monitors)
+
       const { message, cause } = errors.monitors
       toaster.warning(message, { description: cause, duration: 7 })
       // It feels really awkward if the redirect is too quick

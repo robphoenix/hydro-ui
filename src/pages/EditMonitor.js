@@ -1,8 +1,9 @@
 import React from 'react'
-import { Pane, majorScale, Heading } from 'evergreen-ui'
 
 import { useMonitors } from '../context/monitors-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
+import PageContainer from '../components/PageContainer'
+import PageHeading from '../components/PageHeading'
 
 const EditMonitor = ({ id }) => {
   const { updateMonitor, monitor, fetchMonitorById } = useMonitors()
@@ -36,25 +37,16 @@ const EditMonitor = ({ id }) => {
   }, [monitor])
 
   return (
-    <Pane display="flex" justifyContent="center" marginBottom={majorScale(4)}>
-      <Pane width="30%">
-        <Heading
-          is="h2"
-          size={800}
-          marginTop="default"
-          marginBottom={majorScale(3)}
-        >
-          Edit Monitor
-        </Heading>
-        {Object.keys(initialValues).length > 0 && (
-          <CreateMonitorForm
-            disableNameInput
-            initialValues={initialValues}
-            createMonitor={updateMonitor}
-          />
-        )}
-      </Pane>
-    </Pane>
+    <PageContainer width="40%">
+      <PageHeading>edit monitor</PageHeading>
+      {Object.keys(initialValues).length > 0 && (
+        <CreateMonitorForm
+          disableNameInput
+          initialValues={initialValues}
+          createMonitor={updateMonitor}
+        />
+      )}
+    </PageContainer>
   )
 }
 

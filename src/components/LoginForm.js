@@ -54,7 +54,12 @@ const LoginForm = () => {
         />
       </Pane>
 
-      <Button type="submit" appearance="primary" textTransform="uppercase">
+      <Button
+        type="submit"
+        appearance="primary"
+        textTransform="uppercase"
+        letterSpacing="0.1em"
+      >
         log in
       </Button>
       {submitError && (
