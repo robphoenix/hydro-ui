@@ -11,6 +11,7 @@ import ActionPropertiesCell from './ActionPropertiesCell'
 import ActionsTable from './ActionsTable'
 import ActionTypeBadge from './ActionTypeBadge'
 import ActionBlockProperties from './ActionBlockProperties'
+import ActionEmailRateProperties from './ActionEmailRateProperties'
 
 export {
   ActionDescription,
@@ -26,4 +27,5 @@ export {
   ActionsTable,
   ActionTypeBadge,
   ActionBlockProperties,
+  ActionEmailRateProperties,
 }

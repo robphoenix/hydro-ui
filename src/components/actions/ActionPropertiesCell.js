@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Pane, Dialog } from 'evergreen-ui'
-import { ActionBlockProperties } from '.'
+import { ActionBlockProperties, ActionEmailRateProperties } from '.'
 
 const ActionPropertiesCell = ({ action }) => {
   const [showDialog, setShowDialog] = React.useState(false)
@@ -12,10 +12,13 @@ const ActionPropertiesCell = ({ action }) => {
         title="Properties"
         hasFooter={false}
         onCloseComplete={() => setShowDialog(false)}
-        width={400}
+        width={600}
       >
         {action.actionType === `block` && (
           <ActionBlockProperties metadata={action.metadata} />
+        )}
+        {action.actionType === `emailRate` && (
+          <ActionEmailRateProperties metadata={action.metadata} />
         )}
       </Dialog>
       <Button appearance="minimal" onClick={() => setShowDialog(true)}>
