@@ -1,7 +1,7 @@
 // @ts-nocheck
 import EventBus from 'vertx3-eventbus-client'
 
-const eventBusUrl = `http://mn2formlt0002d0:6081/eventbus`
+const eventBusUrl = `${process.env.REACT_APP_EVENTBUS_ROOT}/eventbus`
 const outputAddress = 'result.pub.output.'
 const cachedAddress = 'result.pub.cached'
 // const statusAddress = 'monitor.status'

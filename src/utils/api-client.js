@@ -1,9 +1,7 @@
 import axios from 'axios'
 
-const apiUrl = 'http://mn2formlt0001d0:6080'
-
 const client = (method, endpoint, data) => {
-  const url = `${apiUrl}/${endpoint}`
+  const url = `${process.env.REACT_APP_API_ROOT}/${endpoint}`
 
   return axios({
     method,
