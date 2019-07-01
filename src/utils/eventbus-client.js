@@ -1,7 +1,8 @@
 // @ts-nocheck
 import EventBus from 'vertx3-eventbus-client'
+import { EVENTBUS_ROOT } from './environments'
 
-const eventBusUrl = `${process.env.REACT_APP_EVENTBUS_ROOT}/eventbus`
+const eventBusUrl = `${EVENTBUS_ROOT}/eventbus`
 const outputAddress = 'result.pub.output.'
 const cachedAddress = 'result.pub.cached'
 // const statusAddress = 'monitor.status'

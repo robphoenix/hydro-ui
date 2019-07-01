@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { API_ROOT } from './environments'
 
 const client = (method, endpoint, data) => {
-  const url = `${process.env.REACT_APP_API_ROOT}/${endpoint}`
+  const url = `${API_ROOT}/${endpoint}`
 
   return axios({
     method,
