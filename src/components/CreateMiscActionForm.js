@@ -27,7 +27,8 @@ const CreateMiscActionForm = ({ createAction }) => {
     const { name, description } = values
     const actionType = `misc`
 
-    await createAction({ name, description, actionType })
+    // the api call will fail without a metadata object
+    await createAction({ name, description, actionType, metadata: {} })
     navigate(`/actions/view`)
     toaster.success(`Action created: ${name}`)
   }
