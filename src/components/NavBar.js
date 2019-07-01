@@ -13,6 +13,7 @@ import Logo from './Logo'
 import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
+import { Link } from '@reach/router'
 
 const MenuButton = (props) => (
   <Button
@@ -55,7 +56,9 @@ const NavBar = () => {
       backgroundColor="white"
       zIndex="2"
     >
-      <Logo height="48px" />
+      <Link to="/">
+        <Logo height="48px" />
+      </Link>
       <Pane is="nav" display="flex" width="100%" justifyContent="flex-end">
         <Popover
           position={Position.BOTTOM_LEFT}
