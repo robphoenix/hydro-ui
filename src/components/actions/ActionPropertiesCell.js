@@ -4,6 +4,7 @@ import {
   ActionBlockProperties,
   ActionEmailRateProperties,
   ActionEmailBatchProperties,
+  ActionEmailAlertProperties,
 } from '.'
 
 const ActionPropertiesCell = ({ action }) => {
@@ -26,6 +27,9 @@ const ActionPropertiesCell = ({ action }) => {
         )}
         {action.actionType === `emailBatch` && (
           <ActionEmailBatchProperties metadata={action.metadata} />
+        )}
+        {action.actionType === `emailAlert` && (
+          <ActionEmailAlertProperties metadata={action.metadata} />
         )}
       </Dialog>
       <Button appearance="minimal" onClick={() => setShowDialog(true)}>
