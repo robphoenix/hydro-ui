@@ -59,9 +59,9 @@ const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
 
   const onSubmit = async (values) => {
     const emailAddresses = values.emailAddresses.join(`;`)
-    const actionType = `emailRate`
-    const { name, description, emailSubject, emailText } = values
-    const metadata = { emailAddresses, emailSubject, emailText }
+    const actionType = `emailBatch`
+    const { name, description, emailSubject, emailText, emailCron } = values
+    const metadata = { emailAddresses, emailSubject, emailText, emailCron }
 
     await createAction({
       name,

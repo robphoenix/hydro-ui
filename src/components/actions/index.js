@@ -12,6 +12,7 @@ import ActionsTable from './ActionsTable'
 import ActionTypeBadge from './ActionTypeBadge'
 import ActionBlockProperties from './ActionBlockProperties'
 import ActionEmailRateProperties from './ActionEmailRateProperties'
+import ActionEmailBatchProperties from './ActionEmailBatchProperties'
 
 export {
   ActionDescription,
@@ -28,4 +29,5 @@ export {
   ActionTypeBadge,
   ActionBlockProperties,
   ActionEmailRateProperties,
+  ActionEmailBatchProperties,
 }

@@ -1,6 +1,10 @@
 import React from 'react'
 import { Button, Pane, Dialog } from 'evergreen-ui'
-import { ActionBlockProperties, ActionEmailRateProperties } from '.'
+import {
+  ActionBlockProperties,
+  ActionEmailRateProperties,
+  ActionEmailBatchProperties,
+} from '.'
 
 const ActionPropertiesCell = ({ action }) => {
   const [showDialog, setShowDialog] = React.useState(false)
@@ -19,6 +23,9 @@ const ActionPropertiesCell = ({ action }) => {
         )}
         {action.actionType === `emailRate` && (
           <ActionEmailRateProperties metadata={action.metadata} />
+        )}
+        {action.actionType === `emailBatch` && (
+          <ActionEmailBatchProperties metadata={action.metadata} />
         )}
       </Dialog>
       <Button appearance="minimal" onClick={() => setShowDialog(true)}>
