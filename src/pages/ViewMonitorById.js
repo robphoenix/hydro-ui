@@ -18,26 +18,35 @@ import {
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
+
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
+import { Order, compare, sortableIpAddress } from '../utils/sort'
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case `SET_VALUE`:
+      return {
+        ...state,
+        ...action.payload,
+      }
+    default:
+      return state
+  }
+}
 
 const ViewMonitorById = ({ id }) => {
-  const Order = {
-    NONE: 'NONE',
-    ASC: 'ASC',
-    DESC: 'DESC',
-  }
-
-  const [headers, setHeaders] = React.useState([])
-  const [headersMetadata, setHeadersMetadata] = React.useState([])
-  const [data, setData] = React.useState([])
-  const [isLiveData, setIsLiveData] = React.useState(false)
-  const [showEplQuery, setShowEplQuery] = React.useState(false)
-  const [dataPaused, setDataPaused] = React.useState(false)
-  const [dataReceived, setDataReceived] = React.useState(``)
-  // const [colToSort, setColToSort] = React.useState(``)
-  const [ordering, setOrdering] = React.useState({})
+  const [state, dispatch] = React.useReducer(reducer, {
+    headers: [],
+    headersMetadata: [],
+    data: [],
+    isLiveData: false,
+    showEplQuery: false,
+    paused: false,
+    receivedAt: ``,
+    ordering: {},
+  })
 
   const {
     monitor,
@@ -52,11 +61,11 @@ const ViewMonitorById = ({ id }) => {
   } = useMonitors()
 
   const togglePause = () => {
-    setDataPaused(!dataPaused)
+    dispatch({ type: `SET_VALUE`, payload: { paused: !state.paused } })
   }
 
   const getIconForOrder = (name) => {
-    switch (ordering[name]) {
+    switch (state.ordering[name]) {
       case Order.ASC:
         return 'arrow-up'
       case Order.DESC:
@@ -66,26 +75,17 @@ const ViewMonitorById = ({ id }) => {
     }
   }
 
-  const compare = (a, b, isAsc) => {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
-  }
-
-  const sortableIpAddress = (ip) => {
-    return ip
-      .split('.')
-      .map((octet) => octet.padStart(3, '0'))
-      .join('')
-  }
-
   const sort = (data) => {
-    const col = Object.keys(ordering)[0]
+    const col = Object.keys(state.ordering)[0]
     if (!col) {
       return data
     }
 
-    const type = headersMetadata[col] ? headersMetadata[col].type : ''
+    const type = state.headersMetadata[col]
+      ? state.headersMetadata[col].type
+      : ''
 
-    const direction = ordering[col]
+    const direction = state.ordering[col]
     if (direction === Order.NONE) {
       return data
     }
@@ -99,7 +99,7 @@ const ViewMonitorById = ({ id }) => {
             isAsc,
           )
         case 'dateTime':
-          return this.compare(new Date(a[col]), new Date(a[col]), isAsc)
+          return compare(new Date(a[col]), new Date(a[col]), isAsc)
         default:
           return compare(a[col], b[col], isAsc)
       }
@@ -108,17 +108,17 @@ const ViewMonitorById = ({ id }) => {
   }
 
   React.useEffect(() => {
-    if (dataPaused) {
+    if (state.paused) {
       closeEventBusConnections()
     }
-    if (!dataPaused) {
+    if (!state.paused) {
       initLiveDataConnection(monitor.name)
     }
     // TODO: double check that suppressing this warning is the right thing to
     // do, see https://github.com/facebook/create-react-app/issues/6880
     //
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataPaused])
+  }, [state.paused])
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -147,20 +147,25 @@ const ViewMonitorById = ({ id }) => {
 
   React.useEffect(() => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
-      setHeaders(liveDataMessage.headers)
-      setHeadersMetadata(liveDataMessage.headersMetadata)
-      setData(liveDataMessage.data)
-      setIsLiveData(true)
-      setDataReceived(dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`))
+      const { headers, headersMetadata, data } = liveDataMessage
+      const isLiveData = true
+      const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
+      dispatch({
+        type: `SET_VALUE`,
+        payload: { headers, headersMetadata, data, isLiveData, receivedAt },
+      })
     }
-  }, [headers, liveDataMessage])
+  }, [liveDataMessage])
 
   React.useEffect(() => {
-    if (!isLiveData) {
-      setHeaders(cachedDataMessage.headers)
-      setData(cachedDataMessage.data)
+    if (!state.isLiveData) {
+      const { headers, headersMetadata, data } = cachedDataMessage
+      dispatch({
+        type: `SET_VALUE`,
+        payload: { headers, headersMetadata, data },
+      })
     }
-  }, [cachedDataMessage, isLiveData])
+  }, [cachedDataMessage, state.isLiveData])
 
   return (
     <PageContainer width="80%">
@@ -173,9 +178,14 @@ const ViewMonitorById = ({ id }) => {
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
             <Dialog
-              isShown={showEplQuery}
+              isShown={state.showEplQuery}
               title="EPL Query"
-              onCloseComplete={() => setShowEplQuery(false)}
+              onCloseComplete={() =>
+                dispatch({
+                  type: `SET_VALUE`,
+                  payload: { showEplQuery: false },
+                })
+              }
               hasFooter={false}
             >
               <Pre maxWidth={1000} whiteSpace="pre-wrap">
@@ -186,14 +196,16 @@ const ViewMonitorById = ({ id }) => {
             </Dialog>
             <Button
               onClick={togglePause}
-              disabled={!isLiveData}
+              disabled={!state.isLiveData}
               marginRight={majorScale(2)}
               intent="warning"
             >
-              {dataPaused ? 'Run' : 'Pause'}
+              {state.paused ? 'Run' : 'Pause'}
             </Button>
             <Button
-              onClick={() => setShowEplQuery(true)}
+              onClick={() =>
+                dispatch({ type: `SET_VALUE`, payload: { showEplQuery: true } })
+              }
               marginRight={majorScale(2)}
             >
               View EPL Query
@@ -204,10 +216,10 @@ const ViewMonitorById = ({ id }) => {
             >
               Edit
             </Button>
-            {monitor && data && (
+            {monitor && state.data && (
               <Text marginLeft={majorScale(2)}>
                 Currently viewing{' '}
-                {isLiveData ? (
+                {state.isLiveData ? (
                   <Badge color="green">live</Badge>
                 ) : (
                   <Badge color="yellow">cached</Badge>
@@ -215,14 +227,14 @@ const ViewMonitorById = ({ id }) => {
                 data
               </Text>
             )}
-            {isLiveData && <Text>, received at {dataReceived}</Text>}
+            {state.isLiveData && <Text>, received at {state.receivedAt}</Text>}
           </Pane>
         </Pane>
       )}
-      {monitor && data && (
+      {monitor && state.data && (
         <Table>
           <Table.Head>
-            {headers.map((header) => {
+            {state.headers.map((header) => {
               return (
                 <Table.TextHeaderCell key={header}>
                   <Popover
@@ -236,9 +248,12 @@ const ViewMonitorById = ({ id }) => {
                             { label: 'Descending', value: Order.DESC },
                             { label: 'None', value: Order.NONE },
                           ]}
-                          selected={ordering[header] || Order.NONE}
+                          selected={state.ordering[header] || Order.NONE}
                           onChange={(value) => {
-                            setOrdering({ [header]: value })
+                            dispatch({
+                              type: `SET_VALUE`,
+                              payload: { ordering: { [header]: value } },
+                            })
                             // Close the popover when you select a value.
                             close()
                           }}
@@ -257,7 +272,7 @@ const ViewMonitorById = ({ id }) => {
             })}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {sort(data).map((row) => {
+            {sort(state.data).map((row) => {
               return (
                 <Table.Row key={Object.values(row).join(``)}>
                   {Object.values(row).map((cell) => (
