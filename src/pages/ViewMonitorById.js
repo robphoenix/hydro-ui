@@ -11,6 +11,10 @@ import {
   Code,
   Badge,
   toaster,
+  Popover,
+  Position,
+  Menu,
+  TextDropdownButton,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
@@ -19,12 +23,20 @@ import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 
 const ViewMonitorById = ({ id }) => {
+  const Order = {
+    NONE: 'NONE',
+    ASC: 'ASC',
+    DESC: 'DESC',
+  }
+
   const [headers, setHeaders] = React.useState([])
   const [data, setData] = React.useState([])
   const [isLiveData, setIsLiveData] = React.useState(false)
   const [showEplQuery, setShowEplQuery] = React.useState(false)
   const [dataPaused, setDataPaused] = React.useState(false)
   const [dataReceived, setDataReceived] = React.useState(``)
+  // const [colToSort, setColToSort] = React.useState(``)
+  const [ordering, setOrdering] = React.useState({})
 
   const {
     monitor,
@@ -40,6 +52,17 @@ const ViewMonitorById = ({ id }) => {
 
   const togglePause = () => {
     setDataPaused(!dataPaused)
+  }
+
+  const getIconForOrder = (name) => {
+    switch (ordering[name]) {
+      case Order.ASC:
+        return 'arrow-up'
+      case Order.DESC:
+        return 'arrow-down'
+      default:
+        return 'caret-down'
+    }
   }
 
   React.useEffect(() => {
@@ -158,7 +181,33 @@ const ViewMonitorById = ({ id }) => {
           <Table.Head>
             {headers.map((header) => (
               <Table.TextHeaderCell key={header.n}>
-                {header.n}
+                <Popover
+                  position={Position.BOTTOM_LEFT}
+                  content={({ close }) => (
+                    <Menu>
+                      <Menu.OptionsGroup
+                        title="Order"
+                        options={[
+                          { label: 'Ascending', value: Order.ASC },
+                          { label: 'Descending', value: Order.DESC },
+                          { label: 'None', value: Order.NONE },
+                        ]}
+                        selected={ordering[header.n] || Order.NONE}
+                        onChange={(value) => {
+                          setOrdering({ [header.n]: value })
+                          // Close the popover when you select a value.
+                          close()
+                        }}
+                      />
+                    </Menu>
+                  )}
+                >
+                  <TextDropdownButton icon={getIconForOrder(header.n)}>
+                    <Text size={500} marginRight={majorScale(1)}>
+                      {header.n}
+                    </Text>
+                  </TextDropdownButton>
+                </Popover>
               </Table.TextHeaderCell>
             ))}
           </Table.Head>
