@@ -20,6 +20,11 @@
       "type": "yarn",
       "task": "format",
       "problemMatcher": []
+    },
+    {
+      "type": "yarn",
+      "task": "lint",
+      "problemMatcher": []
     }
   ]
 }

@@ -42,9 +42,13 @@ pipeline {
             sh 'yarn run format:ci'
           }
         }
+        stage('Lint') {
+          steps {
+            sh 'yarn run lint'
+          }
+        }
       }
     }
-
     stage('Dev Build') {
       steps {
         sh 'yarn build'
