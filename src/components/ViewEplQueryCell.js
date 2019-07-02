@@ -8,6 +8,7 @@ import {
   Icon,
   toaster,
   Button,
+  IconButton,
 } from 'evergreen-ui'
 
 import copy from '../utils/copy-to-clipboard'
@@ -19,27 +20,34 @@ const ViewEplQueryCell = ({ monitor }) => {
         <Pane
           width="auto"
           height="auto"
-          padding={majorScale(4)}
+          padding={majorScale(2)}
           background="tint1"
           display="flex"
+          flexDirection="column"
         >
-          <Pre maxWidth={600} whiteSpace="pre-wrap">
+          <Pre
+            maxWidth={600}
+            whiteSpace="pre-wrap"
+            marginBottom={majorScale(2)}
+          >
             <Code appearance="minimal" size={500}>
               {monitor.query}
             </Code>
           </Pre>
-          <Pane display="flex" alignItems="flex-end">
-            <Icon
-              icon="duplicate"
-              color="success"
-              cursor="pointer"
+          <Pane display="flex" justifyContent="flex-end">
+            <Button color="danger" appearance="minimal" onClick={close}>
+              Close
+            </Button>
+            <Button
+              appearance="minimal"
               onClick={() => {
                 copy(monitor.query)
                 toaster.success(`Copied query from monitor ${monitor.name}`)
                 close()
               }}
-              marginLeft={majorScale(2)}
-            />
+            >
+              Copy Epl Query
+            </Button>
           </Pane>
         </Pane>
       )}
