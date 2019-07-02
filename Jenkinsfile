@@ -28,7 +28,11 @@ pipeline {
     stage('Yarn') {
       steps {
         updateGitlabCommitStatus name: 'hydro-web-pipeline', state: 'pending'
-        sh 'yarn'
+        sh '''
+        yarn config set "strict-ssl" false
+        yarn config set registry https://proget/npm/Production-npm/
+        yarn
+        '''
       }
     }
     stage('Dev Build') {
