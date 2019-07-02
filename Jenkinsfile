@@ -27,7 +27,7 @@ pipeline {
   stages {
     stage('Yarn') {
       steps {
-        updateGitlabCommitStatus name: 'hydro-web-pipeline', state: 'pending'
+        updateGitlabCommitStatus name: 'Hydro UI Pipeline', state: 'pending'
         sh '''
         yarn config set "strict-ssl" false
         yarn config set registry https://proget/npm/Production-npm/
@@ -40,5 +40,11 @@ pipeline {
         sh 'yarn build'
       }
     }
+    stage('Dev Deploy') {
+      steps {
+        sh 'scp -i ~/.ssh/id_rsa -r build middleware@mn2formlt0001d0:/usr/local/bet365/hydro-ui'
+      }
+    }
+
   }
 }
