@@ -26,10 +26,32 @@ import { Order, compare, sortableIpAddress } from '../utils/sort'
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case `SET_VALUE`:
+    case `SET_DATA`:
       return {
         ...state,
         ...action.payload,
+      }
+    case `TOGGLE_PAUSE`:
+      return {
+        ...state,
+        paused: !state.paused,
+      }
+    case `SHOW_EPL`:
+      return {
+        ...state,
+        showEplQuery: true,
+      }
+    case `HIDE_EPL`:
+      return {
+        ...state,
+        showEplQuery: false,
+      }
+    case `SET_DIRECTION`:
+      return {
+        ...state,
+        direction: {
+          ...action.payload,
+        },
       }
     default:
       return state
@@ -45,7 +67,7 @@ const ViewMonitorById = ({ id }) => {
     showEplQuery: false,
     paused: false,
     receivedAt: ``,
-    ordering: {},
+    direction: {},
   })
 
   const {
@@ -60,12 +82,8 @@ const ViewMonitorById = ({ id }) => {
     isLoading,
   } = useMonitors()
 
-  const togglePause = () => {
-    dispatch({ type: `SET_VALUE`, payload: { paused: !state.paused } })
-  }
-
   const getIconForOrder = (name) => {
-    switch (state.ordering[name]) {
+    switch (state.direction[name]) {
       case Order.ASC:
         return 'arrow-up'
       case Order.DESC:
@@ -76,7 +94,7 @@ const ViewMonitorById = ({ id }) => {
   }
 
   const sort = (data) => {
-    const col = Object.keys(state.ordering)[0]
+    const col = Object.keys(state.direction)[0]
     if (!col) {
       return data
     }
@@ -85,7 +103,7 @@ const ViewMonitorById = ({ id }) => {
       ? state.headersMetadata[col].type
       : ''
 
-    const direction = state.ordering[col]
+    const direction = state.direction[col]
     if (direction === Order.NONE) {
       return data
     }
@@ -151,7 +169,7 @@ const ViewMonitorById = ({ id }) => {
       const isLiveData = true
       const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
       dispatch({
-        type: `SET_VALUE`,
+        type: `SET_DATA`,
         payload: { headers, headersMetadata, data, isLiveData, receivedAt },
       })
     }
@@ -161,11 +179,18 @@ const ViewMonitorById = ({ id }) => {
     if (!state.isLiveData) {
       const { headers, headersMetadata, data } = cachedDataMessage
       dispatch({
-        type: `SET_VALUE`,
+        type: `SET_DATA`,
         payload: { headers, headersMetadata, data },
       })
     }
   }, [cachedDataMessage, state.isLiveData])
+
+  const showEpl = (show) => {
+    const type = show ? `SHOW_EPL` : `HIDE_EPL`
+    dispatch({ type })
+  }
+
+  const togglePause = () => dispatch({ type: `TOGGLE_PAUSE` })
 
   return (
     <PageContainer width="80%">
@@ -180,12 +205,7 @@ const ViewMonitorById = ({ id }) => {
             <Dialog
               isShown={state.showEplQuery}
               title="EPL Query"
-              onCloseComplete={() =>
-                dispatch({
-                  type: `SET_VALUE`,
-                  payload: { showEplQuery: false },
-                })
-              }
+              onCloseComplete={() => showEpl(true)}
               hasFooter={false}
             >
               <Pre maxWidth={1000} whiteSpace="pre-wrap">
@@ -202,12 +222,7 @@ const ViewMonitorById = ({ id }) => {
             >
               {state.paused ? 'Run' : 'Pause'}
             </Button>
-            <Button
-              onClick={() =>
-                dispatch({ type: `SET_VALUE`, payload: { showEplQuery: true } })
-              }
-              marginRight={majorScale(2)}
-            >
+            <Button onClick={() => showEpl(false)} marginRight={majorScale(2)}>
               View EPL Query
             </Button>
             <Button
@@ -248,11 +263,11 @@ const ViewMonitorById = ({ id }) => {
                             { label: 'Descending', value: Order.DESC },
                             { label: 'None', value: Order.NONE },
                           ]}
-                          selected={state.ordering[header] || Order.NONE}
+                          selected={state.direction[header] || Order.NONE}
                           onChange={(value) => {
                             dispatch({
-                              type: `SET_VALUE`,
-                              payload: { ordering: { [header]: value } },
+                              type: `SET_DIRECTION`,
+                              payload: { [header]: value },
                             })
                             // Close the popover when you select a value.
                             close()
