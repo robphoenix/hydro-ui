@@ -23,6 +23,7 @@ import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 import { Order, compare, sortableIpAddress } from '../utils/sort'
+import copy from '../utils/copy-to-clipboard'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -204,15 +205,39 @@ const ViewMonitorById = ({ id }) => {
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
             <Dialog
               isShown={state.showEplQuery}
-              title="EPL Query"
-              onCloseComplete={() => showEpl(true)}
+              onCloseComplete={() => showEpl(false)}
               hasFooter={false}
+              hasHeader={false}
+              hasClose={true}
             >
-              <Pre maxWidth={1000} whiteSpace="pre-wrap">
+              <Pre
+                maxWidth={600}
+                whiteSpace="pre-wrap"
+                marginBottom={majorScale(2)}
+              >
                 <Code appearance="minimal" size={500}>
                   {monitor.query}
                 </Code>
               </Pre>
+              <Pane display="flex" justifyContent="flex-end">
+                <Button
+                  color="danger"
+                  appearance="minimal"
+                  onClick={() => showEpl(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  appearance="minimal"
+                  onClick={() => {
+                    copy(monitor.query)
+                    toaster.success(`Copied query from monitor ${monitor.name}`)
+                    showEpl(false)
+                  }}
+                >
+                  Copy Epl Query
+                </Button>
+              </Pane>
             </Dialog>
             <Button
               onClick={togglePause}
@@ -222,7 +247,7 @@ const ViewMonitorById = ({ id }) => {
             >
               {state.paused ? 'Run' : 'Pause'}
             </Button>
-            <Button onClick={() => showEpl(false)} marginRight={majorScale(2)}>
+            <Button onClick={() => showEpl(true)} marginRight={majorScale(2)}>
               View EPL Query
             </Button>
             <Button
