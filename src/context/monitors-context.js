@@ -128,11 +128,13 @@ function MonitorsProvider(props) {
 
   const getMessageData = (body) => {
     const { h, d } = body
+
     const headersMetadata = h.reduce((metadata, header) => {
       const { n: name, t: type, f: format } = header
       metadata[name] = { type, format }
       return metadata
     }, {})
+
     const headers = h.map((header) => header.n)
 
     const data = d.map((attributes) => {

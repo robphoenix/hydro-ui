@@ -70,24 +70,41 @@ const ViewMonitorById = ({ id }) => {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
   }
 
+  const sortableIpAddress = (ip) => {
+    return ip
+      .split('.')
+      .map((octet) => octet.padStart(3, '0'))
+      .join('')
+  }
+
   const sort = (data) => {
-    return data
-    // const col = Object.keys(ordering)[0]
-    // if (!col) {
-    //   return data
-    // }
-    // console.log({ col })
-    // const direction = ordering[col]
-    // console.log({ direction })
-    // if (direction === Order.NONE) {
-    //   return data
-    // }
-    // const isAsc = direction === Order.ASC
-    // const sorted = data.sort((a, b) => {
-    //   return compare(a[col], b[col], isAsc)
-    // })
-    // console.log({ sorted })
-    // return sorted
+    const col = Object.keys(ordering)[0]
+    if (!col) {
+      return data
+    }
+
+    const type = headersMetadata[col] ? headersMetadata[col].type : ''
+
+    const direction = ordering[col]
+    if (direction === Order.NONE) {
+      return data
+    }
+    const isAsc = direction === Order.ASC
+    const sorted = data.sort((a, b) => {
+      switch (type) {
+        case 'ip':
+          return compare(
+            sortableIpAddress(a[col]),
+            sortableIpAddress(b[col]),
+            isAsc,
+          )
+        case 'dateTime':
+          return this.compare(new Date(a[col]), new Date(a[col]), isAsc)
+        default:
+          return compare(a[col], b[col], isAsc)
+      }
+    })
+    return sorted
   }
 
   React.useEffect(() => {
@@ -131,7 +148,7 @@ const ViewMonitorById = ({ id }) => {
   React.useEffect(() => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
       setHeaders(liveDataMessage.headers)
-      // setHeadersMetadata(liveDataMessage.headersMetadata)
+      setHeadersMetadata(liveDataMessage.headersMetadata)
       setData(liveDataMessage.data)
       setIsLiveData(true)
       setDataReceived(dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`))
