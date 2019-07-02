@@ -126,6 +126,24 @@ function MonitorsProvider(props) {
     }
   }, [])
 
+  const getMessageData = (body) => {
+    const { h, d } = body
+    const headersMetadata = h.reduce((metadata, header) => {
+      const { n: name, t: type, f: format } = header
+      metadata[name] = { type, format }
+      return metadata
+    }, {})
+    const headers = h.map((header) => header.n)
+
+    const data = d.map((attributes) => {
+      return attributes.reduce((columns, column, i) => {
+        columns[headers[i]] = column
+        return columns
+      }, {})
+    })
+    return { headersMetadata, headers, data }
+  }
+
   const initLiveDataConnection = React.useCallback((name) => {
     if (name) {
       const eb = eventBusLiveData(name, (error, message) => {
@@ -134,10 +152,9 @@ function MonitorsProvider(props) {
           dispatch({ type: 'SET_ERROR', payload: { liveData: error } })
         }
         if (message) {
-          const { h: headers, d: data } = message.body
           dispatch({
             type: 'SUCCESS',
-            payload: { liveDataMessage: { headers, data } },
+            payload: { liveDataMessage: getMessageData(message.body) },
           })
         }
       })
@@ -158,10 +175,9 @@ function MonitorsProvider(props) {
         }
         if (message) {
           if (message.body) {
-            const { h: headers, d: data } = message.body
             dispatch({
               type: 'SUCCESS',
-              payload: { cachedDataMessage: { headers, data } },
+              payload: { cachedDataMessage: getMessageData(message.body) },
             })
           }
           // we'll only ever recieve the one message

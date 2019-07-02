@@ -30,6 +30,7 @@ const ViewMonitorById = ({ id }) => {
   }
 
   const [headers, setHeaders] = React.useState([])
+  const [headersMetadata, setHeadersMetadata] = React.useState([])
   const [data, setData] = React.useState([])
   const [isLiveData, setIsLiveData] = React.useState(false)
   const [showEplQuery, setShowEplQuery] = React.useState(false)
@@ -63,6 +64,30 @@ const ViewMonitorById = ({ id }) => {
       default:
         return 'caret-down'
     }
+  }
+
+  const compare = (a, b, isAsc) => {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
+  }
+
+  const sort = (data) => {
+    return data
+    // const col = Object.keys(ordering)[0]
+    // if (!col) {
+    //   return data
+    // }
+    // console.log({ col })
+    // const direction = ordering[col]
+    // console.log({ direction })
+    // if (direction === Order.NONE) {
+    //   return data
+    // }
+    // const isAsc = direction === Order.ASC
+    // const sorted = data.sort((a, b) => {
+    //   return compare(a[col], b[col], isAsc)
+    // })
+    // console.log({ sorted })
+    // return sorted
   }
 
   React.useEffect(() => {
@@ -106,11 +131,12 @@ const ViewMonitorById = ({ id }) => {
   React.useEffect(() => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
       setHeaders(liveDataMessage.headers)
+      // setHeadersMetadata(liveDataMessage.headersMetadata)
       setData(liveDataMessage.data)
       setIsLiveData(true)
       setDataReceived(dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`))
     }
-  }, [liveDataMessage])
+  }, [headers, liveDataMessage])
 
   React.useEffect(() => {
     if (!isLiveData) {
@@ -179,46 +205,50 @@ const ViewMonitorById = ({ id }) => {
       {monitor && data && (
         <Table>
           <Table.Head>
-            {headers.map((header) => (
-              <Table.TextHeaderCell key={header.n}>
-                <Popover
-                  position={Position.BOTTOM_LEFT}
-                  content={({ close }) => (
-                    <Menu>
-                      <Menu.OptionsGroup
-                        title="Order"
-                        options={[
-                          { label: 'Ascending', value: Order.ASC },
-                          { label: 'Descending', value: Order.DESC },
-                          { label: 'None', value: Order.NONE },
-                        ]}
-                        selected={ordering[header.n] || Order.NONE}
-                        onChange={(value) => {
-                          setOrdering({ [header.n]: value })
-                          // Close the popover when you select a value.
-                          close()
-                        }}
-                      />
-                    </Menu>
-                  )}
-                >
-                  <TextDropdownButton icon={getIconForOrder(header.n)}>
-                    <Text size={500} marginRight={majorScale(1)}>
-                      {header.n}
-                    </Text>
-                  </TextDropdownButton>
-                </Popover>
-              </Table.TextHeaderCell>
-            ))}
+            {headers.map((header) => {
+              return (
+                <Table.TextHeaderCell key={header}>
+                  <Popover
+                    position={Position.BOTTOM_LEFT}
+                    content={({ close }) => (
+                      <Menu>
+                        <Menu.OptionsGroup
+                          title="Order"
+                          options={[
+                            { label: 'Ascending', value: Order.ASC },
+                            { label: 'Descending', value: Order.DESC },
+                            { label: 'None', value: Order.NONE },
+                          ]}
+                          selected={ordering[header] || Order.NONE}
+                          onChange={(value) => {
+                            setOrdering({ [header]: value })
+                            // Close the popover when you select a value.
+                            close()
+                          }}
+                        />
+                      </Menu>
+                    )}
+                  >
+                    <TextDropdownButton icon={getIconForOrder(header)}>
+                      <Text size={500} marginRight={majorScale(1)}>
+                        {header}
+                      </Text>
+                    </TextDropdownButton>
+                  </Popover>
+                </Table.TextHeaderCell>
+              )
+            })}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {data.map((row) => (
-              <Table.Row key={row.join('')}>
-                {row.map((cell) => (
-                  <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
-                ))}
-              </Table.Row>
-            ))}
+            {sort(data).map((row) => {
+              return (
+                <Table.Row key={Object.values(row).join(``)}>
+                  {Object.values(row).map((cell) => (
+                    <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
+                  ))}
+                </Table.Row>
+              )
+            })}
           </Table.VirtualBody>
         </Table>
       )}
