@@ -35,6 +35,16 @@ pipeline {
         '''
       }
     }
+    stage('Checks') {
+      parallel {
+        stage('Format') {
+          steps {
+            sh 'yarn run format:ci'
+          }
+        }
+      }
+    }
+
     stage('Dev Build') {
       steps {
         sh 'yarn build'

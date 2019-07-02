@@ -19,13 +19,19 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"./src/**/*.js\"",
+    "format:ci": "prettier --list-different \"./src/**/*.js\""
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -34,5 +40,11 @@
   },
   "devDependencies": {
     "prettier": "1.16.3"
+  },
+  "prettier": {
+    "semi": false,
+    "arrowParens": "always",
+    "trailingComma": "all",
+    "singleQuote": true
   }
 }

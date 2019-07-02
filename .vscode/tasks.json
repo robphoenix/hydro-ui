@@ -10,6 +10,16 @@
         "runOn": "folderOpen"
       },
       "problemMatcher": []
+    },
+    {
+      "type": "yarn",
+      "task": "format:ci",
+      "problemMatcher": []
+    },
+    {
+      "type": "yarn",
+      "task": "format",
+      "problemMatcher": []
     }
   ]
 }
