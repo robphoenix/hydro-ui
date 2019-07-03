@@ -9,7 +9,7 @@ import FeedTypesToolbar from '../components/FeedTypesToolbar'
 import { matchesSearchQuery } from '../utils/filters'
 
 const ViewFeedTypes = () => {
-  const { feedTypes, fetchFeedTypes, isLoading, errors } = useMonitors()
+  const { feedTypes, fetchFeedTypes, isLoading, errors, reload } = useMonitors()
   const [selected, setSelected] = React.useState(``)
   const [searchQuery, setSearchQuery] = React.useState(``)
 
@@ -37,6 +37,15 @@ const ViewFeedTypes = () => {
       return matchesSearchQuery(term, searchQuery)
     })
   }
+  const handleReload = async () => {
+    try {
+      const result = await reload()
+      toaster.success(result)
+    } catch (error) {
+      const { message, cause, uuid } = error
+      toaster.danger(message, { description: `${cause} - uuid: ${uuid}` })
+    }
+  }
 
   return (
     <PageContainer>
@@ -47,6 +56,7 @@ const ViewFeedTypes = () => {
             <FeedTypesToolbar
               options={options}
               handleSelect={handleSelect}
+              handleReload={handleReload}
               selected={selected}
             />
             <FeedTypesTable

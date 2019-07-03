@@ -35,16 +35,6 @@ const NavBar = () => {
   const user = useUser()
   const { logout } = useAuth()
 
-  const handleReload = async () => {
-    try {
-      await reload()
-      toaster.success(`Cache Reloads Everything Around Me`)
-    } catch (error) {
-      const { message, cause, uuid } = error
-      toaster.danger(message, { description: `${cause} - uuid: ${uuid}` })
-    }
-  }
-
   const monitorsLinks = [
     { to: `/monitors/view`, label: `View Monitors` },
     { to: `/monitors/add`, label: `Add New Monitor` },
@@ -72,15 +62,6 @@ const NavBar = () => {
         <Logo height="48px" />
       </Link>
       <Pane is="nav" display="flex" width="100%" justifyContent="flex-end">
-        <Button
-          type="button"
-          onClick={handleReload}
-          appearance="minimal"
-          intent="danger"
-          marginLeft={majorScale(4)}
-        >
-          C.R.E.A.M.
-        </Button>
         <Popover
           position={Position.BOTTOM_LEFT}
           content={({ close }) => (

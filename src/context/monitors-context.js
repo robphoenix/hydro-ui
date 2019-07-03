@@ -16,6 +16,7 @@ import {
   getAllActions,
   getFeedTypes,
   addAction,
+  reload,
 } from '../utils/monitors-client'
 import { eventBusLiveData, eventBusCachedData } from '../utils/eventbus-client'
 
@@ -210,6 +211,7 @@ function MonitorsProvider(props) {
         initLiveDataConnection,
         initCachedDataConnection,
         closeEventBusConnections,
+        reload,
         ...state,
       }}
       {...props}
