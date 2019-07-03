@@ -16,6 +16,7 @@ import {
   Menu,
   TextDropdownButton,
   SearchInput,
+  Strong,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
@@ -105,8 +106,6 @@ const ViewMonitorById = ({ id }) => {
 
   const filter = (data) => {
     const searchQuery = state.searchQuery.trim()
-
-    // If the searchQuery is empty, return the profiles as is.
     if (!searchQuery) {
       return data
     }
@@ -228,7 +227,27 @@ const ViewMonitorById = ({ id }) => {
               <Text size={600} marginBottom={majorScale(2)}>
                 {monitor.description}
               </Text>
-              <MonitorCategories categories={monitor.categories} />
+              <Pane display="flex" alignItems="center">
+                <MonitorCategories categories={monitor.categories} />
+                <Pane marginLeft={majorScale(4)}>
+                  {monitor && state.data && (
+                    <Text size={500}>
+                      Currently viewing{' '}
+                      {state.isLiveData ? (
+                        <Badge color="green">live</Badge>
+                      ) : (
+                        <Badge color="yellow">cached</Badge>
+                      )}{' '}
+                      data
+                    </Text>
+                  )}
+                  {state.isLiveData && (
+                    <Text size={500}>
+                      , received at <Strong>{state.receivedAt}</Strong>{' '}
+                    </Text>
+                  )}
+                </Pane>
+              </Pane>
             </Pane>
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
@@ -276,35 +295,25 @@ const ViewMonitorById = ({ id }) => {
                 value={state.searchQuery}
               />
             </Pane>
-            <Button
-              onClick={togglePause}
-              disabled={!state.isLiveData}
-              marginRight={majorScale(2)}
-              intent="warning"
-            >
-              {state.paused ? 'Run' : 'Pause'}
-            </Button>
             <Button onClick={() => showEpl(true)} marginRight={majorScale(2)}>
               View EPL Query
             </Button>
             <Button
               onClick={() => navigate(`${monitor.id}/edit`)}
               appearance="primary"
+              marginRight={majorScale(2)}
             >
               Edit
             </Button>
-            {monitor && state.data && (
-              <Text marginLeft={majorScale(2)}>
-                Currently viewing{' '}
-                {state.isLiveData ? (
-                  <Badge color="green">live</Badge>
-                ) : (
-                  <Badge color="yellow">cached</Badge>
-                )}{' '}
-                data
-              </Text>
-            )}
-            {state.isLiveData && <Text>, received at {state.receivedAt}</Text>}
+            <Button
+              onClick={togglePause}
+              disabled={!state.isLiveData}
+              marginRight={majorScale(2)}
+              intent={state.paused ? 'success' : 'warning'}
+              appearance="primary"
+            >
+              {state.paused ? 'Run' : 'Pause'}
+            </Button>
           </Pane>
         </Pane>
       )}
