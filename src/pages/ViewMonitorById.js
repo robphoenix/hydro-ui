@@ -201,7 +201,25 @@ const ViewMonitorById = ({ id }) => {
         <Pane>
           <Pane marginBottom={majorScale(3)}>
             <PageHeading>{monitor.name}</PageHeading>
-            <Text size={600}>{monitor.description}</Text>
+            <Pane display="flex" flexDirection="column">
+              <Text size={600} marginBottom={majorScale(2)}>
+                {monitor.description}
+              </Text>
+              <Pane>
+                {monitor.categories.map((category) => (
+                  <Badge
+                    key={category.id}
+                    color="teal"
+                    marginRight={majorScale(1)}
+                  >
+                    {category.name}
+                  </Badge>
+                ))}
+                {!monitor.categories.length && (
+                  <Badge color="yellow">no categories</Badge>
+                )}
+              </Pane>
+            </Pane>
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
             <Dialog
