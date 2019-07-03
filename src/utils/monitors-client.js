@@ -10,6 +10,7 @@ const groupsUrl = optionsUrl(`groups`)
 const actionsUrl = (id = ``) => optionsUrl(`actions${id ? '/' : ''}${id}`)
 const categoriesUrl = optionsUrl(`categories`)
 const feedTypesUrl = optionsUrl(`feedtypes`)
+const reloadUrl = optionsUrl(`feedtypes/reload`)
 
 const getMonitors = () => {
   return get(monitorsUrl())
@@ -75,6 +76,10 @@ const addAction = (action) => {
   return post(actionsUrl(), action)
 }
 
+const reload = () => {
+  return get(reloadUrl)
+}
+
 export {
   getMonitors,
   getMonitorById,
@@ -91,4 +96,5 @@ export {
   getAllActions,
   archiveAction,
   getFeedTypes,
+  reload,
 }

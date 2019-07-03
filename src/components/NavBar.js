@@ -7,6 +7,7 @@ import {
   Position,
   Menu,
   Text,
+  toaster,
 } from 'evergreen-ui'
 
 import Logo from './Logo'
@@ -14,6 +15,7 @@ import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
 import { Link } from '@reach/router'
+import { reload } from '../utils/monitors-client'
 
 const MenuButton = (props) => (
   <Button
@@ -32,6 +34,16 @@ const LinkTitle = (props) => (
 const NavBar = () => {
   const user = useUser()
   const { logout } = useAuth()
+
+  const handleReload = async () => {
+    try {
+      const res = await reload()
+      toaster.danger(res)
+    } catch (error) {
+      const { message, cause, uuid } = error
+      toaster.danger(message, { description: `${cause} - uuid: ${uuid}` })
+    }
+  }
 
   const monitorsLinks = [
     { to: `/monitors/view`, label: `View Monitors` },
@@ -60,6 +72,15 @@ const NavBar = () => {
         <Logo height="48px" />
       </Link>
       <Pane is="nav" display="flex" width="100%" justifyContent="flex-end">
+        <Button
+          type="button"
+          onClick={handleReload}
+          appearance="minimal"
+          intent="danger"
+          marginLeft={majorScale(4)}
+        >
+          Reload The LLDD
+        </Button>
         <Popover
           position={Position.BOTTOM_LEFT}
           content={({ close }) => (
