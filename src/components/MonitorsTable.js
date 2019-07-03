@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, majorScale, Badge } from 'evergreen-ui'
+import { Table, majorScale } from 'evergreen-ui'
 
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'

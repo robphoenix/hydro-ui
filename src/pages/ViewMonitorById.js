@@ -19,6 +19,7 @@ import {
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
+import { filter as fuzzaldrinFilter } from 'fuzzaldrin-plus'
 
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
@@ -56,6 +57,11 @@ const reducer = (state, action) => {
           ...action.payload,
         },
       }
+    case `SET_SEARCH_QUERY`:
+      return {
+        ...state,
+        searchQuery: action.payload,
+      }
     default:
       return state
   }
@@ -71,6 +77,7 @@ const ViewMonitorById = ({ id }) => {
     paused: false,
     receivedAt: ``,
     direction: {},
+    searchQuery: ``,
   })
 
   const {
@@ -94,6 +101,20 @@ const ViewMonitorById = ({ id }) => {
       default:
         return 'caret-down'
     }
+  }
+
+  const filter = (data) => {
+    const searchQuery = state.searchQuery.trim()
+
+    // If the searchQuery is empty, return the profiles as is.
+    if (!searchQuery) {
+      return data
+    }
+    const filtered = data.filter((row) => {
+      const result = fuzzaldrinFilter(Object.values(row), searchQuery)
+      return result.length === 1
+    })
+    return filtered
   }
 
   const sort = (data) => {
@@ -194,6 +215,8 @@ const ViewMonitorById = ({ id }) => {
   }
 
   const togglePause = () => dispatch({ type: `TOGGLE_PAUSE` })
+  const handleSearchChange = (e) =>
+    dispatch({ type: `SET_SEARCH_QUERY`, payload: e.target.value })
 
   return (
     <PageContainer width="80%">
@@ -247,7 +270,12 @@ const ViewMonitorById = ({ id }) => {
               </Pane>
             </Dialog>
             <Pane width="30%" marginRight={majorScale(2)}>
-              <SearchInput placeholder="Search Monitor Data" width="100%" />
+              <SearchInput
+                placeholder="Search Monitor Data"
+                width="100%"
+                onChange={handleSearchChange}
+                value={state.searchQuery}
+              />
             </Pane>
             <Button
               onClick={togglePause}
@@ -322,7 +350,7 @@ const ViewMonitorById = ({ id }) => {
             })}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {sort(state.data).map((row) => {
+            {filter(sort(state.data)).map((row) => {
               return (
                 <Table.Row key={Object.values(row).join(``)}>
                   {Object.values(row).map((cell) => (
