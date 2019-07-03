@@ -4,6 +4,7 @@ import { Table, majorScale, Badge } from 'evergreen-ui'
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
 import MonitorMenuCell from './MonitorMenuCell'
+import MonitorCategories from './MonitorCategories'
 
 const MonitorsTable = ({ handleSearchChange, monitors }) => {
   return (
@@ -28,18 +29,7 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
               <ViewEplQueryCell monitor={monitor} />
             </Table.Cell>
             <Table.Cell display="flex" flex="2" flexWrap="wrap">
-              {monitor.categories.map((category) => (
-                <Badge
-                  key={category.id}
-                  color="teal"
-                  marginRight={majorScale(1)}
-                >
-                  {category.name}
-                </Badge>
-              ))}
-              {!monitor.categories.length && (
-                <Badge color="yellow">no categories</Badge>
-              )}
+              <MonitorCategories categories={monitor.categories} />
             </Table.Cell>
             <Table.Cell justifyContent="flex-end" flex="1">
               <MonitorMenuCell monitor={monitor} />

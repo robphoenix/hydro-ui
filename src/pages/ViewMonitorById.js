@@ -25,6 +25,7 @@ import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 import { Order, compare, sortableIpAddress } from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
+import MonitorCategories from '../components/MonitorCategories'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -205,20 +206,7 @@ const ViewMonitorById = ({ id }) => {
               <Text size={600} marginBottom={majorScale(2)}>
                 {monitor.description}
               </Text>
-              <Pane>
-                {monitor.categories.map((category) => (
-                  <Badge
-                    key={category.id}
-                    color="teal"
-                    marginRight={majorScale(1)}
-                  >
-                    {category.name}
-                  </Badge>
-                ))}
-                {!monitor.categories.length && (
-                  <Badge color="yellow">no categories</Badge>
-                )}
-              </Pane>
+              <MonitorCategories categories={monitor.categories} />
             </Pane>
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
