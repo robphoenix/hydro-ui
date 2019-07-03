@@ -37,8 +37,8 @@ const NavBar = () => {
 
   const handleReload = async () => {
     try {
-      const res = await reload()
-      toaster.danger(res)
+      await reload()
+      toaster.success(`Cache Reloads Everything Around Me`)
     } catch (error) {
       const { message, cause, uuid } = error
       toaster.danger(message, { description: `${cause} - uuid: ${uuid}` })
@@ -79,7 +79,7 @@ const NavBar = () => {
           intent="danger"
           marginLeft={majorScale(4)}
         >
-          Reload The LLDD
+          C.R.E.A.M.
         </Button>
         <Popover
           position={Position.BOTTOM_LEFT}
