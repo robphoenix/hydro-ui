@@ -19,7 +19,6 @@ import {
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
-import { filter as fuzzaldrinFilter } from 'fuzzaldrin-plus'
 
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
@@ -27,6 +26,7 @@ import PageContainer from '../components/PageContainer'
 import { Order, compare, sortableIpAddress } from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
+import { matchesSearchQuery } from '../utils/filters'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -111,8 +111,7 @@ const ViewMonitorById = ({ id }) => {
       return data
     }
     const filtered = data.filter((row) => {
-      const result = fuzzaldrinFilter(Object.values(row), searchQuery)
-      return result.length === 1
+      return matchesSearchQuery(Object.values(row).join(` `), searchQuery)
     })
     return filtered
   }
