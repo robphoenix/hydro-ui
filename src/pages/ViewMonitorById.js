@@ -15,6 +15,7 @@ import {
   Position,
   Menu,
   TextDropdownButton,
+  SearchInput,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
@@ -239,6 +240,9 @@ const ViewMonitorById = ({ id }) => {
                 </Button>
               </Pane>
             </Dialog>
+            <Pane width="30%" marginRight={majorScale(2)}>
+              <SearchInput placeholder="Search Monitor Data" width="100%" />
+            </Pane>
             <Button
               onClick={togglePause}
               disabled={!state.isLiveData}
