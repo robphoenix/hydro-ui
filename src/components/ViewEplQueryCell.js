@@ -5,10 +5,8 @@ import {
   majorScale,
   Pre,
   Code,
-  Icon,
   toaster,
   Button,
-  IconButton,
 } from 'evergreen-ui'
 
 import copy from '../utils/copy-to-clipboard'
