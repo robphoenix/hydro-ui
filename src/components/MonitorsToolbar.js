@@ -18,7 +18,7 @@ const MonitorsToolbar = ({
   categoriesButtonText,
   disableCategories,
 }) => {
-  const { isAdmin } = useUser()
+  const { allowsEdit } = useUser()
 
   return (
     <Pane display="flex" marginBottom={majorScale(4)}>
@@ -38,7 +38,7 @@ const MonitorsToolbar = ({
       >
         <Button disabled={disableCategories}>{categoriesButtonText}</Button>
       </SelectMenu>
-      {isAdmin && (
+      {allowsEdit && (
         <Button
           textTransform="capitalize"
           marginLeft="auto"

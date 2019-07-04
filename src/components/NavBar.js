@@ -31,12 +31,12 @@ const LinkTitle = (props) => (
 )
 
 const NavBar = () => {
-  const { displayName, isAdmin } = useUser()
+  const { displayName, isAdmin, allowsEdit } = useUser()
   const { logout } = useAuth()
 
   const monitorsLinks = [
     { to: `/monitors/view`, label: `View Monitors`, show: true },
-    { to: `/monitors/add`, label: `Add New Monitor`, show: isAdmin },
+    { to: `/monitors/add`, label: `Add New Monitor`, show: allowsEdit },
     { to: `/monitors/feedtypes`, label: `View Feed Types`, show: true },
   ]
   const actionsLinks = [
