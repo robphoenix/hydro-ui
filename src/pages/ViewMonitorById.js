@@ -17,6 +17,7 @@ import {
   TextDropdownButton,
   SearchInput,
   Strong,
+  CornerDialog,
 } from 'evergreen-ui'
 import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
@@ -63,6 +64,18 @@ const reducer = (state, action) => {
         ...state,
         searchQuery: action.payload,
       }
+    case `SET_CHANGE_EVENT`:
+      return {
+        ...state,
+        showChangeEvent: true,
+        changeEventMessage: action.payload,
+      }
+    case `SET_CHANGE_EVENT_CLOSE`:
+      return {
+        ...state,
+        showChangeEvent: false,
+        changeEventMessage: ``,
+      }
     default:
       return state
   }
@@ -79,6 +92,8 @@ const ViewMonitorById = ({ id }) => {
     receivedAt: ``,
     direction: {},
     searchQuery: ``,
+    showChangeEvent: false,
+    changeEventMessage: ``,
   })
 
   const {
@@ -86,8 +101,10 @@ const ViewMonitorById = ({ id }) => {
     fetchMonitorById,
     liveDataMessage,
     cachedDataMessage,
+    changeEvent,
     initLiveDataConnection,
     initCachedDataConnection,
+    initChangeEventsConnection,
     closeEventBusConnections,
     errors,
     isLoading,
@@ -186,6 +203,40 @@ const ViewMonitorById = ({ id }) => {
   }, [initLiveDataConnection, monitor])
 
   React.useEffect(() => {
+    if (monitor) {
+      initChangeEventsConnection(monitor.name)
+    }
+  }, [initChangeEventsConnection, monitor])
+
+  const isFirst = React.useRef(true)
+  React.useEffect(() => {
+    const changeEventMessages = {
+      // this monitor was just removed from the monitor cache, which means it got archived;
+      removed: `The monitor has been archived by another user.`,
+      // this monitor just got its status changed to online;
+      online: `The monitor status has been changed to online by another user.`,
+      // this monitor just got its status changed to online;
+      offline: `The monitor status has been changed to offline by another user.`,
+      // the EPL query for this monitor was updated;
+      eplUpdated: `The monitor EPL Query has been changed by another user.`,
+      // the cache window for this monitor was updated.
+      cacheWindowChanged: `The monitor cache window has been changed by another user.`,
+    }
+
+    // we want to avoid showing a change event dialog on first render
+    // https://stackoverflow.com/a/54895884
+    if (isFirst.current) {
+      isFirst.current = false
+      return
+    }
+
+    dispatch({
+      type: `SET_CHANGE_EVENT`,
+      payload: changeEventMessages[changeEvent.body],
+    })
+  }, [changeEvent])
+
+  React.useEffect(() => {
     if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
       const { headers, headersMetadata, data } = liveDataMessage
       const isLiveData = true
@@ -218,7 +269,6 @@ const ViewMonitorById = ({ id }) => {
 
   return (
     <PageContainer width="80%">
-      {isLoading && <FullPageSpinner />}
       {!isLoading && monitor && !!Object.keys(monitor).length && (
         <Pane>
           <Pane marginBottom={majorScale(3)}>
@@ -317,6 +367,12 @@ const ViewMonitorById = ({ id }) => {
           </Pane>
         </Pane>
       )}
+      {!state.data && (
+        <Pane>
+          <FullPageSpinner height={400} />
+          <Text />
+        </Pane>
+      )}
       {monitor && state.data && (
         <Table>
           <Table.Head>
@@ -370,6 +426,15 @@ const ViewMonitorById = ({ id }) => {
           </Table.VirtualBody>
         </Table>
       )}
+
+      <CornerDialog
+        title={`${monitor.name} Change Event`}
+        isShown={state.showChangeEvent}
+        onCloseComplete={() => dispatch({ type: `SET_CHANGE_EVENT_CLOSE` })}
+        hasFooter={false}
+      >
+        <Text>{state.changeEventMessage}</Text>
+      </CornerDialog>
     </PageContainer>
   )
 }

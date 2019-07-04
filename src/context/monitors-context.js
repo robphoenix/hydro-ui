@@ -18,7 +18,11 @@ import {
   addAction,
   reload,
 } from '../utils/monitors-client'
-import { eventBusLiveData, eventBusCachedData } from '../utils/eventbus-client'
+import {
+  eventBusLiveData,
+  eventBusCachedData,
+  eventBusChangeEvents,
+} from '../utils/eventbus-client'
 
 const MonitorsContext = React.createContext(null)
 
@@ -69,6 +73,7 @@ function MonitorsProvider(props) {
     liveDataMessage: {},
     cachedDataMessage: {},
     eventBusConnections: [],
+    changeEvent: {},
   }
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
@@ -165,6 +170,24 @@ function MonitorsProvider(props) {
     }
   }, [])
 
+  const initChangeEventsConnection = React.useCallback((name) => {
+    if (name) {
+      const eb = eventBusChangeEvents(name, (error, message) => {
+        if (error) {
+          eb.close()
+          dispatch({ type: 'SET_ERROR', payload: { changeEvent: error } })
+        }
+        if (message) {
+          dispatch({
+            type: 'SUCCESS',
+            payload: { changeEvent: message },
+          })
+        }
+      })
+      dispatch({ type: 'ADD_CONNECTION', payload: eb })
+    }
+  }, [])
+
   const closeEventBusConnections = () => {
     state.eventBusConnections.map((eb) => eb.close())
   }
@@ -210,6 +233,7 @@ function MonitorsProvider(props) {
         fetchFeedTypes,
         initLiveDataConnection,
         initCachedDataConnection,
+        initChangeEventsConnection,
         closeEventBusConnections,
         reload,
         ...state,
