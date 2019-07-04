@@ -7,6 +7,7 @@ import {
   Position,
   Menu,
   Text,
+  Icon,
 } from 'evergreen-ui'
 
 import Logo from './Logo'
@@ -103,6 +104,7 @@ const NavBar = () => {
           onClick={logout}
           marginLeft={majorScale(4)}
         >
+          <Icon icon="user" marginRight={majorScale(1)} color="muted" />
           <Text>Log Out {user.displayName}</Text>
         </Button>
       </Pane>
