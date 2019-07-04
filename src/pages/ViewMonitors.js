@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pane, majorScale, toaster } from 'evergreen-ui'
+import { Pane, majorScale, toaster, Text, Strong } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 
 import MonitorsTable from '../components/MonitorsTable'
@@ -120,10 +120,30 @@ const ViewMonitors = () => {
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}
           />
-          <MonitorsTable
-            monitors={filtered}
-            handleSearchChange={handleTableSearchChange}
-          />
+          {filtered && !!filtered.length && (
+            <MonitorsTable
+              monitors={filtered}
+              handleSearchChange={handleTableSearchChange}
+            />
+          )}
+          {!filtered ||
+            (!filtered.length && (
+              <Pane
+                elevation={1}
+                width="100%"
+                height={120}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+                background="tint1"
+              >
+                <Text size={500}>
+                  There are no <Strong size={500}>{status}</Strong> monitors
+                  currently available
+                </Text>
+              </Pane>
+            ))}
         </Pane>
       )}
     </PageContainer>
