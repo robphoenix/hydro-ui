@@ -83,8 +83,8 @@ const CreateMonitorForm = (props) => {
       categories,
     }
 
-    await createMonitor(monitor)
-    navigate(`/monitors/view`)
+    const response = await createMonitor(monitor)
+    navigate(`/monitors/${response.id || id}`)
   }
 
   const validate = (values) => {
