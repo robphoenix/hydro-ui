@@ -7,7 +7,6 @@ import {
   Position,
   Menu,
   Text,
-  toaster,
 } from 'evergreen-ui'
 
 import Logo from './Logo'
@@ -15,7 +14,6 @@ import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
 import { Link } from '@reach/router'
-import { reload } from '../utils/monitors-client'
 
 const MenuButton = (props) => (
   <Button

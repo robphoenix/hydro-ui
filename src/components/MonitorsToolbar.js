@@ -9,7 +9,8 @@ import {
 import { navigate } from '@reach/router'
 
 const MonitorsToolbar = ({
-  getStatusProps,
+  handleStatusChange,
+  statusValue,
   statusOptions,
   getCategoriesProps,
   categoriesOptions,
@@ -20,7 +21,8 @@ const MonitorsToolbar = ({
       <SegmentedControl
         width={240}
         options={statusOptions}
-        {...getStatusProps(`status`)}
+        value={statusValue}
+        onChange={handleStatusChange}
         marginRight={majorScale(2)}
       />
 

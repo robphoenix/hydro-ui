@@ -14,9 +14,14 @@ import {
 } from '../utils/filters'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
+import useStoredMonitorStatus from '../hooks/useStoredMonitorStatus'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
+  const {
+    getStoredMonitorStatus,
+    setStoredMonitorStatus,
+  } = useStoredMonitorStatus()
   const [buttonText, setButtonText] = React.useState(`Filter Categories...`)
 
   React.useEffect(() => {
@@ -32,7 +37,7 @@ const ViewMonitors = () => {
     searchQuery,
   } = useFilter({
     searchQuery: ``,
-    status: `online`,
+    status: getStoredMonitorStatus(),
     categories: [],
   })
 
@@ -94,6 +99,13 @@ const ViewMonitors = () => {
     }
   }, [errors.monitors])
 
+  const { value, onChange } = getSegmentedControlProps(`status`)
+
+  const handleStatusChange = (value) => {
+    setStoredMonitorStatus(value)
+    onChange(value)
+  }
+
   return (
     <PageContainer>
       <PageHeading>monitors</PageHeading>
@@ -101,7 +113,8 @@ const ViewMonitors = () => {
       {!isLoading && (
         <Pane>
           <MonitorsToolbar
-            getStatusProps={getSegmentedControlProps}
+            handleStatusChange={handleStatusChange}
+            statusValue={value}
             statusOptions={statusOptions}
             getCategoriesProps={getMultiSelectMenuProps}
             categoriesButtonText={buttonText}
