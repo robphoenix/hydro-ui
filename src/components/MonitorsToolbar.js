@@ -15,6 +15,7 @@ const MonitorsToolbar = ({
   getCategoriesProps,
   categoriesOptions,
   categoriesButtonText,
+  disableCategories,
 }) => {
   return (
     <Pane display="flex" marginBottom={majorScale(4)}>
@@ -32,7 +33,7 @@ const MonitorsToolbar = ({
         options={categoriesOptions}
         {...getCategoriesProps(`categories`)}
       >
-        <Button>{categoriesButtonText}</Button>
+        <Button disabled={disableCategories}>{categoriesButtonText}</Button>
       </SelectMenu>
       <Button
         textTransform="capitalize"

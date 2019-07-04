@@ -119,6 +119,7 @@ const ViewMonitors = () => {
             getCategoriesProps={getMultiSelectMenuProps}
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}
+            disableCategories={!filtered || !filtered.length}
           />
           {filtered && !!filtered.length && (
             <MonitorsTable
