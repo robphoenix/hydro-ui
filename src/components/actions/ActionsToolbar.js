@@ -1,8 +1,12 @@
 import React from 'react'
 import { Pane, majorScale, SelectMenu, Button } from 'evergreen-ui'
+
 import { navigate } from '@reach/router'
+import { useUser } from '../../context/user-context'
 
 const ActionsToolbar = ({ options, getProps, actionType }) => {
+  const { isAdmin } = useUser()
+
   return (
     <Pane
       marginBottom={majorScale(4)}
@@ -17,15 +21,17 @@ const ActionsToolbar = ({ options, getProps, actionType }) => {
       >
         <Button>{`${actionType.label} selected`}</Button>
       </SelectMenu>
-      <Button
-        textTransform="capitalize"
-        appearance="primary"
-        intent="success"
-        iconBefore="add"
-        onClick={() => navigate(`/actions/add`)}
-      >
-        add new action
-      </Button>
+      {isAdmin && (
+        <Button
+          textTransform="capitalize"
+          appearance="primary"
+          intent="success"
+          iconBefore="add"
+          onClick={() => navigate(`/actions/add`)}
+        >
+          add new action
+        </Button>
+      )}
     </Pane>
   )
 }

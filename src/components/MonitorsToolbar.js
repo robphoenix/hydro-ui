@@ -7,6 +7,7 @@ import {
   Button,
 } from 'evergreen-ui'
 import { navigate } from '@reach/router'
+import { useUser } from '../context/user-context'
 
 const MonitorsToolbar = ({
   handleStatusChange,
@@ -17,6 +18,8 @@ const MonitorsToolbar = ({
   categoriesButtonText,
   disableCategories,
 }) => {
+  const { isAdmin } = useUser()
+
   return (
     <Pane display="flex" marginBottom={majorScale(4)}>
       <SegmentedControl
@@ -35,16 +38,18 @@ const MonitorsToolbar = ({
       >
         <Button disabled={disableCategories}>{categoriesButtonText}</Button>
       </SelectMenu>
-      <Button
-        textTransform="capitalize"
-        marginLeft="auto"
-        appearance="primary"
-        intent="success"
-        iconBefore="add"
-        onClick={() => navigate(`/monitors/add`)}
-      >
-        add new monitor
-      </Button>
+      {isAdmin && (
+        <Button
+          textTransform="capitalize"
+          marginLeft="auto"
+          appearance="primary"
+          intent="success"
+          iconBefore="add"
+          onClick={() => navigate(`/monitors/add`)}
+        >
+          add new monitor
+        </Button>
+      )}
     </Pane>
   )
 }

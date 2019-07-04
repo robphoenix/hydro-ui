@@ -8,7 +8,7 @@ import PageContainer from '../components/PageContainer'
 
 const AddMonitor = () => {
   const { addMonitor } = useMonitors()
-  const { groups: userGroups } = useUser()
+  const { userGroups } = useUser()
 
   const initialValues = {
     name: '',

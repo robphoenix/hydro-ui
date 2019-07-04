@@ -31,17 +31,17 @@ const LinkTitle = (props) => (
 )
 
 const NavBar = () => {
-  const user = useUser()
+  const { displayName, isAdmin } = useUser()
   const { logout } = useAuth()
 
   const monitorsLinks = [
-    { to: `/monitors/view`, label: `View Monitors` },
-    { to: `/monitors/add`, label: `Add New Monitor` },
-    { to: `/monitors/feedtypes`, label: `View Feed Types` },
+    { to: `/monitors/view`, label: `View Monitors`, show: true },
+    { to: `/monitors/add`, label: `Add New Monitor`, show: isAdmin },
+    { to: `/monitors/feedtypes`, label: `View Feed Types`, show: true },
   ]
   const actionsLinks = [
-    { to: `/actions/view`, label: `View Actions` },
-    { to: `/actions/add`, label: `Add New Action` },
+    { to: `/actions/view`, label: `View Actions`, show: true },
+    { to: `/actions/add`, label: `Add New Action`, show: isAdmin },
   ]
 
   return (
@@ -66,11 +66,13 @@ const NavBar = () => {
           content={({ close }) => (
             <Menu>
               <Menu.Group>
-                {monitorsLinks.map((link) => (
-                  <NavLink key={link.to} to={link.to}>
-                    <Menu.Item onSelect={close}>{link.label}</Menu.Item>
-                  </NavLink>
-                ))}
+                {monitorsLinks
+                  .filter((link) => link.show)
+                  .map((link) => (
+                    <NavLink key={link.to} to={link.to}>
+                      <Menu.Item onSelect={close}>{link.label}</Menu.Item>
+                    </NavLink>
+                  ))}
               </Menu.Group>
             </Menu>
           )}
@@ -85,11 +87,13 @@ const NavBar = () => {
           content={({ close }) => (
             <Menu>
               <Menu.Group>
-                {actionsLinks.map((link) => (
-                  <NavLink key={link.to} to={link.to}>
-                    <Menu.Item onSelect={close}>{link.label}</Menu.Item>
-                  </NavLink>
-                ))}
+                {actionsLinks
+                  .filter((link) => link.show)
+                  .map((link) => (
+                    <NavLink key={link.to} to={link.to}>
+                      <Menu.Item onSelect={close}>{link.label}</Menu.Item>
+                    </NavLink>
+                  ))}
               </Menu.Group>
             </Menu>
           )}
@@ -105,7 +109,7 @@ const NavBar = () => {
           marginLeft={majorScale(4)}
         >
           <Icon icon="user" marginRight={majorScale(1)} color="muted" />
-          <Text>Log Out {user.displayName}</Text>
+          <Text>Log Out {displayName}</Text>
         </Button>
       </Pane>
     </Pane>

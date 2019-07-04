@@ -15,9 +15,11 @@ import {
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 import useStoredMonitorStatus from '../hooks/useStoredMonitorStatus'
+import { useUser } from '../context/user-context'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
+  const { isAdmin } = useUser()
   const {
     getStoredMonitorStatus,
     setStoredMonitorStatus,
@@ -57,10 +59,12 @@ const ViewMonitors = () => {
   const filtered = filter(monitors)
 
   const statusOptions = [
-    { label: 'Online', value: 'online' },
-    { label: 'Offline', value: 'offline' },
-    { label: 'Archived', value: 'archived' },
-  ]
+    { label: `Online`, value: `online` },
+    { label: `Offline`, value: `offline` },
+    { label: `Archived`, value: `archived` },
+  ].filter((option) => {
+    return isAdmin ? true : option.value !== `archived`
+  })
 
   const categoryOptions = Array.from(
     new Set(

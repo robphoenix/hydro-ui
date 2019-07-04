@@ -7,8 +7,11 @@ import {
   ActionPropertiesCell,
   ActionMenuCell,
 } from '.'
+import { useUser } from '../../context/user-context'
 
 const ActionsTable = ({ actions, handleChange }) => {
+  const { isAdmin } = useUser()
+
   return (
     <Table>
       <Table.Head>
@@ -34,7 +37,7 @@ const ActionsTable = ({ actions, handleChange }) => {
               <ActionPropertiesCell action={action} />
             </Table.Cell>
             <Table.Cell justifyContent="flex-end" flex="1">
-              <ActionMenuCell action={action} />
+              {isAdmin && <ActionMenuCell action={action} />}
             </Table.Cell>
           </Table.Row>
         ))}
