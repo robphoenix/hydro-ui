@@ -414,9 +414,13 @@ const ViewMonitorById = ({ id }) => {
             })}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {filter(sort(state.data)).map((row) => {
+            {filter(sort(state.data)).map((row, i) => {
               return (
-                <Table.Row key={Object.values(row).join(``)}>
+                <Table.Row
+                  key={Object.values(row).join(``)}
+                  background={i % 2 !== 0 && 'tint1'}
+                  borderLeft={i % 2 !== 0 && '1px solid #EDF0F2'}
+                >
                   {Object.values(row).map((cell) => (
                     <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
                   ))}
