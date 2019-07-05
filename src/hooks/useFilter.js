@@ -54,6 +54,7 @@ const useFilter = (initialValues) => {
   })
 
   const handleSelect = (fieldName) => (item) => {
+    console.log({ item })
     dispatch({
       type: `SET_VALUE`,
       payload: { [fieldName]: item },

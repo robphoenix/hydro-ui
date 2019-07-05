@@ -15,7 +15,15 @@ const EditMonitor = ({ id }) => {
 
   React.useEffect(() => {
     if (Object.keys(monitor).length) {
-      const { id, name, description, priority, query, cacheWindow } = monitor
+      const {
+        id,
+        name,
+        description,
+        priority,
+        query,
+        cacheWindow,
+        type,
+      } = monitor
 
       // is the monitor online?
       const status = monitor.status === `online`
@@ -25,6 +33,7 @@ const EditMonitor = ({ id }) => {
         name,
         description,
         status,
+        type,
         priority,
         query,
         cacheWindow,

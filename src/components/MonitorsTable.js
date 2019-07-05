@@ -23,7 +23,7 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
             key={monitor.id}
             height="auto"
             padding={majorScale(3)}
-            background={i % 2 !== 0 && 'tint1'}
+            background={i % 2 !== 0 ? 'tint1' : ''}
             borderLeft={i % 2 !== 0 && '1px solid #EDF0F2'}
           >
             <Table.Cell flex="2">

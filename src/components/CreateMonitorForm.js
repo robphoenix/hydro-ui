@@ -18,8 +18,10 @@ import { useMonitors } from '../context/monitors-context'
 import useForm from '../hooks/useForm'
 import { navigate } from '@reach/router'
 import useCacheWindowDurations from '../hooks/useCacheWindowDurations'
+import { useUser } from '../context/user-context'
 
 const CreateMonitorForm = (props) => {
+  const { isAdmin } = useUser()
   const { initialValues, createMonitor } = props
   const nameMaxChars = 50
   const categoriesMax = 4
@@ -61,7 +63,6 @@ const CreateMonitorForm = (props) => {
   }
 
   const onSubmit = async (values) => {
-    const type = `standard`
     const status = values.status ? `online` : `offline`
     const cacheWindow = cacheWindowDurationValues[values.cacheWindow]
     const groups = selectedItems(values.groups, allGroups)
@@ -69,7 +70,7 @@ const CreateMonitorForm = (props) => {
     const categories = selectedItems(values.categories, allCategories)
 
     // NOTE: priority is not yet used
-    const { name, description, query, id } = values
+    const { name, description, query, id, type } = values
     const monitor = {
       id,
       name,
@@ -155,6 +156,11 @@ const CreateMonitorForm = (props) => {
     return text
   }
 
+  const monitorTypeOptions = [
+    { value: `standard`, label: `Standard` },
+    { value: `system`, label: `System` },
+  ]
+
   return (
     <form onSubmit={handleSubmit}>
       <TextInputField
@@ -172,6 +178,7 @@ const CreateMonitorForm = (props) => {
         required
         {...getInputFieldProps('name')}
       />
+
       <FormField
         label="Monitor Description"
         isRequired
@@ -187,6 +194,7 @@ const CreateMonitorForm = (props) => {
           {...getInputFieldProps('description')}
         />
       </FormField>
+
       <FormField
         label="Monitor Status"
         labelFor="status"
@@ -203,14 +211,31 @@ const CreateMonitorForm = (props) => {
           </Text>
         </Pane>
       </FormField>
+
+      {isAdmin && (
+        <FormField
+          label="Type"
+          labelFor="type"
+          marginBottom={majorScale(3)}
+          width="30%"
+        >
+          <SegmentedControl
+            id="type"
+            options={monitorTypeOptions}
+            {...getSegmentedControlFieldProps(`type`)}
+          />
+        </FormField>
+      )}
+
       <FormField
         label="Priority"
         labelFor="priority"
         marginBottom={majorScale(3)}
       >
         <SegmentedControl
+          id="priority"
           options={priorityOptions}
-          {...getSegmentedControlFieldProps('priority')}
+          {...getSegmentedControlFieldProps(`priority`)}
         />
       </FormField>
 
@@ -225,7 +250,7 @@ const CreateMonitorForm = (props) => {
           id="query"
           placeholder="EPL Query..."
           required
-          {...getInputFieldProps('query')}
+          {...getInputFieldProps(`query`)}
           isInvalid={errors.query && touched.query}
           fontFamily="mono"
           rows="10"
@@ -241,13 +266,13 @@ const CreateMonitorForm = (props) => {
           type="range"
           min={cacheWindowMin}
           max={cacheWindowMax}
-          {...getInputFieldProps('cacheWindow')}
+          {...getInputFieldProps(`cacheWindow`)}
           style={{
             width: `100%`,
           }}
         />
         <Text>
-          {cacheWindowDurationNames[getInputFieldProps('cacheWindow').value]}
+          {cacheWindowDurationNames[getInputFieldProps(`cacheWindow`).value]}
         </Text>
       </FormField>
 

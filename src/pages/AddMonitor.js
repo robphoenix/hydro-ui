@@ -11,11 +11,12 @@ const AddMonitor = () => {
   const { userGroups } = useUser()
 
   const initialValues = {
-    name: '',
-    description: '',
+    name: ``,
+    description: ``,
     status: false,
-    priority: 'mid',
-    query: '',
+    type: `standard`,
+    priority: `mid`,
+    query: ``,
     cacheWindow: 0,
     groups: userGroups.map((g) => `${g.id}`),
     categories: [],

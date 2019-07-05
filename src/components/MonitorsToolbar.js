@@ -14,11 +14,13 @@ const MonitorsToolbar = ({
   statusValue,
   statusOptions,
   getCategoriesProps,
+  getTypeProps,
+  typeOptions,
   categoriesOptions,
   categoriesButtonText,
   disableCategories,
 }) => {
-  const { allowsEdit } = useUser()
+  const { allowsEdit, isAdmin } = useUser()
 
   return (
     <Pane display="flex" marginBottom={majorScale(4)}>
@@ -30,14 +32,47 @@ const MonitorsToolbar = ({
         marginRight={majorScale(2)}
       />
 
+      {isAdmin && (
+        <SelectMenu
+          // TODO: we will be able to do this in a future release
+          // https://github.com/segmentio/evergreen/pull/579
+          // height="auto"
+          height={100}
+          width={160}
+          hasFilter={false}
+          hasTitle={false}
+          options={typeOptions}
+          {...getTypeProps(`type`)}
+        >
+          <Button
+            textTransform="capitalize"
+            width={140}
+            marginRight={majorScale(2)}
+            display="flex"
+            justifyContent="center"
+          >
+            {getTypeProps(`type`).selected} monitors
+          </Button>
+        </SelectMenu>
+      )}
+
       <SelectMenu
         isMultiSelect
         title="Select multiple categories"
         options={categoriesOptions}
         {...getCategoriesProps(`categories`)}
       >
-        <Button disabled={disableCategories}>{categoriesButtonText}</Button>
+        <Button
+          disabled={disableCategories}
+          width={160}
+          marginRight={majorScale(2)}
+          display="flex"
+          justifyContent="center"
+        >
+          {categoriesButtonText}
+        </Button>
       </SelectMenu>
+
       {allowsEdit && (
         <Button
           textTransform="capitalize"

@@ -34,6 +34,7 @@ const ViewMonitors = () => {
     handleTableSearchChange,
     getSegmentedControlProps,
     getMultiSelectMenuProps,
+    getSelectMenuProps,
     categories,
     status,
     searchQuery,
@@ -41,6 +42,7 @@ const ViewMonitors = () => {
     searchQuery: ``,
     status: getStoredMonitorStatus(),
     categories: [],
+    type: { value: `standard`, label: `Standard Monitors` },
   })
 
   const filter = (monitors) => {
@@ -65,6 +67,11 @@ const ViewMonitors = () => {
   ].filter((option) => {
     return isAdmin ? true : option.value !== `archived`
   })
+
+  const typeOptions = [
+    { label: `Standard Monitors`, value: `standard` },
+    { label: `System Monitors`, value: `system` },
+  ]
 
   const categoryOptions = Array.from(
     new Set(
@@ -121,6 +128,8 @@ const ViewMonitors = () => {
             statusValue={value}
             statusOptions={statusOptions}
             getCategoriesProps={getMultiSelectMenuProps}
+            getTypeProps={getSelectMenuProps}
+            typeOptions={typeOptions}
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}
             disableCategories={!filtered || !filtered.length}
