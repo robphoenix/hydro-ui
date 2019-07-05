@@ -16,9 +16,6 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
           onChange={handleSearchChange}
           placeholder="Search by monitor name and description..."
         />
-        <Table.TextHeaderCell flex="1" padding="0">
-          Categories
-        </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body height={700}>
         {monitors.map((monitor, i) => (
