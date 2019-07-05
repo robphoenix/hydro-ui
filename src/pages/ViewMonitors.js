@@ -11,6 +11,7 @@ import {
   isStatus,
   matchesSearchQuery,
   hasSelectedCategories,
+  isMonitorType,
 } from '../utils/filters'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
@@ -37,6 +38,7 @@ const ViewMonitors = () => {
     getSelectMenuProps,
     categories,
     status,
+    type,
     searchQuery,
   } = useFilter({
     searchQuery: ``,
@@ -46,8 +48,10 @@ const ViewMonitors = () => {
   })
 
   const filter = (monitors) => {
+    console.log({ type })
     return monitors.filter((monitor) => {
       return (
+        isMonitorType(monitor, type.value) &&
         isStatus(monitor, status) &&
         matchesSearchQuery(
           `${monitor.name} ${monitor.description}`.toLowerCase(),

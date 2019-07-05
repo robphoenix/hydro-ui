@@ -21,6 +21,10 @@ const isStatus = (monitor, status) => {
   return monitor.status === status
 }
 
+const isMonitorType = (monitor, type) => {
+  return monitor.type === type
+}
+
 const isSelectedActionType = (actionType, selected) => {
   if (!selected.value) {
     return true
@@ -33,4 +37,5 @@ export {
   hasSelectedCategories,
   isStatus,
   isSelectedActionType,
+  isMonitorType,
 }
