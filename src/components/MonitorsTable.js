@@ -1,10 +1,11 @@
 import React from 'react'
-import { Table, majorScale } from 'evergreen-ui'
+import { Table, majorScale, Button } from 'evergreen-ui'
 
 import MonitorNameCell from './MonitorNameCell'
 import ViewEplQueryCell from './ViewEplQueryCell'
 import MonitorMenuCell from './MonitorMenuCell'
 import MonitorCategories from './MonitorCategories'
+import { navigate } from '@reach/router'
 
 const MonitorsTable = ({ handleSearchChange, monitors }) => {
   return (
@@ -31,6 +32,17 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
             <Table.Cell flex="2">
               <MonitorNameCell monitor={monitor} />
             </Table.Cell>
+            {monitor.status === `online` && (
+              <Table.Cell flex="1">
+                <Button
+                  appearance="primary"
+                  iconBefore="offline"
+                  onClick={() => navigate(`/monitors/${monitor.id}`)}
+                >
+                  Live Data
+                </Button>
+              </Table.Cell>
+            )}
             <Table.Cell>
               <ViewEplQueryCell monitor={monitor} />
             </Table.Cell>

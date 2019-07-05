@@ -50,7 +50,7 @@ const ViewEplQueryCell = ({ monitor }) => {
         </Pane>
       )}
     >
-      <Button appearance="primary">View EPL Query</Button>
+      <Button appearance="minimal">View EPL Query</Button>
     </Popover>
   )
 }

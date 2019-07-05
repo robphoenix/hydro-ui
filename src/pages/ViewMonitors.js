@@ -111,7 +111,7 @@ const ViewMonitors = () => {
   }
 
   return (
-    <PageContainer>
+    <PageContainer width="70%">
       <PageHeading>monitors</PageHeading>
       {isLoading && <FullPageSpinner height={majorScale(40)} />}
       {!isLoading && (
