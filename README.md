@@ -1,1 +1,1 @@
-![hydro logo](/src/assets/images/hydro-logo-lg.jpg)
+![hydro logo](/src/assets/images/hydro-ui.jpg)
