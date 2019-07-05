@@ -15,7 +15,7 @@ import {
 } from '../utils/filters'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
-import useStoredMonitorStatus from '../hooks/useStoredMonitorStatus'
+import useStoredMonitorPreferences from '../hooks/useStoredMonitorPreferences'
 import { useUser } from '../context/user-context'
 
 const ViewMonitors = () => {
@@ -24,7 +24,9 @@ const ViewMonitors = () => {
   const {
     getStoredMonitorStatus,
     setStoredMonitorStatus,
-  } = useStoredMonitorStatus()
+    getStoredMonitorType,
+    setStoredMonitorType,
+  } = useStoredMonitorPreferences()
   const [buttonText, setButtonText] = React.useState(`Filter Categories...`)
 
   React.useEffect(() => {
@@ -44,7 +46,7 @@ const ViewMonitors = () => {
     searchQuery: ``,
     status: getStoredMonitorStatus(),
     categories: [],
-    type: { value: `standard`, label: `Standard Monitors` },
+    type: getStoredMonitorType(),
   })
 
   const filter = (monitors) => {
@@ -114,11 +116,23 @@ const ViewMonitors = () => {
     }
   }, [errors.monitors])
 
-  const { value, onChange } = getSegmentedControlProps(`status`)
+  const {
+    value: statusValue,
+    onChange: onStatusChange,
+  } = getSegmentedControlProps(`status`)
 
   const handleStatusChange = (value) => {
     setStoredMonitorStatus(value)
-    onChange(value)
+    onStatusChange(value)
+  }
+
+  const { selected: selectedType, onSelect: onTypeSelect } = getSelectMenuProps(
+    `type`,
+  )
+
+  const handleTypeSelect = (item) => {
+    setStoredMonitorType(item)
+    onTypeSelect(item)
   }
 
   return (
@@ -129,10 +143,11 @@ const ViewMonitors = () => {
         <Pane>
           <MonitorsToolbar
             handleStatusChange={handleStatusChange}
-            statusValue={value}
+            statusValue={statusValue}
             statusOptions={statusOptions}
             getCategoriesProps={getMultiSelectMenuProps}
-            getTypeProps={getSelectMenuProps}
+            selectedType={selectedType}
+            handleTypeSelect={handleTypeSelect}
             typeOptions={typeOptions}
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}

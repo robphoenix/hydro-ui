@@ -14,7 +14,8 @@ const MonitorsToolbar = ({
   statusValue,
   statusOptions,
   getCategoriesProps,
-  getTypeProps,
+  selectedType,
+  handleTypeSelect,
   typeOptions,
   categoriesOptions,
   categoriesButtonText,
@@ -42,7 +43,8 @@ const MonitorsToolbar = ({
           hasFilter={false}
           hasTitle={false}
           options={typeOptions}
-          {...getTypeProps(`type`)}
+          selected={selectedType}
+          onSelect={handleTypeSelect}
         >
           <Button
             textTransform="capitalize"
@@ -51,7 +53,7 @@ const MonitorsToolbar = ({
             display="flex"
             justifyContent="center"
           >
-            {getTypeProps(`type`).selected} monitors
+            {selectedType} monitors
           </Button>
         </SelectMenu>
       )}
