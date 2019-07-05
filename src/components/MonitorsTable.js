@@ -20,8 +20,14 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
         </Table.TextHeaderCell>
       </Table.Head>
       <Table.Body height={700}>
-        {monitors.map((monitor) => (
-          <Table.Row key={monitor.id} height="auto" padding={majorScale(3)}>
+        {monitors.map((monitor, i) => (
+          <Table.Row
+            key={monitor.id}
+            height="auto"
+            padding={majorScale(3)}
+            background={i % 2 !== 0 && 'tint1'}
+            borderLeft={i % 2 !== 0 && '1px solid #EDF0F2'}
+          >
             <Table.Cell flex="2">
               <MonitorNameCell monitor={monitor} />
             </Table.Cell>
