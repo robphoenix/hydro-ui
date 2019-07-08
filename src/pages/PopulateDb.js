@@ -52,13 +52,18 @@ const PopulateDb = () => {
     ]
     return Array.from(
       new Set(
-        Array.from(Array(faker.random.number({ min: 1, max: 3 }))).map(
-          (n) =>
-            actionParameters[
-              faker.random.number({ min: 0, max: actionParameters.length - 1 })
-            ],
+        Array.from(Array(faker.random.number({ min: 1, max: 3 }))).map(() =>
+          faker.random.arrayElement(actionParameters),
         ),
       ),
+    )
+  }
+
+  const createEmailAddresses = () => {
+    return Array.from(Array(faker.random.number({ min: 1, max: 3 }))).map(
+      () => {
+        return `${faker.name.firstName()}.${faker.name.lastName()}@bet365.com`.toLowerCase()
+      },
     )
   }
 
@@ -83,8 +88,25 @@ const PopulateDb = () => {
     switch (actionType) {
       case `block`:
         return createBlockMetadata()
+      case `emailRate`:
+        return createEmailRateMetadata()
       default:
-        return createBlockMetadata()
+        return createEmailRateMetadata()
+    }
+  }
+
+  const createEmailRateMetadata = () => {
+    const parameters = []
+    const emailAddresses = createEmailAddresses()
+    const emailSubject = faker.lorem.sentence()
+    const emailSendLimit = faker.random.number({ min: -1, max: 30 })
+    const emailText = faker.lorem.paragraph()
+    return {
+      parameters,
+      emailAddresses,
+      emailSubject,
+      emailSendLimit,
+      emailText,
     }
   }
 
@@ -97,13 +119,17 @@ const PopulateDb = () => {
         blockTime,
       }
     }
-    const blockTimeUnit = [`MINUTES`, `HOURS`, `DAYS`][
-      faker.random.number({ min: 0, max: 2 })
-    ]
+    const blockTimeUnit = faker.random.arrayElement([
+      `MINUTES`,
+      `HOURS`,
+      `DAYS`,
+    ])
     const blockDelay = faker.random.number({ min: 0, max: 59 })
-    const blockDelayUnit = [`SECONDS`, `MINUTES`, `HOURS`][
-      faker.random.number({ min: 0, max: 2 })
-    ]
+    const blockDelayUnit = faker.random.arrayElement([
+      `SECONDS`,
+      `MINUTES`,
+      `HOURS`,
+    ])
     if (!blockDelay) {
       return { parameters, blockTime, blockTimeUnit }
     }
