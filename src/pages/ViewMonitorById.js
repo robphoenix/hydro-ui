@@ -29,6 +29,11 @@ import { Order, compare, sortableIpAddress } from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
+import {
+  eventBusCachedData,
+  eventBusLiveData,
+  eventBusChangeEvents,
+} from '../utils/eventbus-client'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -83,6 +88,7 @@ const reducer = (state, action) => {
 
 const ViewMonitorById = ({ id }) => {
   const [state, dispatch] = React.useReducer(reducer, {
+    cachedConnectionOpened: false,
     headers: [],
     headersMetadata: [],
     data: [],
@@ -99,13 +105,7 @@ const ViewMonitorById = ({ id }) => {
   const {
     monitor,
     fetchMonitorById,
-    liveDataMessage,
-    cachedDataMessage,
     changeEvent,
-    initLiveDataConnection,
-    initCachedDataConnection,
-    initChangeEventsConnection,
-    closeEventBusConnections,
     errors,
     isLoading,
   } = useMonitors()
@@ -164,49 +164,94 @@ const ViewMonitorById = ({ id }) => {
     return sorted
   }
 
-  React.useEffect(() => {
-    if (state.paused) {
-      closeEventBusConnections()
-    }
-    if (!state.paused) {
-      initLiveDataConnection(monitor.name)
-    }
-    // TODO: double check that suppressing this warning is the right thing to
-    // do, see https://github.com/facebook/create-react-app/issues/6880
-    //
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.paused])
+  const getMessageData = (body) => {
+    const { h, d } = body
+
+    const headersMetadata = h.reduce((metadata, header) => {
+      const { n: name, t: type, f: format } = header
+      metadata[name] = { type, format }
+      return metadata
+    }, {})
+
+    const headers = h.map((header) => header.n)
+
+    const data = d.map((attributes) => {
+      return attributes.reduce((columns, column, i) => {
+        columns[headers[i]] = column
+        return columns
+      }, {})
+    })
+    return { headersMetadata, headers, data }
+  }
 
   React.useEffect(() => {
-    fetchMonitorById(id)
-  }, [fetchMonitorById, id])
+    if (Object.keys(monitor).length && !state.cachedConnectionOpened) {
+      const eb = eventBusCachedData(monitor.name, (error, message) => {
+        if (error) {
+          console.log({ error })
+          eb.close()
+        }
+        if (message) {
+          const { headers, headersMetadata, data } = getMessageData(
+            message.body,
+          )
+          dispatch({
+            type: `SET_DATA`,
+            payload: { headers, headersMetadata, data },
+          })
+        }
+        // we'll only ever recieve the one message
+        eb.close()
+      })
+      dispatch({ type: `SET_DATA`, payload: { cachedConnectionOpened: true } })
+      if (state.isLiveData) {
+        eb.close()
+      }
+    }
+  }, [monitor, state.cachedConnectionOpened, state.isLiveData])
 
   React.useEffect(() => {
-    const error = errors.monitorById
-    if (error) {
-      const { cause } = error
-      toaster.danger(`Cannot view monitor`, { description: cause })
-      navigate(`/monitors/view`)
+    let eb
+    if (Object.keys(monitor).length) {
+      eb = eventBusLiveData(monitor.name, (error, message) => {
+        if (error) {
+          eb.close()
+        }
+        if (message && message.body) {
+          const isLiveData = true
+          const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
+          const { headers, headersMetadata, data } = getMessageData(
+            message.body,
+          )
+          dispatch({
+            type: `SET_DATA`,
+            payload: {
+              headers,
+              headersMetadata,
+              data,
+              isLiveData,
+              receivedAt,
+            },
+          })
+        }
+      })
     }
-  })
-
-  React.useEffect(() => {
-    if (monitor) {
-      initCachedDataConnection(monitor.name)
+    return () => {
+      dispatch({
+        type: `SET_DATA`,
+        payload: {
+          headers: [],
+          headersMetadata: [],
+          data: [],
+          isLiveData: false,
+          receivedAt: ``,
+        },
+      })
+      if (eb) {
+        eb.close()
+      }
     }
-  }, [initCachedDataConnection, monitor])
-
-  React.useEffect(() => {
-    if (monitor) {
-      initLiveDataConnection(monitor.name)
-    }
-  }, [initLiveDataConnection, monitor])
-
-  React.useEffect(() => {
-    if (monitor) {
-      initChangeEventsConnection(monitor.name)
-    }
-  }, [initChangeEventsConnection, monitor])
+  }, [monitor])
 
   const isFirst = React.useRef(true)
   React.useEffect(() => {
@@ -223,40 +268,48 @@ const ViewMonitorById = ({ id }) => {
       cacheWindowChanged: `The monitor cache window has been changed by another user.`,
     }
 
-    // we want to avoid showing a change event dialog on first render
-    // https://stackoverflow.com/a/54895884
-    if (isFirst.current) {
-      isFirst.current = false
-      return
-    }
+    let eb
+    if (Object.keys(monitor).length) {
+      eb = eventBusChangeEvents(monitor.name, (error, message) => {
+        if (error) {
+          eb.close()
+        }
+        if (message && message.body) {
+          // we want to avoid showing a change event dialog on first render
+          // https://stackoverflow.com/a/54895884
+          if (isFirst.current) {
+            isFirst.current = false
+            return
+          }
 
-    dispatch({
-      type: `SET_CHANGE_EVENT`,
-      payload: changeEventMessages[changeEvent.body],
-    })
-  }, [changeEvent])
-
-  React.useEffect(() => {
-    if (Object.keys(liveDataMessage) && Object.keys(liveDataMessage).length) {
-      const { headers, headersMetadata, data } = liveDataMessage
-      const isLiveData = true
-      const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
-      dispatch({
-        type: `SET_DATA`,
-        payload: { headers, headersMetadata, data, isLiveData, receivedAt },
+          dispatch({
+            type: `SET_CHANGE_EVENT`,
+            payload: changeEventMessages[message.body],
+          })
+        }
       })
     }
-  }, [liveDataMessage])
+    return () => {
+      if (eb) {
+        eb.close()
+      }
+    }
+  }, [changeEvent.body, monitor])
 
   React.useEffect(() => {
-    if (!state.isLiveData) {
-      const { headers, headersMetadata, data } = cachedDataMessage
-      dispatch({
-        type: `SET_DATA`,
-        payload: { headers, headersMetadata, data },
-      })
+    fetchMonitorById(id)
+  }, [fetchMonitorById, id])
+
+  React.useEffect(() => {
+    const error = errors.monitorById
+    if (error) {
+      const { cause } = error
+      toaster.danger(`Cannot view monitor`, { description: cause })
+      navigate(`/monitors/view`)
     }
-  }, [cachedDataMessage, state.isLiveData])
+  })
+
+  React.useEffect(() => {}, [changeEvent])
 
   const showEpl = (show) => {
     const type = show ? `SHOW_EPL` : `HIDE_EPL`
@@ -418,11 +471,11 @@ const ViewMonitorById = ({ id }) => {
               return (
                 <Table.Row
                   key={Object.values(row).join(``)}
-                  background={i % 2 !== 0 && 'tint1'}
-                  borderLeft={i % 2 !== 0 && '1px solid #EDF0F2'}
+                  background={i % 2 !== 0 ? `tint1` : ``}
+                  borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
                 >
-                  {Object.values(row).map((cell) => (
-                    <Table.TextCell key={cell}>{cell || `-`}</Table.TextCell>
+                  {Object.values(row).map((cell, i) => (
+                    <Table.TextCell key={`${i}${cell}`}>{cell}</Table.TextCell>
                   ))}
                 </Table.Row>
               )
