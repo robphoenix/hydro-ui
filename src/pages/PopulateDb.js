@@ -7,7 +7,7 @@ import PageHeading from '../components/PageHeading'
 import { useMonitors } from '../context/monitors-context'
 
 const PopulateDb = () => {
-  const { addCategories } = useMonitors()
+  const { addCategories, addAction } = useMonitors()
 
   const randomCategories = () => {
     return Array.from(Array(faker.random.number({ min: 10, max: 20 }))).map(
@@ -68,20 +68,30 @@ const PopulateDb = () => {
   }
 
   const createActions = () => {
-    const actionType =
-      actionTypes[faker.random.number({ min: 0, max: actionTypes.length - 1 })]
-    const metadata = createMetadata(actionType)
-
-    const action = {
-      name: faker.random.words(),
-      description: faker.lorem.paragraph(
-        faker.random.number({ min: 1, max: 3 }),
-      ),
-      archived: false,
-      actionType,
-      metadata,
-    }
-    console.log({ action })
+    Array.from(Array(faker.random.number({ min: 30, max: 50 }))).map(
+      async () => {
+        const actionType =
+          actionTypes[
+            faker.random.number({ min: 0, max: actionTypes.length - 1 })
+          ]
+        const metadata = createMetadata(actionType)
+        const action = {
+          name: faker.random.words(),
+          description: faker.lorem.paragraph(
+            faker.random.number({ min: 1, max: 3 }),
+          ),
+          archived: false,
+          actionType,
+          metadata,
+        }
+        try {
+          await addAction(action)
+          toaster.success(`Created action: ${action.name}`)
+        } catch (error) {
+          toaster.warning(error.message)
+        }
+      },
+    )
   }
 
   const createMetadata = (actionType) => {
@@ -90,8 +100,40 @@ const PopulateDb = () => {
         return createBlockMetadata()
       case `emailRate`:
         return createEmailRateMetadata()
+      case `emailBatch`:
+        return createEmailBatchMetadata()
+      case `emailAlert`:
+        return createEmailAlertMetadata()
       default:
-        return createEmailRateMetadata()
+        return { parameters: [] }
+    }
+  }
+
+  const createEmailAlertMetadata = () => {
+    const parameters = createParameters()
+    const emailAddresses = createEmailAddresses()
+    const emailSubject = faker.lorem.sentence()
+    const emailText = faker.lorem.paragraph()
+    return {
+      parameters,
+      emailAddresses,
+      emailSubject,
+      emailText,
+    }
+  }
+
+  const createEmailBatchMetadata = () => {
+    const parameters = []
+    const emailAddresses = createEmailAddresses()
+    const emailSubject = faker.lorem.sentence()
+    const emailText = faker.lorem.paragraph()
+    const emailCron = `0 0 12 1/1 * ? *`
+    return {
+      parameters,
+      emailAddresses,
+      emailSubject,
+      emailCron,
+      emailText,
     }
   }
 
