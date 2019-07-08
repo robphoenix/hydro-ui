@@ -38,6 +38,7 @@ const NavBar = () => {
     { to: `/monitors/view`, label: `View Monitors`, show: true },
     { to: `/monitors/add`, label: `Add New Monitor`, show: allowsEdit },
     { to: `/monitors/feedtypes`, label: `View Feed Types`, show: true },
+    { to: `populate`, label: `Populate Database`, show: isAdmin },
   ]
   const actionsLinks = [
     { to: `/actions/view`, label: `View Actions`, show: true },

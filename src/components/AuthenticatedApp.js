@@ -14,6 +14,7 @@ import ViewFeedTypes from '../pages/ViewFeedTypes'
 import NotFound from '../pages/NotFound'
 import AddAction from '../pages/AddAction'
 import ViewActions from '../pages/ViewActions'
+import PopulateDb from '../pages/PopulateDb'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -37,6 +38,7 @@ const AuthenticatedApp = () => {
           <ViewMonitorById path="/monitors/:id" />
           <ViewActions path="/actions/view" />
           <AddAction path="/actions/add" />
+          <PopulateDb path="/populate" />
           <NotFound default />
         </Router>
       </MonitorsProvider>

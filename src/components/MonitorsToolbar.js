@@ -19,7 +19,6 @@ const MonitorsToolbar = ({
   typeOptions,
   categoriesOptions,
   categoriesButtonText,
-  disableCategories,
 }) => {
   const { allowsEdit, isAdmin } = useUser()
 
@@ -65,7 +64,6 @@ const MonitorsToolbar = ({
         {...getCategoriesProps(`categories`)}
       >
         <Button
-          disabled={disableCategories}
           width={160}
           marginRight={majorScale(2)}
           display="flex"

@@ -50,7 +50,6 @@ const ViewMonitors = () => {
   })
 
   const filter = (monitors) => {
-    console.log({ type })
     return monitors.filter((monitor) => {
       return (
         isMonitorType(monitor, type.value) &&
@@ -151,7 +150,6 @@ const ViewMonitors = () => {
             typeOptions={typeOptions}
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}
-            disableCategories={!filtered || !filtered.length}
           />
           {filtered && !!filtered.length && (
             <MonitorsTable
@@ -171,9 +169,12 @@ const ViewMonitors = () => {
                 flexDirection="column"
                 background="tint1"
               >
-                <Text size={500}>
-                  There are no <Strong size={500}>{status}</Strong> monitors
-                  currently available
+                <Text size={500} textTransform="capitalize">
+                  No{' '}
+                  <Strong size={500}>
+                    {status} {type.value}
+                  </Strong>{' '}
+                  monitors
                 </Text>
               </Pane>
             ))}
