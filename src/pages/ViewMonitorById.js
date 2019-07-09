@@ -93,10 +93,9 @@ const ViewMonitorById = ({ id }) => {
     if (!searchQuery) {
       return data
     }
-    const filtered = data.filter((row) => {
+    return data.filter((row) => {
       return matchesSearchQuery(Object.values(row).join(` `), searchQuery)
     })
-    return filtered
   }
 
   const sort = (data) => {
@@ -114,7 +113,7 @@ const ViewMonitorById = ({ id }) => {
       return data
     }
     const isAsc = direction === Order.ASC
-    const sorted = data.sort((a, b) => {
+    return data.sort((a, b) => {
       switch (type) {
         case 'ip':
           return compare(
@@ -128,7 +127,6 @@ const ViewMonitorById = ({ id }) => {
           return compare(a[col], b[col], isAsc)
       }
     })
-    return sorted
   }
 
   const getMessageData = (body) => {
@@ -152,6 +150,10 @@ const ViewMonitorById = ({ id }) => {
   }
 
   React.useEffect(() => {
+    // We do this here, rather than in the monitor context, so that no previous
+    // state is left over. When used in the monitor context, the previous
+    // monitor is still in state and so the first set of data that comes through
+    // is for that not the current monitor.
     const fetchMonitorById = async (id) => {
       try {
         const monitor = await getMonitorById(id)
@@ -235,16 +237,6 @@ const ViewMonitorById = ({ id }) => {
       }
     }
     return () => {
-      dispatch({
-        type: `SET_VALUE`,
-        payload: {
-          headers: [],
-          headersMetadata: [],
-          data: [],
-          isLiveData: false,
-          receivedAt: ``,
-        },
-      })
       if (eb) {
         eb.close()
       }
@@ -307,8 +299,6 @@ const ViewMonitorById = ({ id }) => {
       navigate(`/monitors/view`)
     }
   })
-
-  React.useEffect(() => {}, [changeEvent])
 
   const showEpl = (showEplQuery) => {
     dispatch({ type: `SET_VALUE`, payload: { showEplQuery } })
