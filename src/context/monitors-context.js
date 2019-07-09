@@ -18,7 +18,6 @@ import {
   addAction,
   reload,
 } from '../utils/monitors-client'
-import { eventBusChangeEvents } from '../utils/eventbus-client'
 
 const MonitorsContext = React.createContext(null)
 
@@ -53,15 +52,14 @@ function MonitorsProvider(props) {
   }
 
   const initialState = {
+    monitor: {},
     isLoading: true,
     monitors: [],
-    monitor: {},
     feedTypes: {},
     allGroups: [],
     allCategories: [],
     allActions: [],
     errors: {},
-    changeEvent: {},
   }
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
@@ -120,26 +118,10 @@ function MonitorsProvider(props) {
     }
   }, [])
 
-  const initChangeEventsConnection = React.useCallback((name) => {
-    if (name) {
-      const eb = eventBusChangeEvents(name, (error, message) => {
-        if (error) {
-          eb.close()
-          dispatch({ type: `SET_ERROR`, payload: { changeEvent: error } })
-        }
-        if (message) {
-          dispatch({
-            type: `SUCCESS`,
-            payload: { changeEvent: message },
-          })
-        }
-      })
-      dispatch({
-        type: `ADD_CONNECTION`,
-        payload: { name: `CHANGE EVENTS ${name}`, eb },
-      })
-    }
-  }, [])
+  const resetMonitor = () => {
+    console.log(`reset`)
+    dispatch({ type: `RESET` })
+  }
 
   return (
     <MonitorsContext.Provider
@@ -153,13 +135,14 @@ function MonitorsProvider(props) {
         archiveMonitor,
         unarchiveMonitor,
         fetchMonitors,
+        getMonitorById,
         fetchMonitorById,
         fetchGroups,
         fetchCategories,
         fetchActions,
         archiveAction,
         fetchFeedTypes,
-        initChangeEventsConnection,
+        resetMonitor,
         reload,
         ...state,
       }}
