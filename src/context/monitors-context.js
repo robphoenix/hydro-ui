@@ -37,6 +37,7 @@ function MonitorsProvider(props) {
           ...state,
           ...action.payload,
           isLoading: false,
+          errors: {},
         }
       case `SET_ERROR`:
         return {

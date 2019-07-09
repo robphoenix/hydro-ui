@@ -248,7 +248,9 @@ const PopulateDb = () => {
   return (
     <PageContainer>
       <PageHeading>Populate Database</PageHeading>
-      <Button onClick={createMonitors}>Create Monitors</Button>
+      <Button intent="danger" appearance="primary" onClick={createMonitors}>
+        Create Monitors
+      </Button>
     </PageContainer>
   )
 }
