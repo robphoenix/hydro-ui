@@ -121,7 +121,7 @@ const ViewMonitorById = ({ id }) => {
     changeEventMessage: ``,
   })
 
-  const { getMonitorById, changeEvent, errors, isLoading } = useMonitors()
+  const { getMonitorById, changeEvent, errors } = useMonitors()
 
   const getIconForOrder = (name) => {
     switch (state.direction[name]) {
@@ -375,7 +375,7 @@ const ViewMonitorById = ({ id }) => {
 
   return (
     <PageContainer width="80%">
-      {state.monitor && !!Object.keys(state.monitor).length && (
+      {!state.isLoading && (
         <Pane>
           <Pane marginBottom={majorScale(3)}>
             <PageHeading>{state.monitor.name}</PageHeading>
