@@ -25,7 +25,12 @@ import { navigate } from '@reach/router'
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
-import { Order, compare, sortableIpAddress } from '../utils/sort'
+import {
+  Order,
+  compare,
+  sortableIpAddress,
+  getIconForOrder,
+} from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
@@ -68,7 +73,6 @@ const ViewMonitorById = ({ id }) => {
     isLoading: true,
     monitor: {},
     errors: {},
-    cachedConnectionOpened: false,
     headers: [],
     headersMetadata: [],
     data: [],
@@ -83,17 +87,6 @@ const ViewMonitorById = ({ id }) => {
   })
 
   const { getMonitorById, changeEvent, errors } = useMonitors()
-
-  const getIconForOrder = (name) => {
-    switch (state.direction[name]) {
-      case Order.ASC:
-        return 'arrow-up'
-      case Order.DESC:
-        return 'arrow-down'
-      default:
-        return 'caret-down'
-    }
-  }
 
   const filter = (data) => {
     const searchQuery = state.searchQuery.trim()
@@ -171,7 +164,7 @@ const ViewMonitorById = ({ id }) => {
   }, [getMonitorById, id])
 
   React.useEffect(() => {
-    if (Object.keys(state.monitor).length && !state.cachedConnectionOpened) {
+    if (Object.keys(state.monitor).length) {
       const eb = new EventBus(eventBusUrl, {})
 
       eb.enableReconnect(true)
@@ -181,10 +174,6 @@ const ViewMonitorById = ({ id }) => {
         console.log(`[connection closed]: CACHED ${state.monitor.name}`)
       eb.onopen = () => {
         console.log(`[connection open]: CACHED ${state.monitor.name}`)
-        dispatch({
-          type: `SET_VALUE`,
-          payload: { cachedConnectionOpened: true },
-        })
         eb.send(cachedAddress, state.monitor.name, {}, (error, message) => {
           if (error) {
             console.log({ error })
@@ -207,7 +196,7 @@ const ViewMonitorById = ({ id }) => {
         eb.close()
       }
     }
-  }, [state.cachedConnectionOpened, state.isLiveData, state.monitor])
+  }, [state.isLiveData, state.monitor])
 
   React.useEffect(() => {
     let eb
@@ -471,7 +460,9 @@ const ViewMonitorById = ({ id }) => {
                       </Menu>
                     )}
                   >
-                    <TextDropdownButton icon={getIconForOrder(header)}>
+                    <TextDropdownButton
+                      icon={getIconForOrder(state.direction[header])}
+                    >
                       <Text size={500} marginRight={majorScale(1)}>
                         {header}
                       </Text>

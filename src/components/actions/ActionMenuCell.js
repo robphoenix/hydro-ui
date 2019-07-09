@@ -15,7 +15,9 @@ const ActionMenuCell = ({ action }) => {
         <Menu>
           <Menu.Group>
             {!action.archived && (
-              <Menu.Item onSelect={() => navigate(`${action.id}/edit`)}>
+              <Menu.Item
+                onSelect={() => navigate(`/actions/${action.id}/edit`)}
+              >
                 Edit
               </Menu.Item>
             )}

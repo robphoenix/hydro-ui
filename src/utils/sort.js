@@ -4,6 +4,17 @@ const Order = {
   DESC: 'DESC',
 }
 
+const getIconForOrder = (direction) => {
+  switch (direction) {
+    case Order.ASC:
+      return 'arrow-up'
+    case Order.DESC:
+      return 'arrow-down'
+    default:
+      return 'caret-down'
+  }
+}
+
 const compare = (a, b, isAsc) => {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1)
 }
@@ -15,4 +26,4 @@ const sortableIpAddress = (ip) => {
     .join('')
 }
 
-export { Order, compare, sortableIpAddress }
+export { Order, compare, sortableIpAddress, getIconForOrder }
