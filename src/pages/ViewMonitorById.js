@@ -53,49 +53,10 @@ const reducer = (state, action) => {
           ...action.payload,
         },
       }
-    case `SET_DATA`:
+    case `SET_VALUE`:
       return {
         ...state,
         ...action.payload,
-      }
-    case `TOGGLE_PAUSE`:
-      return {
-        ...state,
-        paused: !state.paused,
-      }
-    case `SHOW_EPL`:
-      return {
-        ...state,
-        showEplQuery: true,
-      }
-    case `HIDE_EPL`:
-      return {
-        ...state,
-        showEplQuery: false,
-      }
-    case `SET_DIRECTION`:
-      return {
-        ...state,
-        direction: {
-          ...action.payload,
-        },
-      }
-    case `SET_SEARCH_QUERY`:
-      return {
-        ...state,
-        searchQuery: action.payload,
-      }
-    case `SET_CHANGE_EVENT`:
-      return {
-        ...state,
-        showChangeEvent: true,
-        changeEventMessage: action.payload,
-      }
-    case `SET_CHANGE_EVENT_CLOSE`:
-      return {
-        ...state,
-        showChangeEvent: false,
-        changeEventMessage: ``,
       }
     default:
       return state
@@ -221,7 +182,7 @@ const ViewMonitorById = ({ id }) => {
       eb.onopen = () => {
         console.log(`[connection open]: CACHED ${state.monitor.name}`)
         dispatch({
-          type: `SET_DATA`,
+          type: `SET_VALUE`,
           payload: { cachedConnectionOpened: true },
         })
         eb.send(cachedAddress, state.monitor.name, {}, (error, message) => {
@@ -234,7 +195,7 @@ const ViewMonitorById = ({ id }) => {
               message.body,
             )
             dispatch({
-              type: `SET_DATA`,
+              type: `SET_VALUE`,
               payload: { headers, headersMetadata, data },
             })
           }
@@ -271,7 +232,7 @@ const ViewMonitorById = ({ id }) => {
               message.body,
             )
             dispatch({
-              type: `SET_DATA`,
+              type: `SET_VALUE`,
               payload: {
                 headers,
                 headersMetadata,
@@ -286,7 +247,7 @@ const ViewMonitorById = ({ id }) => {
     }
     return () => {
       dispatch({
-        type: `SET_DATA`,
+        type: `SET_VALUE`,
         payload: {
           headers: [],
           headersMetadata: [],
@@ -329,13 +290,14 @@ const ViewMonitorById = ({ id }) => {
           if (error) {
             eb.close()
           }
-          if (message) {
-            console.log({ message })
-          }
           if (message && message.body) {
+            const changeEventMessage = changeEventMessages[message.body]
             dispatch({
-              type: `SET_CHANGE_EVENT`,
-              payload: changeEventMessages[message.body],
+              type: `SET_VALUE`,
+              payload: {
+                showChangeEvent: true,
+                changeEventMessage,
+              },
             })
           }
         })
@@ -359,14 +321,17 @@ const ViewMonitorById = ({ id }) => {
 
   React.useEffect(() => {}, [changeEvent])
 
-  const showEpl = (show) => {
-    const type = show ? `SHOW_EPL` : `HIDE_EPL`
-    dispatch({ type })
+  const showEpl = (showEplQuery) => {
+    dispatch({ type: `SET_VALUE`, payload: { showEplQuery } })
   }
 
-  const togglePause = () => dispatch({ type: `TOGGLE_PAUSE` })
+  const togglePause = () => {
+    const paused = !state.paused
+    dispatch({ type: `SET_VALUE`, payload: { paused } })
+  }
+
   const handleSearchChange = (e) =>
-    dispatch({ type: `SET_SEARCH_QUERY`, payload: e.target.value })
+    dispatch({ type: `SET_VALUE`, payload: { searchQuery: e.target.value } })
 
   return (
     <PageContainer width="80%">
@@ -496,8 +461,8 @@ const ViewMonitorById = ({ id }) => {
                           selected={state.direction[header] || Order.NONE}
                           onChange={(value) => {
                             dispatch({
-                              type: `SET_DIRECTION`,
-                              payload: { [header]: value },
+                              type: `SET_VALUE`,
+                              payload: { direction: { [header]: value } },
                             })
                             // Close the popover when you select a value.
                             close()
@@ -536,9 +501,17 @@ const ViewMonitorById = ({ id }) => {
 
       <CornerDialog
         title={`${state.monitor.name} Change Event`}
-        isShown={state.showChangeEvent}
-        onCloseComplete={() => dispatch({ type: `SET_CHANGE_EVENT_CLOSE` })}
         hasFooter={false}
+        isShown={state.showChangeEvent}
+        onCloseComplete={() =>
+          dispatch({
+            type: `SET_VALUE`,
+            payload: {
+              showChangeEvent: false,
+              changeEventMessage: ``,
+            },
+          })
+        }
       >
         <Text>{state.changeEventMessage}</Text>
       </CornerDialog>
