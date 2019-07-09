@@ -118,11 +118,6 @@ function MonitorsProvider(props) {
     }
   }, [])
 
-  const resetMonitor = () => {
-    console.log(`reset`)
-    dispatch({ type: `RESET` })
-  }
-
   return (
     <MonitorsContext.Provider
       value={{
@@ -142,7 +137,6 @@ function MonitorsProvider(props) {
         fetchActions,
         archiveAction,
         fetchFeedTypes,
-        resetMonitor,
         reload,
         ...state,
       }}

@@ -17,6 +17,7 @@ import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 import useStoredMonitorPreferences from '../hooks/useStoredMonitorPreferences'
 import { useUser } from '../context/user-context'
+import { isDev } from '../utils/environments'
 
 const ViewMonitors = () => {
   const { monitors, fetchMonitors, errors, isLoading } = useMonitors()
@@ -111,9 +112,12 @@ const ViewMonitors = () => {
       const { message, cause } = errors.monitors
       toaster.warning(message, { description: cause, duration: 7 })
       // It feels really awkward if the redirect is too quick
-      setTimeout(() => navigate(`/monitors/add`), 500)
+      setTimeout(() => {
+        const url = isAdmin && isDev ? `/populate` : `/monitors/add`
+        navigate(url)
+      }, 500)
     }
-  }, [errors.monitors])
+  }, [errors.monitors, isAdmin])
 
   const {
     value: statusValue,

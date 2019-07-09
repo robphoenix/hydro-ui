@@ -5,25 +5,14 @@ import * as faker from 'faker'
 import PageContainer from '../components/PageContainer'
 import PageHeading from '../components/PageHeading'
 import { useMonitors } from '../context/monitors-context'
+import {
+  getAllActions,
+  getAllCategories,
+  addMonitor,
+} from '../utils/monitors-client'
 
 const PopulateDb = () => {
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case `SET_VALUE`:
-        return {
-          ...state,
-          ...action.payload,
-        }
-      default:
-        return state
-    }
-  }
-
   const { addCategories, addAction } = useMonitors()
-  const [state, dispatch] = React.useReducer(reducer, {
-    categories: [],
-    actions: [],
-  })
 
   const randomCategories = () => {
     return Array.from(Array(faker.random.number({ min: 10, max: 20 }))).map(
@@ -35,13 +24,13 @@ const PopulateDb = () => {
 
   const createCategories = async () => {
     const categories = randomCategories()
-    dispatch({ type: `SET_VALUE`, payload: { categories } })
     try {
       await addCategories(categories)
-      toaster.success(`New categories created: ${categories.join(`, `)}`)
+      toaster.success(`Created ${categories.length} actions`)
     } catch (error) {
-      toaster.warning(`Error creating categories: ${error}`)
+      toaster.warning(`Error creating categories: ${error.message}`)
     }
+    return categories
   }
 
   const actionTypes = [
@@ -83,7 +72,7 @@ const PopulateDb = () => {
     )
   }
 
-  const createActions = () => {
+  const createActions = async () => {
     let actions = []
     Array.from(Array(faker.random.number({ min: 30, max: 50 }))).map(
       async () => {
@@ -101,16 +90,15 @@ const PopulateDb = () => {
           actionType,
           metadata,
         }
-        actions.push(action)
         try {
           await addAction(action)
-          toaster.success(`Created action: ${action.name}`)
+          actions.push(actions)
         } catch (error) {
           toaster.warning(error.message)
         }
       },
     )
-    dispatch({ type: `SET_VALUE`, payload: { actions } })
+    toaster.success(`Created ${actions.length} actions`)
   }
 
   const createMetadata = (actionType) => {
@@ -197,11 +185,70 @@ const PopulateDb = () => {
     return { parameters, blockTime, blockTimeUnit, blockDelay, blockDelayUnit }
   }
 
+  const createMonitor = async (
+    queries,
+    availableCategories,
+    availableActions,
+  ) => {
+    const name = faker.random.words()
+    const description = faker.hacker.phrase()
+    const query = faker.random.arrayElement(queries)
+    const cacheWindow = 0
+    const status = faker.random.arrayElement([`online`, `offline`, `archived`])
+    const type = faker.random.arrayElement([`standard`, `system`])
+    const categories = Array.from(
+      Array(faker.random.number({ min: 0, max: 4 })),
+    ).map(() => {
+      return faker.random.arrayElement(availableCategories)
+    })
+    const actions = Array.from(
+      Array(faker.random.number({ min: 0, max: 2 })),
+    ).map(() => {
+      return faker.random.arrayElement(availableActions)
+    })
+    const groups = [{ id: 43, name: `App_Forensic Monitoring Dev Team` }]
+    const monitor = {
+      name,
+      description,
+      query,
+      cacheWindow,
+      status,
+      type,
+      categories,
+      actions,
+      groups,
+    }
+
+    try {
+      await addMonitor(monitor)
+    } catch (error) {
+      toaster.warning(`Error creating monitor: ${error.message}`)
+    }
+    return monitor
+  }
+
+  const createMonitors = async () => {
+    await createCategories()
+    await createActions()
+    const availableCategories = await getAllCategories()
+    const availableActions = await getAllActions()
+    const queries = [
+      `select count(*) as hits, stk, sip,betSource, failure, inPlay, liabilitySingle, plbt, referer, countryID from opcodes.win:time(2 seconds) group by sip output last every 1 seconds`,
+      `select count(*) as hits, stk, sip from fm.win:time(1 seconds) group by sip output last every 1 seconds`,
+    ]
+
+    const monitors = Array.from(
+      Array(faker.random.number({ min: 50, max: 100 })),
+    ).map(async () => {
+      return await createMonitor(queries, availableCategories, availableActions)
+    })
+    toaster.success(`Created ${monitors.length} monitors`)
+  }
+
   return (
     <PageContainer>
       <PageHeading>Populate Database</PageHeading>
-      <Button onClick={createCategories}>Create Categories</Button>
-      <Button onClick={createActions}>Create Actions</Button>
+      <Button onClick={createMonitors}>Create Monitors</Button>
     </PageContainer>
   )
 }

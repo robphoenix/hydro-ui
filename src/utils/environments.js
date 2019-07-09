@@ -21,8 +21,9 @@ const eventBusRoots = {
 
 const hostname = window && window.location && window.location.hostname
 const env = environments[hostname]
+const isDev = env === `local` || `dev`
 
 const API_ROOT = `http://${apiRoots[env]}:${apiPort}`
 const EVENTBUS_ROOT = `http://${eventBusRoots[env]}:${eventBusPort}`
 
-export { API_ROOT, EVENTBUS_ROOT }
+export { API_ROOT, EVENTBUS_ROOT, isDev }

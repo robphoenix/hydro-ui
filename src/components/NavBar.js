@@ -15,6 +15,7 @@ import { useUser } from '../context/user-context'
 import { useAuth } from '../context/auth-context'
 import NavLink from './NavLink'
 import { Link } from '@reach/router'
+import { isDev } from '../utils/environments'
 
 const MenuButton = (props) => (
   <Button
@@ -38,7 +39,7 @@ const NavBar = () => {
     { to: `/monitors/view`, label: `View Monitors`, show: true },
     { to: `/monitors/add`, label: `Add New Monitor`, show: allowsEdit },
     { to: `/monitors/feedtypes`, label: `View Feed Types`, show: true },
-    { to: `populate`, label: `Populate Database`, show: isAdmin },
+    { to: `populate`, label: `Populate Database`, show: isAdmin && isDev },
   ]
   const actionsLinks = [
     { to: `/actions/view`, label: `View Actions`, show: true },
