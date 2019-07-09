@@ -7,7 +7,23 @@ import PageHeading from '../components/PageHeading'
 import { useMonitors } from '../context/monitors-context'
 
 const PopulateDb = () => {
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case `SET_VALUE`:
+        return {
+          ...state,
+          ...action.payload,
+        }
+      default:
+        return state
+    }
+  }
+
   const { addCategories, addAction } = useMonitors()
+  const [state, dispatch] = React.useReducer(reducer, {
+    categories: [],
+    actions: [],
+  })
 
   const randomCategories = () => {
     return Array.from(Array(faker.random.number({ min: 10, max: 20 }))).map(
@@ -19,12 +35,12 @@ const PopulateDb = () => {
 
   const createCategories = async () => {
     const categories = randomCategories()
+    dispatch({ type: `SET_VALUE`, payload: { categories } })
     try {
       await addCategories(categories)
       toaster.success(`New categories created: ${categories.join(`, `)}`)
     } catch (error) {
-      toaster.warning(`Error creating categories: ${error}, trying again...`)
-      createCategories()
+      toaster.warning(`Error creating categories: ${error}`)
     }
   }
 
@@ -68,6 +84,7 @@ const PopulateDb = () => {
   }
 
   const createActions = () => {
+    let actions = []
     Array.from(Array(faker.random.number({ min: 30, max: 50 }))).map(
       async () => {
         const actionType =
@@ -84,6 +101,7 @@ const PopulateDb = () => {
           actionType,
           metadata,
         }
+        actions.push(action)
         try {
           await addAction(action)
           toaster.success(`Created action: ${action.name}`)
@@ -92,6 +110,7 @@ const PopulateDb = () => {
         }
       },
     )
+    dispatch({ type: `SET_VALUE`, payload: { actions } })
   }
 
   const createMetadata = (actionType) => {

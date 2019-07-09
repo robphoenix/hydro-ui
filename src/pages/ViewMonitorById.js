@@ -229,7 +229,7 @@ const ViewMonitorById = ({ id }) => {
             console.log({ error })
             eb.close()
           }
-          if (message) {
+          if (message && message.body) {
             const { headers, headersMetadata, data } = getMessageData(
               message.body,
             )
@@ -301,7 +301,6 @@ const ViewMonitorById = ({ id }) => {
     }
   }, [state.monitor])
 
-  const isFirstChangeEvent = React.useRef(true)
   React.useEffect(() => {
     const changeEventMessages = {
       // this monitor was just removed from the monitor cache, which means it got archived;
@@ -330,14 +329,10 @@ const ViewMonitorById = ({ id }) => {
           if (error) {
             eb.close()
           }
-          if (message && message.body) {
+          if (message) {
             console.log({ message })
-            // we want to avoid showing a change event dialog on first render
-            // https://stackoverflow.com/a/54895884
-            if (isFirstChangeEvent.current) {
-              isFirstChangeEvent.current = false
-              return
-            }
+          }
+          if (message && message.body) {
             dispatch({
               type: `SET_CHANGE_EVENT`,
               payload: changeEventMessages[message.body],
