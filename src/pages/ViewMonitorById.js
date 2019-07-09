@@ -86,7 +86,7 @@ const ViewMonitorById = ({ id }) => {
     changeEventMessage: ``,
   })
 
-  const { getMonitorById, changeEvent, errors } = useMonitors()
+  const { getMonitorById, errors } = useMonitors()
 
   const filter = (data) => {
     const searchQuery = state.searchQuery.trim()

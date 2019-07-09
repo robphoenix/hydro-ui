@@ -24,7 +24,7 @@ const PopulateDb = () => {
     const categories = randomCategories()
     try {
       await addCategories(categories)
-      toaster.success(`Created ${categories.length} actions`)
+      toaster.success(`Created ${categories.length} categories`)
     } catch (error) {
       toaster.warning(`Error creating categories: ${error.message}`)
     }
@@ -71,8 +71,7 @@ const PopulateDb = () => {
   }
 
   const createActions = async () => {
-    let actions = []
-    Array.from(Array(20)).map(async () => {
+    const actions = Array.from(Array(20)).map(async () => {
       const actionType = faker.random.arrayElement(actionTypes)
       const metadata = createMetadata(actionType)
       const name = faker.random.words()
@@ -87,10 +86,10 @@ const PopulateDb = () => {
       }
       try {
         await addAction(action)
-        actions.push(actions)
       } catch (error) {
         toaster.warning(error.message)
       }
+      return action
     })
     toaster.success(`Created ${actions.length} actions`)
   }
@@ -190,7 +189,7 @@ const PopulateDb = () => {
     const cacheWindow = 0
     // Just create standard online monitors
     // const status = faker.random.arrayElement([`online`, `offline`, `archived`])
-    const status = `standard`
+    const status = `online`
     // const type = faker.random.arrayElement([`standard`, `system`])
     const type = `standard`
     const categories = Array.from(
