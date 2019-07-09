@@ -203,45 +203,53 @@ const ViewMonitorById = ({ id }) => {
   React.useEffect(() => {
     let eb
     if (Object.keys(state.monitor).length) {
-      eb = new EventBus(eventBusUrl, {})
-      const address = `${outputAddress}${state.monitor.name}`
-      eb.enableReconnect(true)
-      eb.onerror = () =>
-        console.error(`[connection error]: LIVE ${state.monitor.name}`)
-      eb.onclose = () =>
-        console.log(`[connection closed]: LIVE ${state.monitor.name}`)
-      eb.onopen = () => {
-        console.log(`[connection open]: LIVE ${state.monitor.name}`)
-        eb.registerHandler(address, {}, (error, message) => {
-          if (error) {
-            eb.close()
-          }
-          if (message && message.body) {
-            const isLiveData = true
-            const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
-            const { headers, headersMetadata, data } = getMessageData(
-              message.body,
-            )
-            dispatch({
-              type: `SET_VALUE`,
-              payload: {
-                headers,
-                headersMetadata,
-                data,
-                isLiveData,
-                receivedAt,
-              },
-            })
-          }
-        })
-      }
-    }
-    return () => {
-      if (eb) {
+      if (state.paused && eb) {
         eb.close()
       }
+      if (!state.paused) {
+        eb = new EventBus(eventBusUrl, {})
+        const address = `${outputAddress}${state.monitor.name}`
+        eb.enableReconnect(true)
+        eb.onerror = () =>
+          console.error(`[connection error]: LIVE ${state.monitor.name}`)
+        eb.onclose = () =>
+          console.log(`[connection closed]: LIVE ${state.monitor.name}`)
+        eb.onopen = () => {
+          console.log(`[connection open]: LIVE ${state.monitor.name}`)
+          eb.registerHandler(address, {}, (error, message) => {
+            if (error) {
+              eb.close()
+            }
+            if (message && message.body) {
+              const isLiveData = true
+              const receivedAt = dateFnsFormat(
+                new Date(),
+                `HH:mm:ss dd/MM/yyyy`,
+              )
+              const { headers, headersMetadata, data } = getMessageData(
+                message.body,
+              )
+              dispatch({
+                type: `SET_VALUE`,
+                payload: {
+                  headers,
+                  headersMetadata,
+                  data,
+                  isLiveData,
+                  receivedAt,
+                },
+              })
+            }
+          })
+        }
+      }
+      return () => {
+        if (eb) {
+          eb.close()
+        }
+      }
     }
-  }, [state.monitor])
+  }, [state.monitor, state.paused])
 
   React.useEffect(() => {
     const changeEventMessages = {

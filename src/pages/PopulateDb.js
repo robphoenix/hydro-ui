@@ -10,6 +10,7 @@ import {
   getAllCategories,
   addMonitor,
 } from '../utils/monitors-client'
+import { navigate } from '@reach/router'
 
 const PopulateDb = () => {
   const { addCategories, addAction } = useMonitors()
@@ -237,6 +238,7 @@ const PopulateDb = () => {
       return await createMonitor(queries, availableCategories, availableActions)
     })
     toaster.success(`Created ${monitors.length} monitors`)
+    navigate(`/monitors/view`)
   }
 
   return (
