@@ -15,11 +15,9 @@ const PopulateDb = () => {
   const { addCategories, addAction } = useMonitors()
 
   const randomCategories = () => {
-    return Array.from(Array(faker.random.number({ min: 10, max: 20 }))).map(
-      () => {
-        return faker.random.word()
-      },
-    )
+    return Array.from(Array(20)).map(() => {
+      return faker.random.word()
+    })
   }
 
   const createCategories = async () => {
@@ -65,39 +63,35 @@ const PopulateDb = () => {
   }
 
   const createEmailAddresses = () => {
-    return Array.from(Array(faker.random.number({ min: 1, max: 3 }))).map(
-      () => {
+    return Array.from(Array(faker.random.number({ min: 1, max: 3 })))
+      .map(() => {
         return `${faker.name.firstName()}.${faker.name.lastName()}@bet365.com`.toLowerCase()
-      },
-    )
+      })
+      .join(`;`)
   }
 
   const createActions = async () => {
     let actions = []
-    Array.from(Array(faker.random.number({ min: 30, max: 50 }))).map(
-      async () => {
-        const actionType =
-          actionTypes[
-            faker.random.number({ min: 0, max: actionTypes.length - 1 })
-          ]
-        const metadata = createMetadata(actionType)
-        const action = {
-          name: faker.random.words(),
-          description: faker.lorem.paragraph(
-            faker.random.number({ min: 1, max: 3 }),
-          ),
-          archived: false,
-          actionType,
-          metadata,
-        }
-        try {
-          await addAction(action)
-          actions.push(actions)
-        } catch (error) {
-          toaster.warning(error.message)
-        }
-      },
-    )
+    Array.from(Array(20)).map(async () => {
+      const actionType = faker.random.arrayElement(actionTypes)
+      const metadata = createMetadata(actionType)
+      const name = faker.random.words()
+      const description = faker.hacker.phrase()
+      const archived = false
+      const action = {
+        name,
+        description,
+        archived,
+        actionType,
+        metadata,
+      }
+      try {
+        await addAction(action)
+        actions.push(actions)
+      } catch (error) {
+        toaster.warning(error.message)
+      }
+    })
     toaster.success(`Created ${actions.length} actions`)
   }
 
@@ -194,8 +188,11 @@ const PopulateDb = () => {
     const description = faker.hacker.phrase()
     const query = faker.random.arrayElement(queries)
     const cacheWindow = 0
-    const status = faker.random.arrayElement([`online`, `offline`, `archived`])
-    const type = faker.random.arrayElement([`standard`, `system`])
+    // Just create standard online monitors
+    // const status = faker.random.arrayElement([`online`, `offline`, `archived`])
+    const status = `standard`
+    // const type = faker.random.arrayElement([`standard`, `system`])
+    const type = `standard`
     const categories = Array.from(
       Array(faker.random.number({ min: 0, max: 4 })),
     ).map(() => {
@@ -237,9 +234,7 @@ const PopulateDb = () => {
       `select count(*) as hits, stk, sip from fm.win:time(1 seconds) group by sip output last every 1 seconds`,
     ]
 
-    const monitors = Array.from(
-      Array(faker.random.number({ min: 50, max: 100 })),
-    ).map(async () => {
+    const monitors = Array.from(Array(10)).map(async () => {
       return await createMonitor(queries, availableCategories, availableActions)
     })
     toaster.success(`Created ${monitors.length} monitors`)
