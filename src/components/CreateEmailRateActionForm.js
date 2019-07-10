@@ -19,17 +19,12 @@ import {
   ActionEmailSubject,
 } from './actions'
 
-const CreateEmailRateActionForm = ({ createAction, validateEmailAddress }) => {
+const CreateEmailRateActionForm = ({
+  createAction,
+  validateEmailAddress,
+  initialValues,
+}) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const initialValues = {
-    name: ``,
-    description: ``,
-    emailAddresses: [],
-    emailSubject: ``,
-    emailSendLimit: 0,
-    emailText: ``,
-  }
 
   const validate = (values) => {
     let errors = {}

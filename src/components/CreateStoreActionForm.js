@@ -4,20 +4,12 @@ import { toaster, Pane, Button, majorScale, RadioGroup } from 'evergreen-ui'
 import useForm from '../hooks/useForm'
 import { ActionHeading, ActionName, ActionDescription } from './actions'
 
-const CreateStoreActionForm = ({ createAction }) => {
+const CreateStoreActionForm = ({
+  createAction,
+  initialValues,
+  storeOptions,
+}) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const storeOptions = [
-    { label: `Store in Database`, value: `storeDB` },
-    { label: `Store Logins`, value: `storeLogins` },
-    { label: `Store Analysis`, value: `storeAnalysis` },
-  ]
-
-  const initialValues = {
-    name: ``,
-    description: ``,
-    actionType: storeOptions[0].value,
-  }
 
   const validate = (values) => {
     let errors = {}

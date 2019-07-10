@@ -4,13 +4,8 @@ import { toaster, Pane, majorScale, Button } from 'evergreen-ui'
 import useForm from '../hooks/useForm'
 import { ActionHeading, ActionName, ActionDescription } from './actions'
 
-const CreateMiscActionForm = ({ createAction }) => {
+const CreateMiscActionForm = ({ createAction, initialValues }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const initialValues = {
-    name: '',
-    description: '',
-  }
 
   const validate = (values) => {
     let errors = {}

@@ -12,17 +12,12 @@ import {
 import ActionParameters from './actions/ActionParameters'
 import { navigate } from '@reach/router'
 
-const CreateEmailAlertActionForm = ({ createAction, validateEmailAddress }) => {
+const CreateEmailAlertActionForm = ({
+  createAction,
+  validateEmailAddress,
+  initialValues,
+}) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const initialValues = {
-    name: '',
-    description: '',
-    parameters: [],
-    emailAddresses: [],
-    emailSubject: ``,
-    emailText: ``,
-  }
 
   const validate = (values) => {
     let errors = {}

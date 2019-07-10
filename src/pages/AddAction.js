@@ -15,6 +15,12 @@ const AddAction = () => {
   const [actionType, setActionType] = React.useState(`block`)
   const { addAction } = useMonitors()
 
+  const storeOptions = [
+    { label: `Store in Database`, value: `storeDB` },
+    { label: `Store Logins`, value: `storeLogins` },
+    { label: `Store Analysis`, value: `storeAnalysis` },
+  ]
+
   const actionTypeOptions = [
     { label: `Block`, value: `block` },
     { label: `Email Rate`, value: `emailRate` },
@@ -27,6 +33,25 @@ const AddAction = () => {
   const validateEmailAddress = (emailAddress) => {
     const regex = new RegExp(/\S+\.\S+@bet365\.com/, `gi`)
     return emailAddress.trim().match(regex)
+  }
+
+  // These cover all possible values used by the different action types, they're
+  // not necessarily used in every form
+  const initialValues = {
+    name: '',
+    description: '',
+    parameters: [],
+    permanently: false,
+    blockTime: ``,
+    blockTimeUnit: `minutes`,
+    blockDelay: ``,
+    blockDelayUnit: ``,
+    emailAddresses: [],
+    emailSubject: ``,
+    emailSendLimit: 0,
+    emailText: ``,
+    emailCron: ``,
+    actionType: storeOptions[0].value,
   }
 
   return (
@@ -49,31 +74,44 @@ const AddAction = () => {
         </UnorderedList>
         <Pane flex="3">
           {actionType === `block` && (
-            <CreateBlockActionForm createAction={addAction} />
+            <CreateBlockActionForm
+              createAction={addAction}
+              initialValues={initialValues}
+            />
           )}
           {actionType === `emailRate` && (
             <CreateEmailRateActionForm
               createAction={addAction}
+              initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `emailBatch` && (
             <CreateEmailBatchActionForm
               createAction={addAction}
+              initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `emailAlert` && (
             <CreateEmailAlertActionForm
               createAction={addAction}
+              initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `store` && (
-            <CreateStoreActionForm createAction={addAction} />
+            <CreateStoreActionForm
+              createAction={addAction}
+              initialValues={initialValues}
+              storeOptions={storeOptions}
+            />
           )}
           {actionType === `misc` && (
-            <CreateMiscActionForm createAction={addAction} />
+            <CreateMiscActionForm
+              createAction={addAction}
+              initialValues={initialValues}
+            />
           )}
         </Pane>
       </Pane>

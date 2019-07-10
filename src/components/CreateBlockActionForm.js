@@ -19,7 +19,7 @@ import {
   ActionParameters,
 } from './actions'
 
-const CreateBlockActionForm = ({ createAction }) => {
+const CreateBlockActionForm = ({ createAction, initialValues }) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
 
   const blockDurationUnitOptions = [
@@ -33,17 +33,6 @@ const CreateBlockActionForm = ({ createAction }) => {
     { label: `Minutes`, value: `minutes` },
     { label: `Hours`, value: `hours` },
   ]
-
-  const initialValues = {
-    name: '',
-    description: '',
-    parameters: [],
-    permanently: false,
-    blockTime: ``,
-    blockTimeUnit: `minutes`,
-    blockDelay: ``,
-    blockDelayUnit: ``,
-  }
 
   const validate = (values) => {
     let errors = {}
@@ -125,7 +114,7 @@ const CreateBlockActionForm = ({ createAction }) => {
 
   return (
     <Pane>
-      <ActionHeading>Block</ActionHeading>
+      <ActionHeading>block</ActionHeading>
       <form onSubmit={handleSubmit}>
         <ActionName
           formProps={getInputFieldProps(`name`)}

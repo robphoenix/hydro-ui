@@ -19,17 +19,12 @@ import {
 } from './actions'
 import useForm from '../hooks/useForm'
 
-const CreateEmailBatchActionForm = ({ createAction, validateEmailAddress }) => {
+const CreateEmailBatchActionForm = ({
+  createAction,
+  validateEmailAddress,
+  initialValues,
+}) => {
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-
-  const initialValues = {
-    name: ``,
-    description: ``,
-    emailAddresses: [],
-    emailSubject: ``,
-    emailText: ``,
-    emailCron: ``,
-  }
 
   const validate = (values) => {
     let errors = {}
