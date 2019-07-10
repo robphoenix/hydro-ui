@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, toaster } from 'evergreen-ui'
+import { Button, toaster, majorScale } from 'evergreen-ui'
 import * as faker from 'faker'
 
 import PageContainer from '../components/PageContainer'
@@ -9,6 +9,8 @@ import {
   getAllActions,
   getAllCategories,
   addMonitor,
+  getMonitors,
+  archiveMonitor,
 } from '../utils/monitors-client'
 import { navigate } from '@reach/router'
 
@@ -241,11 +243,32 @@ const PopulateDb = () => {
     navigate(`/monitors/view`)
   }
 
+  const archiveMonitors = async () => {
+    const allMonitors = await getMonitors()
+    let archived = 0
+
+    await allMonitors.forEach(async (monitor) => {
+      if (monitor.status !== `archived`) {
+        await archiveMonitor(monitor)
+        archived++
+      }
+    })
+    toaster.success(`Archived ${archived} monitors`)
+  }
+
   return (
     <PageContainer>
       <PageHeading>Populate Database</PageHeading>
-      <Button intent="danger" appearance="primary" onClick={createMonitors}>
+      <Button
+        intent="danger"
+        appearance="primary"
+        onClick={createMonitors}
+        marginRight={majorScale(2)}
+      >
         Create Monitors
+      </Button>
+      <Button intent="warning" appearance="primary" onClick={archiveMonitors}>
+        Archive Monitors
       </Button>
     </PageContainer>
   )
