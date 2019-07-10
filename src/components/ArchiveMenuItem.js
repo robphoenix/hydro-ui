@@ -10,7 +10,7 @@ const ArchiveMenuItem = ({ archive, refresh, item, dialogTitle }) => {
       toaster.success(`${item.name} has been archived`)
       refresh()
     } catch (error) {
-      toaster.warning(error)
+      toaster.warning(error.cause)
     }
   }
 
