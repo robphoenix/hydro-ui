@@ -18,14 +18,12 @@ const CreateMiscActionForm = ({ createAction, initialValues }) => {
     return errors
   }
 
-  const onSubmit = async (values) => {
-    const { name, description } = values
+  const onSubmit = (values) => {
+    const { id, name, description } = values
     const actionType = `misc`
 
     // the api call will fail without a metadata object
-    await createAction({ name, description, actionType, metadata: {} })
-    navigate(`/actions/view`)
-    toaster.success(`Action created: ${name}`)
+    createAction({ id, name, description, actionType, metadata: {} })
   }
 
   const {

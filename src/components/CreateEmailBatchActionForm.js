@@ -37,7 +37,10 @@ const CreateEmailBatchActionForm = ({
     if (values.emailAddresses && !values.emailAddresses.length) {
       errors.emailAddresses = `You must provide at least one email address`
     }
-    if (!values.emailAddresses.every(validateEmailAddress)) {
+    if (
+      values.emailAddresses &&
+      !values.emailAddresses.every(validateEmailAddress)
+    ) {
       errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
     }
     if (values.emailSubject === ``) {
@@ -52,20 +55,19 @@ const CreateEmailBatchActionForm = ({
     return errors
   }
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     const emailAddresses = values.emailAddresses.join(`;`)
     const actionType = `emailBatch`
-    const { name, description, emailSubject, emailText, emailCron } = values
+    const { id, name, description, emailSubject, emailText, emailCron } = values
     const metadata = { emailAddresses, emailSubject, emailText, emailCron }
 
-    await createAction({
+    createAction({
+      id,
       name,
       description,
       actionType,
       metadata,
     })
-    navigate(`/actions/view`)
-    toaster.success(`Action created: ${name}`)
   }
 
   const {

@@ -62,7 +62,7 @@ const CreateMonitorForm = (props) => {
     )
   }
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     const status = values.status ? `online` : `offline`
     const cacheWindow = cacheWindowDurationValues[values.cacheWindow]
     const groups = selectedItems(values.groups, allGroups)
@@ -84,8 +84,7 @@ const CreateMonitorForm = (props) => {
       categories,
     }
 
-    const response = await createMonitor(monitor)
-    navigate(`/monitors/${response.id || id}`)
+    createMonitor(monitor)
   }
 
   const validate = (values) => {

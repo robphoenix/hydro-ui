@@ -16,6 +16,8 @@ import {
   getAllActions,
   getFeedTypes,
   addAction,
+  getActionById,
+  updateAction,
   reload,
 } from '../utils/monitors-client'
 
@@ -61,6 +63,7 @@ function MonitorsProvider(props) {
     allCategories: [],
     allActions: [],
     errors: {},
+    action: {},
   }
 
   const [state, dispatch] = React.useReducer(monitorsReducer, initialState)
@@ -110,6 +113,15 @@ function MonitorsProvider(props) {
     }
   }, [])
 
+  const fetchActionById = React.useCallback(async (id) => {
+    try {
+      const action = await getActionById(id)
+      dispatch({ type: 'SUCCESS', payload: { action } })
+    } catch (error) {
+      dispatch({ type: 'SET_ERROR', payload: { actionById: error } })
+    }
+  }, [])
+
   const fetchFeedTypes = React.useCallback(async () => {
     try {
       const feedTypes = await getFeedTypes()
@@ -139,6 +151,8 @@ function MonitorsProvider(props) {
         archiveAction,
         fetchFeedTypes,
         reload,
+        fetchActionById,
+        updateAction,
         ...state,
       }}
       {...props}

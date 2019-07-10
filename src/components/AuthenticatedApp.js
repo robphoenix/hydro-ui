@@ -15,6 +15,7 @@ import NotFound from '../pages/NotFound'
 import AddAction from '../pages/AddAction'
 import ViewActions from '../pages/ViewActions'
 import PopulateDb from '../pages/PopulateDb'
+import EditAction from '../pages/EditAction'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -38,6 +39,7 @@ const AuthenticatedApp = () => {
           <ViewMonitorById path="/monitors/:id" />
           <ViewActions path="/actions/view" />
           <AddAction path="/actions/add" />
+          <EditAction path="/actions/:id/edit" />
           <PopulateDb path="/populate" />
           <NotFound default />
         </Router>

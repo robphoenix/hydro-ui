@@ -1,6 +1,13 @@
 import React from 'react'
 import { navigate } from '@reach/router'
-import { toaster, Pane, Button, majorScale, RadioGroup } from 'evergreen-ui'
+import {
+  toaster,
+  Pane,
+  Button,
+  majorScale,
+  RadioGroup,
+  FormField,
+} from 'evergreen-ui'
 import useForm from '../hooks/useForm'
 import { ActionHeading, ActionName, ActionDescription } from './actions'
 
@@ -19,16 +26,17 @@ const CreateStoreActionForm = ({
     if (values.description === ``) {
       errors.description = `You must enter an Action description`
     }
+    if (!values.actionType.startsWith(`store`)) {
+      errors.actionType = `You must choose a store type`
+    }
     return errors
   }
 
-  const onSubmit = async (values) => {
-    const { name, description, actionType } = values
+  const onSubmit = (values) => {
+    const { id, name, description, actionType } = values
     const metadata = {}
 
-    await createAction({ name, description, actionType, metadata })
-    navigate(`/actions/view`)
-    toaster.success(`Action created: ${values.name}`)
+    createAction({ id, name, description, actionType, metadata })
   }
 
   const {
@@ -71,13 +79,20 @@ const CreateStoreActionForm = ({
           isInvalid={errors.description && touched.description}
           validationMessage={touched.description && errors.description}
         />
-        <RadioGroup
-          size={16}
+        <FormField
           label="Store Options"
-          options={storeOptions}
-          {...getRadioGroupProps(`actionType`)}
+          isRequired
+          validationMessage={errors.actionType}
           marginBottom={majorScale(4)}
-        />
+        >
+          <RadioGroup
+            isRequired
+            id="storeOptions"
+            size={16}
+            options={storeOptions}
+            {...getRadioGroupProps(`actionType`)}
+          />
+        </FormField>
 
         <Button
           appearance="primary"

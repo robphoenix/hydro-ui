@@ -5,6 +5,8 @@ import { useUser } from '../context/user-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
+import { navigate } from '@reach/router'
+import { toaster } from 'evergreen-ui'
 
 const AddMonitor = () => {
   const { addMonitor } = useMonitors()
@@ -24,12 +26,18 @@ const AddMonitor = () => {
     actions: [],
   }
 
+  const createMonitor = async (monitor) => {
+    const response = await addMonitor(monitor)
+    navigate(`/monitors/${response.id}`)
+    toaster.success(`Monitor created: ${response.name}`)
+  }
+
   return (
     <PageContainer width="40%">
       <PageHeading>add monitor</PageHeading>
       <CreateMonitorForm
         initialValues={initialValues}
-        createMonitor={addMonitor}
+        createMonitor={createMonitor}
       />
     </PageContainer>
   )

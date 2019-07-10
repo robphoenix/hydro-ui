@@ -4,6 +4,8 @@ import { useMonitors } from '../context/monitors-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 import PageContainer from '../components/PageContainer'
 import PageHeading from '../components/PageHeading'
+import { navigate } from '@reach/router'
+import { toaster } from 'evergreen-ui'
 
 const DuplicateMonitor = ({ id }) => {
   const { addMonitor, monitor, fetchMonitorById } = useMonitors()
@@ -45,13 +47,19 @@ const DuplicateMonitor = ({ id }) => {
     }
   }, [monitor])
 
+  const createMonitor = async (monitor) => {
+    const response = await addMonitor(monitor)
+    navigate(`/monitors/${response.id}`)
+    toaster.success(`Monitor created: ${response.name}`)
+  }
+
   return (
     <PageContainer width="40%">
       <PageHeading>duplicate monitor</PageHeading>
       {Object.keys(initialValues).length > 0 && (
         <CreateMonitorForm
           initialValues={initialValues}
-          createMonitor={addMonitor}
+          createMonitor={createMonitor}
         />
       )}
     </PageContainer>

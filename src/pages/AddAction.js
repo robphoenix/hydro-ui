@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pane, UnorderedList, ListItem, Button } from 'evergreen-ui'
+import { Pane, UnorderedList, ListItem, Button, toaster } from 'evergreen-ui'
 
 import { useMonitors } from '../context/monitors-context'
 import CreateBlockActionForm from '../components/CreateBlockActionForm'
@@ -10,6 +10,7 @@ import CreateMiscActionForm from '../components/CreateMiscActionForm'
 import CreateStoreActionForm from '../components/CreateStoreActionForm'
 import PageContainer from '../components/PageContainer'
 import PageHeading from '../components/PageHeading'
+import { navigate } from '@reach/router'
 
 const AddAction = () => {
   const [actionType, setActionType] = React.useState(`block`)
@@ -54,6 +55,12 @@ const AddAction = () => {
     actionType: storeOptions[0].value,
   }
 
+  const createAction = async (action) => {
+    const response = await addAction(action)
+    navigate(`/actions/view`)
+    toaster.success(`Action created: ${response.name}`)
+  }
+
   return (
     <PageContainer width="50%">
       <PageHeading>add action</PageHeading>
@@ -75,41 +82,41 @@ const AddAction = () => {
         <Pane flex="3">
           {actionType === `block` && (
             <CreateBlockActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
             />
           )}
           {actionType === `emailRate` && (
             <CreateEmailRateActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `emailBatch` && (
             <CreateEmailBatchActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `emailAlert` && (
             <CreateEmailAlertActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
               validateEmailAddress={validateEmailAddress}
             />
           )}
           {actionType === `store` && (
             <CreateStoreActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
               storeOptions={storeOptions}
             />
           )}
           {actionType === `misc` && (
             <CreateMiscActionForm
-              createAction={addAction}
+              createAction={createAction}
               initialValues={initialValues}
             />
           )}

@@ -37,7 +37,10 @@ const CreateEmailRateActionForm = ({
     if (values.emailAddresses && !values.emailAddresses.length) {
       errors.emailAddresses = `You must provide at least one email address`
     }
-    if (!values.emailAddresses.every(validateEmailAddress)) {
+    if (
+      values.emailAddresses &&
+      !values.emailAddresses.every(validateEmailAddress)
+    ) {
       errors.emailAddresses = `All email addresses must be a valid Bet365 email address`
     }
     if (values.emailSubject === ``) {
@@ -49,21 +52,20 @@ const CreateEmailRateActionForm = ({
     return errors
   }
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     const emailAddresses = values.emailAddresses.join(`;`)
     const emailSendLimit = +values.emailSendLimit
     const actionType = `emailRate`
-    const { name, description, emailSubject, emailText } = values
+    const { id, name, description, emailSubject, emailText } = values
     const metadata = { emailAddresses, emailSubject, emailSendLimit, emailText }
 
-    await createAction({
+    createAction({
+      id,
       name,
       description,
       actionType,
       metadata,
     })
-    navigate(`/actions/view`)
-    toaster.success(`Action created: ${name}`)
   }
 
   const {

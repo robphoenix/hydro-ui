@@ -54,8 +54,9 @@ const CreateBlockActionForm = ({ createAction, initialValues }) => {
     return errors
   }
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     const {
+      id,
       name,
       description,
       permanently,
@@ -79,9 +80,13 @@ const CreateBlockActionForm = ({ createAction, initialValues }) => {
           parameters,
         }
 
-    await createAction({ name, description, actionType, metadata })
-    navigate(`/actions/view`)
-    toaster.success(`Action created: ${name}`)
+    createAction({
+      id,
+      name,
+      description,
+      actionType,
+      metadata,
+    })
   }
 
   const {

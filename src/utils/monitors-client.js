@@ -76,6 +76,14 @@ const addAction = (action) => {
   return post(actionsUrl(), action)
 }
 
+const getActionById = (id) => {
+  return get(actionsUrl(id))
+}
+
+const updateAction = (action) => {
+  return put(actionsUrl(action.id), action)
+}
+
 const reload = () => {
   return get(reloadUrl)
 }
@@ -96,5 +104,7 @@ export {
   getAllActions,
   archiveAction,
   getFeedTypes,
+  getActionById,
+  updateAction,
   reload,
 }

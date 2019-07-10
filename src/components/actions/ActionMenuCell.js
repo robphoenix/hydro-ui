@@ -1,6 +1,6 @@
 import React from 'react'
 import { Popover, Position, Menu, Button } from 'evergreen-ui'
-import { navigate } from '@reach/router/lib/history'
+import { navigate } from '@reach/router'
 
 import ArchiveMenuItem from '../ArchiveMenuItem'
 import { useMonitors } from '../../context/monitors-context'
@@ -15,9 +15,7 @@ const ActionMenuCell = ({ action }) => {
         <Menu>
           <Menu.Group>
             {!action.archived && (
-              <Menu.Item
-                onSelect={() => navigate(`/actions/${action.id}/edit`)}
-              >
+              <Menu.Item onSelect={() => navigate(`${action.id}/edit`)}>
                 Edit
               </Menu.Item>
             )}

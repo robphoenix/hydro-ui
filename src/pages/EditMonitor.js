@@ -4,6 +4,8 @@ import { useMonitors } from '../context/monitors-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 import PageContainer from '../components/PageContainer'
 import PageHeading from '../components/PageHeading'
+import { navigate } from '@reach/router'
+import { toaster } from 'evergreen-ui'
 
 const EditMonitor = ({ id }) => {
   const { updateMonitor, monitor, fetchMonitorById } = useMonitors()
@@ -45,6 +47,12 @@ const EditMonitor = ({ id }) => {
     }
   }, [monitor])
 
+  const createMonitor = async (monitor) => {
+    await updateMonitor(monitor)
+    navigate(`/monitors/${id}`)
+    toaster.success(`Monitor updated: ${monitor.name}`)
+  }
+
   return (
     <PageContainer width="40%">
       <PageHeading>edit monitor</PageHeading>
@@ -52,7 +60,7 @@ const EditMonitor = ({ id }) => {
         <CreateMonitorForm
           disableNameInput
           initialValues={initialValues}
-          createMonitor={updateMonitor}
+          createMonitor={createMonitor}
         />
       )}
     </PageContainer>
