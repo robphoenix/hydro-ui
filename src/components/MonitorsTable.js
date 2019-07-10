@@ -21,16 +21,21 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
         {monitors.map((monitor, i) => (
           <Table.Row
             key={monitor.id}
-            height="auto"
-            padding={majorScale(3)}
+            height={majorScale(17)}
+            padding={majorScale(2)}
             background={i % 2 !== 0 ? 'tint1' : ''}
             borderLeft={i % 2 !== 0 && '1px solid #EDF0F2'}
           >
-            <Table.Cell flex="2">
+            <Table.Cell flex="3">
               <MonitorNameCell monitor={monitor} />
             </Table.Cell>
             {monitor.status === `online` && (
-              <Table.Cell flex="1">
+              <Table.Cell
+                flex="1"
+                padding="0"
+                display="flex"
+                justifyContent="center"
+              >
                 <Button
                   appearance="primary"
                   iconBefore="offline"
@@ -40,7 +45,7 @@ const MonitorsTable = ({ handleSearchChange, monitors }) => {
                 </Button>
               </Table.Cell>
             )}
-            <Table.Cell>
+            <Table.Cell padding="0" display="flex" justifyContent="center">
               <ViewEplQueryCell monitor={monitor} />
             </Table.Cell>
             <Table.Cell display="flex" flex="2" flexWrap="wrap">
