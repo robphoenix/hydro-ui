@@ -2,6 +2,8 @@
 
 :clipboard: [1.0.0...1.1.0](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/compare/1.0.0...1.1.0)
 
+:paperclip: [Tag](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/tags/1.1.0)
+
 :building_construction: [![Build Status](https://mn2forbld0001d0/buildStatus/icon?job=hydro-ui-pipeline%2F1.1.0&build=1)](https://mn2forbld0001d0/job/hydro-ui-pipeline/job/1.1.0/1/)
 
 ## :deciduous_tree: Environments
