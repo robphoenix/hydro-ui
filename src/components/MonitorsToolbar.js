@@ -36,11 +36,7 @@ const MonitorsToolbar = ({
 
       {isAdmin && (
         <SelectMenu
-          // TODO: we will be able to do this in a future release
-          // https://github.com/segmentio/evergreen/pull/579
-          // https://jira/browse/PRJHYP-130
-          // height="auto"
-          height={100}
+          height="auto"
           width={160}
           hasFilter={false}
           hasTitle={false}
