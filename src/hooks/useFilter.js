@@ -15,6 +15,18 @@ const reducer = (state, action) => {
 const useFilter = (initialValues) => {
   const [state, dispatch] = React.useReducer(reducer, initialValues)
 
+  const handleSearchInputChange = (fieldName) => (event) => {
+    dispatch({
+      type: `SET_VALUE`,
+      payload: { [fieldName]: event.target.value },
+    })
+  }
+
+  const getSearchInputProps = (fieldName) => ({
+    value: state[fieldName],
+    onChange: handleSearchInputChange(fieldName),
+  })
+
   const handleTableSearchChange = (value) =>
     dispatch({
       type: `SET_VALUE`,
@@ -69,6 +81,7 @@ const useFilter = (initialValues) => {
     getSegmentedControlProps,
     getMultiSelectMenuProps,
     getSelectMenuProps,
+    getSearchInputProps,
     handleTableSearchChange,
     ...state,
   }

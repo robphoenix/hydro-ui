@@ -20,7 +20,7 @@ const NotFound = () => {
       <WavyHeading size={900} marginBottom={majorScale(4)}>
         404
       </WavyHeading>
-      <WavyHeading size={900} textTransform="uppercase" letterSpacing="0.4px">
+      <WavyHeading size={900} textTransform="uppercase" letterSpacing="0.1em">
         page not found
       </WavyHeading>
     </Pane>

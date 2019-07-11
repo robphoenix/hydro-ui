@@ -36,6 +36,7 @@ const ViewEplQueryCell = ({ monitor }) => {
             <Button color="danger" appearance="minimal" onClick={close}>
               Close
             </Button>
+            {/* TODO: open on hover: https://jira/browse/PRJHYP-130 */}
             <Button
               appearance="minimal"
               onClick={() => {
