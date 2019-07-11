@@ -158,7 +158,7 @@ const ViewMonitors = () => {
           {filtered && !!filtered.length && (
             <MonitorsTable
               monitors={filtered}
-              handleSearchChange={handleTableSearchChange}
+              header={`${statusValue} ${selectedType} monitors`}
             />
           )}
           {!filtered ||
