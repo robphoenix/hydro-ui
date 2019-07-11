@@ -39,7 +39,7 @@ const ViewActions = () => {
   ]
 
   const {
-    handleTableSearchChange,
+    getSearchInputProps,
     getSelectMenuProps,
     actionType,
     searchQuery,
@@ -78,13 +78,11 @@ const ViewActions = () => {
         <Pane>
           <ActionsToolbar
             options={actionTypeOptions}
-            getProps={getSelectMenuProps}
+            getTypeProps={getSelectMenuProps}
             actionType={actionType}
+            getSearchProps={getSearchInputProps}
           />
-          <ActionsTable
-            actions={filtered}
-            handleChange={handleTableSearchChange}
-          />
+          <ActionsTable actions={filtered} />
         </Pane>
       )}
     </PageContainer>
