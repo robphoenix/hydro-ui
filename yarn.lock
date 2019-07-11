@@ -4234,10 +4234,10 @@ eventsource@^1.0.7:
   dependencies:
     original "^1.0.0"
 
-evergreen-ui@^4.15.0:
-  version "4.15.0"
-  resolved "https://proget/npm/Production-npm/evergreen-ui/-/evergreen-ui-4.15.0.tgz#52cfd81feb2e738839e3431f14fd9c47c3dc2e0e"
-  integrity sha1-Us/YH+suc4g540MfFP2cR8PcLg4=
+evergreen-ui@4.18.1:
+  version "4.18.1"
+  resolved "https://proget/npm/Production-npm/evergreen-ui/-/evergreen-ui-4.18.1.tgz#b277e05ae0beefbf361499a7148ff45b7db7cc31"
+  integrity sha1-snfgWuC+7782FJmnFI/0W323zDE=
   dependencies:
     "@babel/runtime" "^7.1.2"
     "@blueprintjs/icons" "^3.2.0"
