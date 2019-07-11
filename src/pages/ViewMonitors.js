@@ -35,7 +35,7 @@ const ViewMonitors = () => {
   }, [fetchMonitors])
 
   const {
-    handleTableSearchChange,
+    getSearchInputProps,
     getSegmentedControlProps,
     getMultiSelectMenuProps,
     getSelectMenuProps,
@@ -154,11 +154,12 @@ const ViewMonitors = () => {
             typeOptions={typeOptions}
             categoriesButtonText={buttonText}
             categoriesOptions={categoryOptions}
+            getSearchProps={getSearchInputProps}
           />
           {filtered && !!filtered.length && (
             <MonitorsTable
               monitors={filtered}
-              handleSearchChange={handleTableSearchChange}
+              header={`${statusValue} ${selectedType} monitors`}
             />
           )}
           {!filtered ||

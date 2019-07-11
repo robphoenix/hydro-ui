@@ -28,7 +28,7 @@ const MenuButton = (props) => (
 )
 
 const LinkTitle = (props) => (
-  <Text size={500} textTransform="uppercase" letterSpacing="0.4px" {...props} />
+  <Text size={500} textTransform="uppercase" letterSpacing="0.1em" {...props} />
 )
 
 const NavBar = () => {
