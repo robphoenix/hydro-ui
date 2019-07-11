@@ -5,7 +5,6 @@ import {
   SegmentedControl,
   SelectMenu,
   Button,
-  SearchInput,
 } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 import { useUser } from '../context/user-context'
@@ -20,7 +19,6 @@ const MonitorsToolbar = ({
   typeOptions,
   categoriesOptions,
   categoriesButtonText,
-  getSearchProps,
 }) => {
   const { allowsEdit, isAdmin } = useUser()
 
@@ -38,7 +36,6 @@ const MonitorsToolbar = ({
         <SelectMenu
           // TODO: we will be able to do this in a future release
           // https://github.com/segmentio/evergreen/pull/579
-          // https://jira/browse/PRJHYP-130
           // height="auto"
           height={100}
           width={160}
@@ -75,11 +72,6 @@ const MonitorsToolbar = ({
           {categoriesButtonText}
         </Button>
       </SelectMenu>
-
-      <SearchInput
-        placeholder="Search Monitors..."
-        {...getSearchProps(`searchQuery`)}
-      />
 
       {allowsEdit && (
         <Button

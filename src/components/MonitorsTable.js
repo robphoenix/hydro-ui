@@ -7,13 +7,15 @@ import MonitorMenuCell from './MonitorMenuCell'
 import MonitorCategories from './MonitorCategories'
 import { navigate } from '@reach/router'
 
-const MonitorsTable = ({ monitors, header }) => {
+const MonitorsTable = ({ handleSearchChange, monitors }) => {
   return (
     <Table>
       <Table.Head>
-        <Table.TextHeaderCell textTransform="uppercase" letterSpacing="0.1em">
-          {header}
-        </Table.TextHeaderCell>
+        <Table.SearchHeaderCell
+          flex="1"
+          onChange={handleSearchChange}
+          placeholder="Search by monitor name and description..."
+        />
       </Table.Head>
       <Table.Body height={700}>
         {monitors.map((monitor, i) => (
