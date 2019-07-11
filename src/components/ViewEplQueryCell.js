@@ -14,6 +14,7 @@ import copy from '../utils/copy-to-clipboard'
 const ViewEplQueryCell = ({ monitor }) => {
   return (
     <Popover
+      trigger="hover"
       content={({ close }) => (
         <Pane
           width="auto"
@@ -36,7 +37,6 @@ const ViewEplQueryCell = ({ monitor }) => {
             <Button color="danger" appearance="minimal" onClick={close}>
               Close
             </Button>
-            {/* TODO: open on hover: https://jira/browse/PRJHYP-130 */}
             <Button
               appearance="minimal"
               onClick={() => {

@@ -36,6 +36,8 @@ const MonitorsToolbar = ({
 
       {isAdmin && (
         <SelectMenu
+          // we'll still see an error here until a new release
+          // https://github.com/segmentio/evergreen/pull/594
           height="auto"
           width={160}
           hasFilter={false}
