@@ -27,9 +27,14 @@ const AddMonitor = () => {
   }
 
   const createMonitor = async (monitor) => {
-    const response = await addMonitor(monitor)
-    navigate(`/monitors/${response.id}`)
-    toaster.success(`Monitor created: ${response.name}`)
+    try {
+      const response = await addMonitor(monitor)
+      navigate(`/monitors/${response.id}`)
+      toaster.success(`Monitor created: ${response.name}`)
+    } catch (error) {
+      const { message, cause } = error
+      toaster.warning(message, { description: cause })
+    }
   }
 
   return (

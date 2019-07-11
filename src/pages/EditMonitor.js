@@ -48,9 +48,14 @@ const EditMonitor = ({ id }) => {
   }, [monitor])
 
   const createMonitor = async (monitor) => {
-    await updateMonitor(monitor)
-    navigate(`/monitors/${id}`)
-    toaster.success(`Monitor updated: ${monitor.name}`)
+    try {
+      await updateMonitor(monitor)
+      navigate(`/monitors/${id}`)
+      toaster.success(`Monitor updated: ${monitor.name}`)
+    } catch (error) {
+      const { message, cause } = error
+      toaster.warning(message, { description: cause })
+    }
   }
 
   return (
