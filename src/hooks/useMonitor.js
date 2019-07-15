@@ -10,7 +10,7 @@ const monitorsReducer = (state, action) => {
         isLoading: false,
         errors: {},
       }
-    case `SET_ERROR`:
+    case `ERROR`:
       return {
         ...state,
         errors: {
@@ -35,9 +35,9 @@ const useMonitor = () => {
   const fetchMonitorById = async (id) => {
     try {
       const monitor = await getMonitorById(id)
-      dispatch({ type: 'SUCCESS', payload: { monitor } })
+      dispatch({ type: `SUCCESS`, payload: { monitor } })
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: { monitorById: error } })
+      dispatch({ type: `ERROR`, payload: { monitorById: error } })
     }
   }
 

@@ -1,14 +1,16 @@
 import React from 'react'
 
-import { useMonitors } from '../context/monitors-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 import PageContainer from '../components/PageContainer'
 import PageHeading from '../components/PageHeading'
 import { navigate } from '@reach/router'
 import { toaster } from 'evergreen-ui'
+import useMonitor from '../hooks/useMonitor'
+import { addMonitor } from '../utils/monitors-client'
 
 const DuplicateMonitor = ({ id }) => {
-  const { addMonitor, monitor, fetchMonitorById } = useMonitors()
+  const { monitor, fetchMonitorById } = useMonitor()
+
   const [initialValues, setInitialValues] = React.useState({})
 
   React.useEffect(() => {
