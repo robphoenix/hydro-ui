@@ -329,42 +329,12 @@ const ViewMonitorById = ({ id }) => {
       )}
       {monitor && data && (
         <Table>
-          <Table.Head>
-            {headers.map((header) => {
-              return (
-                <Table.TextHeaderCell key={header}>
-                  <Popover
-                    position={Position.BOTTOM_LEFT}
-                    content={({ close }) => (
-                      <Menu>
-                        <Menu.OptionsGroup
-                          title="Order"
-                          options={[
-                            { label: 'Ascending', value: Order.ASC },
-                            { label: 'Descending', value: Order.DESC },
-                            { label: 'None', value: Order.NONE },
-                          ]}
-                          selected={direction[header] || Order.NONE}
-                          onChange={(value) => {
-                            handleSortOrderChange(value, header)
-                            // Close the popover when you select a value.
-                            close()
-                          }}
-                        />
-                      </Menu>
-                    )}
-                  >
-                    <TextDropdownButton
-                      icon={getIconForOrder(direction[header])}
-                    >
-                      <Text size={500} marginRight={majorScale(1)}>
-                        {header}
-                      </Text>
-                    </TextDropdownButton>
-                  </Popover>
-                </Table.TextHeaderCell>
-              )
-            })}
+          <Table.Head paddingRight="0">
+            {headers.map((column) => (
+              <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
+                {column}
+              </Table.TextHeaderCell>
+            ))}
           </Table.Head>
           <Table.VirtualBody height={700}>
             {filter(sort(data)).map((row, i) => {
