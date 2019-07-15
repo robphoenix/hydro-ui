@@ -172,13 +172,6 @@ const useMonitor = () => {
       payload: { searchQuery: e.target.value.trim() },
     })
 
-  const handleSortOrderChange = (value, header) => {
-    dispatch({
-      type: `SET_VALUE`,
-      payload: { direction: { [header]: value } },
-    })
-  }
-
   const handleChangeEventClose = () => {
     dispatch({
       type: `SET_VALUE`,
@@ -197,7 +190,6 @@ const useMonitor = () => {
     showEpl,
     togglePause,
     handleSearchChange,
-    handleSortOrderChange,
     handleChangeEventClose,
     ...state,
   }

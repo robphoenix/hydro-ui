@@ -56,7 +56,6 @@ const ViewMonitorById = ({ id }) => {
     showEpl,
     togglePause,
     handleSearchChange,
-    handleSortOrderChange,
     handleChangeEventClose,
   } = useMonitor()
 
