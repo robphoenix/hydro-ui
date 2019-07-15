@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   getMonitors,
-  getMonitorById,
   addMonitor,
   updateMonitor,
   addCategories,
@@ -55,7 +54,6 @@ function MonitorsProvider(props) {
   }
 
   const initialState = {
-    monitor: {},
     isLoading: true,
     monitors: [],
     feedTypes: {},
@@ -74,15 +72,6 @@ function MonitorsProvider(props) {
       dispatch({ type: 'SUCCESS', payload: { monitors } })
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: { monitors: error } })
-    }
-  }, [])
-
-  const fetchMonitorById = React.useCallback(async (id) => {
-    try {
-      const monitor = await getMonitorById(id)
-      dispatch({ type: 'SUCCESS', payload: { monitor } })
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: { monitorById: error } })
     }
   }, [])
 
@@ -143,8 +132,6 @@ function MonitorsProvider(props) {
         archiveMonitor,
         unarchiveMonitor,
         fetchMonitors,
-        getMonitorById,
-        fetchMonitorById,
         fetchGroups,
         fetchCategories,
         fetchActions,
