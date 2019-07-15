@@ -1,15 +1,14 @@
 import React from 'react'
 
-import { useMonitors } from '../context/monitors-context'
 import { useUser } from '../context/user-context'
 import CreateMonitorForm from '../components/CreateMonitorForm'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
 import { navigate } from '@reach/router'
 import { toaster } from 'evergreen-ui'
+import { addMonitor } from '../utils/monitors-client'
 
 const AddMonitor = () => {
-  const { addMonitor } = useMonitors()
   const { userGroups } = useUser()
 
   const initialValues = {

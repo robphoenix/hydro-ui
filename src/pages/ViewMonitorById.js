@@ -1,5 +1,4 @@
 import React from 'react'
-import { useMonitors } from '../context/monitors-context'
 import {
   Pane,
   Text,
@@ -19,7 +18,6 @@ import {
   Strong,
   CornerDialog,
 } from 'evergreen-ui'
-import dateFnsFormat from 'date-fns/format'
 import { navigate } from '@reach/router'
 
 import FullPageSpinner from '../components/FullPageSpinner'
@@ -36,83 +34,63 @@ import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
 import EventBus from 'vertx3-eventbus-client'
 import { EVENTBUS_ROOT } from '../utils/environments'
+import useMonitor from '../hooks/useMonitor'
 
 const eventBusUrl = `${EVENTBUS_ROOT}/eventbus`
 const outputAddress = 'result.pub.output.'
 const cachedAddress = 'result.pub.cached'
 const statusAddress = 'monitor.status.'
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case `SUCCESS`:
-      return {
-        ...state,
-        ...action.payload,
-        isLoading: false,
-      }
-    case `SET_ERROR`:
-      return {
-        ...state,
-        errors: {
-          ...state.errors,
-          ...action.payload,
-        },
-      }
-    case `SET_VALUE`:
-      return {
-        ...state,
-        ...action.payload,
-      }
-    default:
-      return state
-  }
-}
-
 const ViewMonitorById = ({ id }) => {
-  const [state, dispatch] = React.useReducer(reducer, {
-    isLoading: true,
-    monitor: {},
-    errors: {},
-    headers: [],
-    headersMetadata: [],
-    data: [],
-    isLiveData: false,
-    showEplQuery: false,
-    paused: false,
-    receivedAt: ``,
-    direction: {},
-    searchQuery: ``,
-    showChangeEvent: false,
-    changeEventMessage: ``,
-  })
-
-  const { getMonitorById, errors } = useMonitors()
+  const {
+    monitor,
+    searchQuery,
+    direction,
+    headersMetadata,
+    isLiveData,
+    paused,
+    headers,
+    data,
+    showEplQuery,
+    receivedAt,
+    showChangeEvent,
+    changeEventMessage,
+    isLoading,
+    errors,
+    fetchMonitorById,
+    handleCachedMessage,
+    handleLiveMessage,
+    handleChangeEventMessage,
+    showEpl,
+    togglePause,
+    handleSearchChange,
+    handleSortOrderChange,
+    handleChangeEventClose,
+  } = useMonitor()
 
   const filter = (data) => {
-    const searchQuery = state.searchQuery.trim()
     if (!searchQuery) {
       return data
     }
     return data.filter((row) => {
+      // @ts-ignore
       return matchesSearchQuery(Object.values(row).join(` `), searchQuery)
     })
   }
 
   const sort = (data) => {
-    const col = Object.keys(state.direction)[0]
+    const col = Object.keys(direction)[0]
     if (!col) {
       return data
     }
 
-    const type = state.headersMetadata[col]
-      ? state.headersMetadata[col].type
-      : ''
+    const type = headersMetadata[col] ? headersMetadata[col].type : ''
 
-    const direction = state.direction[col]
-    if (direction === Order.NONE) {
+    const order = direction[col]
+    if (order === Order.NONE) {
       return data
     }
-    const isAsc = direction === Order.ASC
+    const isAsc = order === Order.ASC
     return data.sort((a, b) => {
       switch (type) {
         case 'ip':
@@ -129,116 +107,68 @@ const ViewMonitorById = ({ id }) => {
     })
   }
 
-  const getMessageData = (body) => {
-    const { h, d } = body
-
-    const headersMetadata = h.reduce((metadata, header) => {
-      const { n: name, t: type, f: format } = header
-      metadata[name] = { type, format }
-      return metadata
-    }, {})
-
-    const headers = h.map((header) => header.n)
-
-    const data = d.map((attributes) => {
-      return attributes.reduce((columns, column, i) => {
-        columns[headers[i]] = column
-        return columns
-      }, {})
-    })
-    return { headersMetadata, headers, data }
-  }
-
   React.useEffect(() => {
-    // We do this here, rather than in the monitor context, so that no previous
-    // state is left over. When used in the monitor context, the previous
-    // monitor is still in state and so the first set of data that comes through
-    // is for that not the current monitor.
-    const fetchMonitorById = async (id) => {
-      try {
-        const monitor = await getMonitorById(id)
-        dispatch({ type: 'SUCCESS', payload: { monitor } })
-      } catch (error) {
-        dispatch({ type: 'SET_ERROR', payload: { monitorById: error } })
-      }
-    }
     fetchMonitorById(id)
-  }, [getMonitorById, id])
+  }, [fetchMonitorById, id])
 
   React.useEffect(() => {
-    if (Object.keys(state.monitor).length) {
+    if (Object.keys(monitor).length) {
       const eb = new EventBus(eventBusUrl, {})
 
       eb.enableReconnect(true)
       eb.onerror = () =>
-        console.error(`[connection error]: CACHED ${state.monitor.name}`)
+        console.error(`[connection error]: CACHED ${monitor.name}`)
+      // @ts-ignore
       eb.onclose = () =>
-        console.log(`[connection closed]: CACHED ${state.monitor.name}`)
+        console.log(`[connection closed]: CACHED ${monitor.name}`)
+      // @ts-ignore
       eb.onopen = () => {
-        console.log(`[connection open]: CACHED ${state.monitor.name}`)
-        eb.send(cachedAddress, state.monitor.name, {}, (error, message) => {
+        console.log(`[connection open]: CACHED ${monitor.name}`)
+        eb.send(cachedAddress, monitor.name, {}, (error, message) => {
           if (error) {
             console.log({ error })
             eb.close()
           }
-          if (message && message.body) {
-            const { headers, headersMetadata, data } = getMessageData(
-              message.body,
-            )
-            dispatch({
-              type: `SET_VALUE`,
-              payload: { headers, headersMetadata, data },
-            })
+          if (message) {
+            handleCachedMessage(message)
           }
           // we'll only ever recieve the one message
-          eb.close()
+          if (eb) {
+            eb.close()
+          }
         })
       }
-      if (state.isLiveData) {
+      if (isLiveData) {
         eb.close()
       }
     }
-  }, [state.isLiveData, state.monitor])
+  }, [handleCachedMessage, isLiveData, monitor])
 
   React.useEffect(() => {
     let eb
-    if (Object.keys(state.monitor).length) {
-      if (state.paused && eb) {
+    if (Object.keys(monitor).length) {
+      if (paused && eb) {
+        // @ts-ignore
         eb.close()
       }
-      if (!state.paused) {
+      if (!paused) {
         eb = new EventBus(eventBusUrl, {})
-        const address = `${outputAddress}${state.monitor.name}`
+        const address = `${outputAddress}${monitor.name}`
         eb.enableReconnect(true)
         eb.onerror = () =>
-          console.error(`[connection error]: LIVE ${state.monitor.name}`)
+          console.error(`[connection error]: LIVE ${monitor.name}`)
+        // @ts-ignore
         eb.onclose = () =>
-          console.log(`[connection closed]: LIVE ${state.monitor.name}`)
+          console.log(`[connection closed]: LIVE ${monitor.name}`)
+        // @ts-ignore
         eb.onopen = () => {
-          console.log(`[connection open]: LIVE ${state.monitor.name}`)
+          console.log(`[connection open]: LIVE ${monitor.name}`)
           eb.registerHandler(address, {}, (error, message) => {
             if (error) {
               eb.close()
             }
-            if (message && message.body) {
-              const isLiveData = true
-              const receivedAt = dateFnsFormat(
-                new Date(),
-                `HH:mm:ss dd/MM/yyyy`,
-              )
-              const { headers, headersMetadata, data } = getMessageData(
-                message.body,
-              )
-              dispatch({
-                type: `SET_VALUE`,
-                payload: {
-                  headers,
-                  headersMetadata,
-                  data,
-                  isLiveData,
-                  receivedAt,
-                },
-              })
+            if (message) {
+              handleLiveMessage(message)
             }
           })
         }
@@ -249,45 +179,28 @@ const ViewMonitorById = ({ id }) => {
         }
       }
     }
-  }, [state.monitor, state.paused])
+  }, [handleLiveMessage, monitor, paused])
 
   React.useEffect(() => {
-    const changeEventMessages = {
-      // this monitor was just removed from the monitor cache, which means it got archived;
-      removed: `The monitor has been archived by another user.`,
-      // this monitor just got its status changed to online;
-      online: `The monitor status has been changed to online by another user.`,
-      // this monitor just got its status changed to online;
-      offline: `The monitor status has been changed to offline by another user.`,
-      // the EPL query for this monitor was updated;
-      eplUpdated: `The monitor EPL Query has been changed by another user.`,
-      // the cache window for this monitor was updated.
-      cacheWindowChanged: `The monitor cache window has been changed by another user.`,
-    }
     let eb
-    if (Object.keys(state.monitor).length) {
+    if (Object.keys(monitor).length) {
       eb = new EventBus(eventBusUrl, {})
-      const address = `${statusAddress}${state.monitor.name}`
+      const address = `${statusAddress}${monitor.name}`
       eb.enableReconnect(true)
       eb.onerror = () =>
-        console.error(`[connection error]: CHANGE EVENTS ${state.monitor.name}`)
+        console.error(`[connection error]: CHANGE EVENTS ${monitor.name}`)
+      // @ts-ignore
       eb.onclose = () =>
-        console.log(`[connection closed]: CHANGE EVENTS ${state.monitor.name}`)
+        console.log(`[connection closed]: CHANGE EVENTS ${monitor.name}`)
+      // @ts-ignore
       eb.onopen = () => {
-        console.log(`[connection open]: CHANGE EVENTS ${state.monitor.name}`)
+        console.log(`[connection open]: CHANGE EVENTS ${monitor.name}`)
         eb.registerHandler(address, {}, (error, message) => {
           if (error) {
             eb.close()
           }
-          if (message && message.body) {
-            const changeEventMessage = changeEventMessages[message.body]
-            dispatch({
-              type: `SET_VALUE`,
-              payload: {
-                showChangeEvent: true,
-                changeEventMessage,
-              },
-            })
+          if (message) {
+            handleChangeEventMessage(message)
           }
         })
       }
@@ -297,7 +210,7 @@ const ViewMonitorById = ({ id }) => {
         eb.close()
       }
     }
-  }, [state.monitor])
+  }, [handleChangeEventMessage, monitor])
 
   React.useEffect(() => {
     const error = errors.monitorById
@@ -308,35 +221,23 @@ const ViewMonitorById = ({ id }) => {
     }
   })
 
-  const showEpl = (showEplQuery) => {
-    dispatch({ type: `SET_VALUE`, payload: { showEplQuery } })
-  }
-
-  const togglePause = () => {
-    const paused = !state.paused
-    dispatch({ type: `SET_VALUE`, payload: { paused } })
-  }
-
-  const handleSearchChange = (e) =>
-    dispatch({ type: `SET_VALUE`, payload: { searchQuery: e.target.value } })
-
   return (
     <PageContainer width="80%">
-      {!state.isLoading && (
+      {!isLoading && (
         <Pane>
           <Pane marginBottom={majorScale(3)}>
-            <PageHeading>{state.monitor.name}</PageHeading>
+            <PageHeading>{monitor.name}</PageHeading>
             <Pane display="flex" flexDirection="column">
               <Text size={600} marginBottom={majorScale(2)}>
-                {state.monitor.description}
+                {monitor.description}
               </Text>
               <Pane display="flex" alignItems="center">
-                <MonitorCategories categories={state.monitor.categories} />
+                <MonitorCategories categories={monitor.categories} />
                 <Pane marginLeft={majorScale(4)}>
-                  {state.monitor && state.data && (
+                  {monitor && data && (
                     <Text size={500}>
                       Currently viewing{' '}
-                      {state.isLiveData ? (
+                      {isLiveData ? (
                         <Badge color="green">live</Badge>
                       ) : (
                         <Badge color="yellow">cached</Badge>
@@ -344,9 +245,9 @@ const ViewMonitorById = ({ id }) => {
                       data
                     </Text>
                   )}
-                  {state.isLiveData && (
+                  {isLiveData && (
                     <Text size={500}>
-                      , received at <Strong>{state.receivedAt}</Strong>{' '}
+                      , received at <Strong>{receivedAt}</Strong>{' '}
                     </Text>
                   )}
                 </Pane>
@@ -355,7 +256,7 @@ const ViewMonitorById = ({ id }) => {
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
             <Dialog
-              isShown={state.showEplQuery}
+              isShown={showEplQuery}
               onCloseComplete={() => showEpl(false)}
               hasFooter={false}
               hasHeader={false}
@@ -367,7 +268,7 @@ const ViewMonitorById = ({ id }) => {
                 marginBottom={majorScale(2)}
               >
                 <Code appearance="minimal" size={500}>
-                  {state.monitor.query}
+                  {monitor.query}
                 </Code>
               </Pre>
               <Pane display="flex" justifyContent="flex-end">
@@ -381,10 +282,8 @@ const ViewMonitorById = ({ id }) => {
                 <Button
                   appearance="minimal"
                   onClick={() => {
-                    copy(state.monitor.query)
-                    toaster.success(
-                      `Copied query from monitor ${state.monitor.name}`,
-                    )
+                    copy(monitor.query)
+                    toaster.success(`Copied query from monitor ${monitor.name}`)
                     showEpl(false)
                   }}
                 >
@@ -397,14 +296,14 @@ const ViewMonitorById = ({ id }) => {
                 placeholder="Search Monitor Data"
                 width="100%"
                 onChange={handleSearchChange}
-                value={state.searchQuery}
+                value={searchQuery}
               />
             </Pane>
             <Button onClick={() => showEpl(true)} marginRight={majorScale(2)}>
               View EPL Query
             </Button>
             <Button
-              onClick={() => navigate(`${state.monitor.id}/edit`)}
+              onClick={() => navigate(`${monitor.id}/edit`)}
               appearance="primary"
               marginRight={majorScale(2)}
             >
@@ -412,26 +311,26 @@ const ViewMonitorById = ({ id }) => {
             </Button>
             <Button
               onClick={togglePause}
-              disabled={!state.isLiveData}
+              disabled={!isLiveData}
               marginRight={majorScale(2)}
-              intent={state.paused ? 'success' : 'warning'}
+              intent={paused ? 'success' : 'warning'}
               appearance="primary"
             >
-              {state.paused ? 'Run' : 'Pause'}
+              {paused ? 'Run' : 'Pause'}
             </Button>
           </Pane>
         </Pane>
       )}
-      {!state.data && (
+      {!data && (
         <Pane>
           <FullPageSpinner height={400} />
           <Text />
         </Pane>
       )}
-      {state.monitor && state.data && (
+      {monitor && data && (
         <Table>
           <Table.Head>
-            {state.headers.map((header) => {
+            {headers.map((header) => {
               return (
                 <Table.TextHeaderCell key={header}>
                   <Popover
@@ -445,12 +344,9 @@ const ViewMonitorById = ({ id }) => {
                             { label: 'Descending', value: Order.DESC },
                             { label: 'None', value: Order.NONE },
                           ]}
-                          selected={state.direction[header] || Order.NONE}
+                          selected={direction[header] || Order.NONE}
                           onChange={(value) => {
-                            dispatch({
-                              type: `SET_VALUE`,
-                              payload: { direction: { [header]: value } },
-                            })
+                            handleSortOrderChange(value, header)
                             // Close the popover when you select a value.
                             close()
                           }}
@@ -459,7 +355,7 @@ const ViewMonitorById = ({ id }) => {
                     )}
                   >
                     <TextDropdownButton
-                      icon={getIconForOrder(state.direction[header])}
+                      icon={getIconForOrder(direction[header])}
                     >
                       <Text size={500} marginRight={majorScale(1)}>
                         {header}
@@ -471,16 +367,22 @@ const ViewMonitorById = ({ id }) => {
             })}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {filter(sort(state.data)).map((row, i) => {
+            {filter(sort(data)).map((row, i) => {
               return (
                 <Table.Row
+                  // @ts-ignore
                   key={Object.values(row).join(``)}
                   background={i % 2 !== 0 ? `tint1` : ``}
                   borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
                 >
-                  {Object.values(row).map((cell, i) => (
-                    <Table.TextCell key={`${i}${cell}`}>{cell}</Table.TextCell>
-                  ))}
+                  {Object
+                    // @ts-ignore
+                    .values(row)
+                    .map((cell, i) => (
+                      <Table.TextCell key={`${i}${cell}`}>
+                        {cell}
+                      </Table.TextCell>
+                    ))}
                 </Table.Row>
               )
             })}
@@ -489,20 +391,12 @@ const ViewMonitorById = ({ id }) => {
       )}
 
       <CornerDialog
-        title={`${state.monitor.name} Change Event`}
+        title={`${monitor.name} Change Event`}
         hasFooter={false}
-        isShown={state.showChangeEvent}
-        onCloseComplete={() =>
-          dispatch({
-            type: `SET_VALUE`,
-            payload: {
-              showChangeEvent: false,
-              changeEventMessage: ``,
-            },
-          })
-        }
+        isShown={showChangeEvent}
+        onCloseComplete={handleChangeEventClose}
       >
-        <Text>{state.changeEventMessage}</Text>
+        <Text>{changeEventMessage}</Text>
       </CornerDialog>
     </PageContainer>
   )
