@@ -323,43 +323,42 @@ const ViewMonitorById = ({ id }) => {
           </Pane>
         </Pane>
       )}
-      {!data && (
+      {isLoading && (
         <Pane>
           <FullPageSpinner height={400} />
           <Text />
         </Pane>
       )}
-      {monitor && data && (
+      {!isLoading && (
         <Table>
-          <Table.Head paddingRight="0">
+          <Table.Head paddingRight={filter(data).length > 10 ? `17px` : 0}>
             {headers.map((column) => (
               <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
                 {column}
               </Table.TextHeaderCell>
             ))}
           </Table.Head>
-          <Table.VirtualBody height={700}>
-            <Pane>
-              {filter(sort(data)).map((row, i) => {
-                return (
-                  <Table.Row
-                    // @ts-ignore
-                    key={Object.values(row).join(``)}
-                    background={i % 2 !== 0 ? `tint1` : ``}
-                    borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
-                  >
-                    {Object.keys(row).map((column, i) => (
-                      <Table.TextCell
-                        key={`${i}${row[column]}`}
-                        flex={getFlexValue(column)}
-                      >
-                        {row[column]}
-                      </Table.TextCell>
-                    ))}
-                  </Table.Row>
-                )
-              })}
-            </Pane>
+          <Table.VirtualBody height={600}>
+            {filter(data).map((row, i) => {
+              return (
+                <Table.Row
+                  // @ts-ignore
+                  key={Object.values(row).join(``)}
+                  background={i % 2 !== 0 ? `tint1` : ``}
+                  borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
+                  height={majorScale(7)}
+                >
+                  {Object.keys(row).map((column, i) => (
+                    <Table.TextCell
+                      key={`${i}${row[column]}`}
+                      flex={getFlexValue(column)}
+                    >
+                      {row[column]}
+                    </Table.TextCell>
+                  ))}
+                </Table.Row>
+              )
+            })}
           </Table.VirtualBody>
         </Table>
       )}
