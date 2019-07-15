@@ -10,10 +10,6 @@ import {
   Code,
   Badge,
   toaster,
-  Popover,
-  Position,
-  Menu,
-  TextDropdownButton,
   SearchInput,
   Strong,
   CornerDialog,
@@ -23,12 +19,7 @@ import { navigate } from '@reach/router'
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
-import {
-  Order,
-  compare,
-  sortableIpAddress,
-  getIconForOrder,
-} from '../utils/sort'
+import { Order, compare, sortableIpAddress } from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
@@ -51,6 +42,7 @@ const ViewMonitorById = ({ id }) => {
     paused,
     headers,
     data,
+    maxLengths,
     showEplQuery,
     receivedAt,
     showChangeEvent,
@@ -221,6 +213,17 @@ const ViewMonitorById = ({ id }) => {
     }
   })
 
+  const getFlexValue = (column) => {
+    const cellMaxLength = maxLengths[column]
+    if (cellMaxLength < 18) {
+      return 1
+    }
+    if (cellMaxLength < 40) {
+      return 3
+    }
+    return 4
+  }
+
   return (
     <PageContainer width="80%">
       {!isLoading && (
@@ -337,25 +340,27 @@ const ViewMonitorById = ({ id }) => {
             ))}
           </Table.Head>
           <Table.VirtualBody height={700}>
-            {filter(sort(data)).map((row, i) => {
-              return (
-                <Table.Row
-                  // @ts-ignore
-                  key={Object.values(row).join(``)}
-                  background={i % 2 !== 0 ? `tint1` : ``}
-                  borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
-                >
-                  {Object
+            <Pane>
+              {filter(sort(data)).map((row, i) => {
+                return (
+                  <Table.Row
                     // @ts-ignore
-                    .values(row)
-                    .map((cell, i) => (
-                      <Table.TextCell key={`${i}${cell}`}>
-                        {cell}
+                    key={Object.values(row).join(``)}
+                    background={i % 2 !== 0 ? `tint1` : ``}
+                    borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
+                  >
+                    {Object.keys(row).map((column, i) => (
+                      <Table.TextCell
+                        key={`${i}${row[column]}`}
+                        flex={getFlexValue(column)}
+                      >
+                        {row[column]}
                       </Table.TextCell>
                     ))}
-                </Table.Row>
-              )
-            })}
+                  </Table.Row>
+                )
+              })}
+            </Pane>
           </Table.VirtualBody>
         </Table>
       )}
