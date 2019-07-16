@@ -19,7 +19,6 @@ import { navigate } from '@reach/router'
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
-import { Order, compare, sortableIpAddress } from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
@@ -36,8 +35,6 @@ const ViewMonitorById = ({ id }) => {
   const {
     monitor,
     searchQuery,
-    direction,
-    headersMetadata,
     isLiveData,
     paused,
     headers,
@@ -69,34 +66,34 @@ const ViewMonitorById = ({ id }) => {
     })
   }
 
-  const sort = (data) => {
-    const col = Object.keys(direction)[0]
-    if (!col) {
-      return data
-    }
+  // const sort = (data) => {
+  //   const col = Object.keys(direction)[0]
+  //   if (!col) {
+  //     return data
+  //   }
 
-    const type = headersMetadata[col] ? headersMetadata[col].type : ''
+  //   const type = headersMetadata[col] ? headersMetadata[col].type : ''
 
-    const order = direction[col]
-    if (order === Order.NONE) {
-      return data
-    }
-    const isAsc = order === Order.ASC
-    return data.sort((a, b) => {
-      switch (type) {
-        case 'ip':
-          return compare(
-            sortableIpAddress(a[col]),
-            sortableIpAddress(b[col]),
-            isAsc,
-          )
-        case 'dateTime':
-          return compare(new Date(a[col]), new Date(a[col]), isAsc)
-        default:
-          return compare(a[col], b[col], isAsc)
-      }
-    })
-  }
+  //   const order = direction[col]
+  //   if (order === Order.NONE) {
+  //     return data
+  //   }
+  //   const isAsc = order === Order.ASC
+  //   return data.sort((a, b) => {
+  //     switch (type) {
+  //       case 'ip':
+  //         return compare(
+  //           sortableIpAddress(a[col]),
+  //           sortableIpAddress(b[col]),
+  //           isAsc,
+  //         )
+  //       case 'dateTime':
+  //         return compare(new Date(a[col]), new Date(a[col]), isAsc)
+  //       default:
+  //         return compare(a[col], b[col], isAsc)
+  //     }
+  //   })
+  // }
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -223,6 +220,8 @@ const ViewMonitorById = ({ id }) => {
     return 4
   }
 
+  const scrollBarWidth = `17px`
+
   return (
     <PageContainer width="80%">
       {!isLoading && (
@@ -331,7 +330,9 @@ const ViewMonitorById = ({ id }) => {
       )}
       {!isLoading && (
         <Table>
-          <Table.Head paddingRight={filter(data).length > 10 ? `17px` : 0}>
+          <Table.Head
+            paddingRight={filter(data).length > 10 ? scrollBarWidth : 0}
+          >
             {headers.map((column) => (
               <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
                 {column}
