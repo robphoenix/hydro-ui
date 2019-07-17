@@ -10,10 +10,6 @@ import {
   Code,
   Badge,
   toaster,
-  Popover,
-  Position,
-  Menu,
-  TextDropdownButton,
   SearchInput,
   Strong,
   CornerDialog,
@@ -23,12 +19,6 @@ import { navigate } from '@reach/router'
 import FullPageSpinner from '../components/FullPageSpinner'
 import PageHeading from '../components/PageHeading'
 import PageContainer from '../components/PageContainer'
-import {
-  Order,
-  compare,
-  sortableIpAddress,
-  getIconForOrder,
-} from '../utils/sort'
 import copy from '../utils/copy-to-clipboard'
 import MonitorCategories from '../components/MonitorCategories'
 import { matchesSearchQuery } from '../utils/filters'
@@ -45,12 +35,11 @@ const ViewMonitorById = ({ id }) => {
   const {
     monitor,
     searchQuery,
-    direction,
-    headersMetadata,
     isLiveData,
     paused,
     headers,
     data,
+    maxLengths,
     showEplQuery,
     receivedAt,
     showChangeEvent,
@@ -64,7 +53,6 @@ const ViewMonitorById = ({ id }) => {
     showEpl,
     togglePause,
     handleSearchChange,
-    handleSortOrderChange,
     handleChangeEventClose,
   } = useMonitor()
 
@@ -78,34 +66,34 @@ const ViewMonitorById = ({ id }) => {
     })
   }
 
-  const sort = (data) => {
-    const col = Object.keys(direction)[0]
-    if (!col) {
-      return data
-    }
+  // const sort = (data) => {
+  //   const col = Object.keys(direction)[0]
+  //   if (!col) {
+  //     return data
+  //   }
 
-    const type = headersMetadata[col] ? headersMetadata[col].type : ''
+  //   const type = headersMetadata[col] ? headersMetadata[col].type : ''
 
-    const order = direction[col]
-    if (order === Order.NONE) {
-      return data
-    }
-    const isAsc = order === Order.ASC
-    return data.sort((a, b) => {
-      switch (type) {
-        case 'ip':
-          return compare(
-            sortableIpAddress(a[col]),
-            sortableIpAddress(b[col]),
-            isAsc,
-          )
-        case 'dateTime':
-          return compare(new Date(a[col]), new Date(a[col]), isAsc)
-        default:
-          return compare(a[col], b[col], isAsc)
-      }
-    })
-  }
+  //   const order = direction[col]
+  //   if (order === Order.NONE) {
+  //     return data
+  //   }
+  //   const isAsc = order === Order.ASC
+  //   return data.sort((a, b) => {
+  //     switch (type) {
+  //       case 'ip':
+  //         return compare(
+  //           sortableIpAddress(a[col]),
+  //           sortableIpAddress(b[col]),
+  //           isAsc,
+  //         )
+  //       case 'dateTime':
+  //         return compare(new Date(a[col]), new Date(a[col]), isAsc)
+  //       default:
+  //         return compare(a[col], b[col], isAsc)
+  //     }
+  //   })
+  // }
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -221,6 +209,22 @@ const ViewMonitorById = ({ id }) => {
     }
   })
 
+  const getFlexValue = (column) => {
+    const cellMaxLength = maxLengths[column]
+    if (cellMaxLength < 15) {
+      return 1
+    }
+    if (cellMaxLength < 24) {
+      return 2
+    }
+    if (cellMaxLength < 40) {
+      return 3
+    }
+    return 4
+  }
+
+  const scrollBarWidth = `17px`
+
   return (
     <PageContainer width="80%">
       {!isLoading && (
@@ -321,68 +325,55 @@ const ViewMonitorById = ({ id }) => {
           </Pane>
         </Pane>
       )}
-      {!data && (
+      {isLoading && (
         <Pane>
           <FullPageSpinner height={400} />
           <Text />
         </Pane>
       )}
-      {monitor && data && (
+      {!isLoading && (
         <Table>
-          <Table.Head>
-            {headers.map((header) => {
-              return (
-                <Table.TextHeaderCell key={header}>
-                  <Popover
-                    position={Position.BOTTOM_LEFT}
-                    content={({ close }) => (
-                      <Menu>
-                        <Menu.OptionsGroup
-                          title="Order"
-                          options={[
-                            { label: 'Ascending', value: Order.ASC },
-                            { label: 'Descending', value: Order.DESC },
-                            { label: 'None', value: Order.NONE },
-                          ]}
-                          selected={direction[header] || Order.NONE}
-                          onChange={(value) => {
-                            handleSortOrderChange(value, header)
-                            // Close the popover when you select a value.
-                            close()
-                          }}
-                        />
-                      </Menu>
-                    )}
-                  >
-                    <TextDropdownButton
-                      icon={getIconForOrder(direction[header])}
-                    >
-                      <Text size={500} marginRight={majorScale(1)}>
-                        {header}
-                      </Text>
-                    </TextDropdownButton>
-                  </Popover>
-                </Table.TextHeaderCell>
-              )
-            })}
+          <Table.Head
+            paddingRight={filter(data).length > 9 ? scrollBarWidth : 0}
+          >
+            {headers.map((column) => (
+              <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
+                {column}
+              </Table.TextHeaderCell>
+            ))}
           </Table.Head>
-          <Table.VirtualBody height={700}>
-            {filter(sort(data)).map((row, i) => {
+          <Table.VirtualBody height={600}>
+            {filter(data).map((row, i) => {
               return (
                 <Table.Row
                   // @ts-ignore
                   key={Object.values(row).join(``)}
                   background={i % 2 !== 0 ? `tint1` : ``}
-                  borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
+                  borderLeft={i % 2 !== 0 && `1px solid #F9F9FB`}
+                  height={majorScale(8)}
                 >
-                  {Object
-                    // @ts-ignore
-                    .values(row)
-                    .map((cell, i) => (
-                      <Table.TextCell key={`${i}${cell}`}>
-                        {cell}
-                      </Table.TextCell>
-                    ))}
+                  {Object.keys(row).map((column, i) => (
+                    <Table.Cell
+                      key={`${i}${row[column]}`}
+                      flex={getFlexValue(column)}
+                    >
+                      <Text
+                        css={{
+                          whiteSpace: `nowrap`,
+                          overflow: `hidden`,
+                          textOverflow: `ellipsis`,
+                          ':hover': {
+                            whiteSpace: `normal`,
+                            wordBreak: `break-all`,
+                            textOverflow: `clip`,
+                            height: `auto`,
+                          },
+                        }}
+                      >
+                        {row[column]}
+                      </Text>
+                    </Table.Cell>
+                  ))}
                 </Table.Row>
               )
             })}

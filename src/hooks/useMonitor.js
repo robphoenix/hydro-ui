@@ -33,7 +33,27 @@ const getMessageData = (body) => {
       return columns
     }, {})
   })
-  return { headersMetadata, headers, data }
+
+  const maxLengths = data.reduce((lengths, attributes) => {
+    Object.keys(attributes).forEach((attribute) => {
+      if (!lengths[attribute]) {
+        lengths[attribute] =
+          attribute.length > `${attributes[attribute]}`.length
+            ? attribute.length
+            : `${attributes[attribute]}`.length
+      } else {
+        const max =
+          lengths[attribute] > `${attributes[attribute]}`.length
+            ? lengths[attribute]
+            : `${attributes[attribute]}`.length
+
+        lengths[attribute] = max
+      }
+    })
+    return lengths
+  }, {})
+
+  return { headersMetadata, headers, data, maxLengths }
 }
 
 const monitorsReducer = (state, action) => {
@@ -94,10 +114,12 @@ const useMonitor = () => {
 
   const handleCachedMessage = React.useCallback((message) => {
     if (message.body) {
-      const { headers, headersMetadata, data } = getMessageData(message.body)
+      const { headers, headersMetadata, data, maxLengths } = getMessageData(
+        message.body,
+      )
       dispatch({
         type: `SET_VALUE`,
-        payload: { headers, headersMetadata, data },
+        payload: { headers, headersMetadata, data, maxLengths },
       })
     }
   }, [])
@@ -106,7 +128,9 @@ const useMonitor = () => {
     if (message.body) {
       const isLiveData = true
       const receivedAt = dateFnsFormat(new Date(), `HH:mm:ss dd/MM/yyyy`)
-      const { headers, headersMetadata, data } = getMessageData(message.body)
+      const { headers, headersMetadata, data, maxLengths } = getMessageData(
+        message.body,
+      )
       dispatch({
         type: `SET_VALUE`,
         payload: {
@@ -115,6 +139,7 @@ const useMonitor = () => {
           data,
           isLiveData,
           receivedAt,
+          maxLengths,
         },
       })
     }
@@ -147,13 +172,6 @@ const useMonitor = () => {
       payload: { searchQuery: e.target.value.trim() },
     })
 
-  const handleSortOrderChange = (value, header) => {
-    dispatch({
-      type: `SET_VALUE`,
-      payload: { direction: { [header]: value } },
-    })
-  }
-
   const handleChangeEventClose = () => {
     dispatch({
       type: `SET_VALUE`,
@@ -172,7 +190,6 @@ const useMonitor = () => {
     showEpl,
     togglePause,
     handleSearchChange,
-    handleSortOrderChange,
     handleChangeEventClose,
     ...state,
   }
