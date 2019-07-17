@@ -211,8 +211,11 @@ const ViewMonitorById = ({ id }) => {
 
   const getFlexValue = (column) => {
     const cellMaxLength = maxLengths[column]
-    if (cellMaxLength < 18) {
+    if (cellMaxLength < 15) {
       return 1
+    }
+    if (cellMaxLength < 24) {
+      return 2
     }
     if (cellMaxLength < 40) {
       return 3
@@ -331,7 +334,7 @@ const ViewMonitorById = ({ id }) => {
       {!isLoading && (
         <Table>
           <Table.Head
-            paddingRight={filter(data).length > 10 ? scrollBarWidth : 0}
+            paddingRight={filter(data).length > 9 ? scrollBarWidth : 0}
           >
             {headers.map((column) => (
               <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
@@ -346,16 +349,30 @@ const ViewMonitorById = ({ id }) => {
                   // @ts-ignore
                   key={Object.values(row).join(``)}
                   background={i % 2 !== 0 ? `tint1` : ``}
-                  borderLeft={i % 2 !== 0 && `1px solid #EDF0F2`}
-                  height={majorScale(7)}
+                  borderLeft={i % 2 !== 0 && `1px solid #F9F9FB`}
+                  height={majorScale(8)}
                 >
                   {Object.keys(row).map((column, i) => (
-                    <Table.TextCell
+                    <Table.Cell
                       key={`${i}${row[column]}`}
                       flex={getFlexValue(column)}
                     >
-                      {row[column]}
-                    </Table.TextCell>
+                      <Text
+                        css={{
+                          whiteSpace: `nowrap`,
+                          overflow: `hidden`,
+                          textOverflow: `ellipsis`,
+                          ':hover': {
+                            whiteSpace: `normal`,
+                            wordBreak: `break-all`,
+                            textOverflow: `clip`,
+                            height: `auto`,
+                          },
+                        }}
+                      >
+                        {row[column]}
+                      </Text>
+                    </Table.Cell>
                   ))}
                 </Table.Row>
               )
