@@ -13,6 +13,10 @@ import {
   SearchInput,
   Strong,
   CornerDialog,
+  Popover,
+  Position,
+  Menu,
+  TextDropdownButton,
 } from 'evergreen-ui'
 import { navigate } from '@reach/router'
 
@@ -25,6 +29,12 @@ import { matchesSearchQuery } from '../utils/filters'
 import EventBus from 'vertx3-eventbus-client'
 import { EVENTBUS_ROOT } from '../utils/environments'
 import useMonitor from '../hooks/useMonitor'
+import {
+  Order,
+  getIconForOrder,
+  compare,
+  sortableIpAddress,
+} from '../utils/sort'
 
 const eventBusUrl = `${EVENTBUS_ROOT}/eventbus`
 const outputAddress = 'result.pub.output.'
@@ -38,12 +48,14 @@ const ViewMonitorById = ({ id }) => {
     isLiveData,
     paused,
     headers,
+    headersMetadata,
     data,
     maxLengths,
     showEplQuery,
     receivedAt,
     showChangeEvent,
     changeEventMessage,
+    direction,
     isLoading,
     errors,
     fetchMonitorById,
@@ -54,6 +66,7 @@ const ViewMonitorById = ({ id }) => {
     togglePause,
     handleSearchChange,
     handleChangeEventClose,
+    handleSortOrderChange,
   } = useMonitor()
 
   const filter = (data) => {
@@ -66,34 +79,34 @@ const ViewMonitorById = ({ id }) => {
     })
   }
 
-  // const sort = (data) => {
-  //   const col = Object.keys(direction)[0]
-  //   if (!col) {
-  //     return data
-  //   }
+  const sort = (data) => {
+    const col = Object.keys(direction)[0]
+    if (!col) {
+      return data
+    }
 
-  //   const type = headersMetadata[col] ? headersMetadata[col].type : ''
+    const type = headersMetadata[col] ? headersMetadata[col].type : ''
 
-  //   const order = direction[col]
-  //   if (order === Order.NONE) {
-  //     return data
-  //   }
-  //   const isAsc = order === Order.ASC
-  //   return data.sort((a, b) => {
-  //     switch (type) {
-  //       case 'ip':
-  //         return compare(
-  //           sortableIpAddress(a[col]),
-  //           sortableIpAddress(b[col]),
-  //           isAsc,
-  //         )
-  //       case 'dateTime':
-  //         return compare(new Date(a[col]), new Date(a[col]), isAsc)
-  //       default:
-  //         return compare(a[col], b[col], isAsc)
-  //     }
-  //   })
-  // }
+    const order = direction[col]
+    if (order === Order.NONE) {
+      return data
+    }
+    const isAsc = order === Order.ASC
+    return data.sort((a, b) => {
+      switch (type) {
+        case 'ip':
+          return compare(
+            sortableIpAddress(a[col]),
+            sortableIpAddress(b[col]),
+            isAsc,
+          )
+        case 'dateTime':
+          return compare(new Date(a[col]), new Date(a[col]), isAsc)
+        default:
+          return compare(a[col], b[col], isAsc)
+      }
+    })
+  }
 
   React.useEffect(() => {
     fetchMonitorById(id)
@@ -259,6 +272,15 @@ const ViewMonitorById = ({ id }) => {
             </Pane>
           </Pane>
           <Pane display="flex" alignItems="center" marginBottom={majorScale(4)}>
+            <Pane width="30%" marginRight={majorScale(2)}>
+              <SearchInput
+                placeholder="Search Monitor Data"
+                width="100%"
+                onChange={handleSearchChange}
+                value={searchQuery}
+              />
+            </Pane>
+
             <Dialog
               isShown={showEplQuery}
               onCloseComplete={() => showEpl(false)}
@@ -295,14 +317,6 @@ const ViewMonitorById = ({ id }) => {
                 </Button>
               </Pane>
             </Dialog>
-            <Pane width="30%" marginRight={majorScale(2)}>
-              <SearchInput
-                placeholder="Search Monitor Data"
-                width="100%"
-                onChange={handleSearchChange}
-                value={searchQuery}
-              />
-            </Pane>
             <Button onClick={() => showEpl(true)} marginRight={majorScale(2)}>
               View EPL Query
             </Button>
@@ -338,18 +352,41 @@ const ViewMonitorById = ({ id }) => {
           >
             {headers.map((column) => (
               <Table.TextHeaderCell key={column} flex={getFlexValue(column)}>
-                {column}
+                <Popover
+                  position={Position.BOTTOM_LEFT}
+                  content={({ close }) => (
+                    <Menu>
+                      <Menu.OptionsGroup
+                        title="Order"
+                        options={[
+                          { label: 'None', value: Order.NONE },
+                          { label: 'Ascending', value: Order.ASC },
+                          { label: 'Descending', value: Order.DESC },
+                        ]}
+                        selected={direction[column] || Order.NONE}
+                        onChange={(value) => {
+                          handleSortOrderChange(value, column)
+                          // Close the popover when you select a value.
+                          close()
+                        }}
+                      />
+                    </Menu>
+                  )}
+                >
+                  <TextDropdownButton icon={getIconForOrder(direction[column])}>
+                    {column}
+                  </TextDropdownButton>
+                </Popover>
               </Table.TextHeaderCell>
             ))}
           </Table.Head>
           <Table.VirtualBody height={600}>
-            {filter(data).map((row, i) => {
+            {sort(filter(data)).map((row, i) => {
               return (
                 <Table.Row
                   // @ts-ignore
                   key={Object.values(row).join(``)}
                   background={i % 2 !== 0 ? `tint1` : ``}
-                  borderLeft={i % 2 !== 0 && `1px solid #F9F9FB`}
                   height={majorScale(8)}
                 >
                   {Object.keys(row).map((column, i) => (
