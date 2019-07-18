@@ -182,6 +182,13 @@ const useMonitor = () => {
     })
   }
 
+  const handleSortOrderChange = (value, header) => {
+    dispatch({
+      type: `SET_VALUE`,
+      payload: { direction: { [header]: value } },
+    })
+  }
+
   return {
     fetchMonitorById,
     handleCachedMessage,
@@ -191,6 +198,7 @@ const useMonitor = () => {
     togglePause,
     handleSearchChange,
     handleChangeEventClose,
+    handleSortOrderChange,
     ...state,
   }
 }
