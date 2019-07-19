@@ -21,3 +21,30 @@
 
 - Fix Monitor data state issue ([PRJHYP-118](https://jira/browse/PRJHYP-118))
 - Fix archiving actions ([PRJHYP-120](https://jira/browse/PRJHYP-120))
+-
+
+# :tada: Release 1.2.0
+
+:clipboard: [1.1.0...1.2.0](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/compare/1.1.0...1.2.0)
+
+:paperclip: [Tag](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/tags/1.2.0)
+
+:building_construction: [![Build Status](https://mn2forbld0001d0/buildStatus/icon?job=hydro-ui-pipeline%2F1.2.0)](https://mn2forbld0001d0/job/hydro-ui-pipeline/view/tags/job/1.2.0/)
+
+## :deciduous_tree: Environments
+
+- :white_check_mark: DEV
+- :x: POC
+
+## :sparkles: Features
+
+- Remove search header from monitors table ([#2](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/2))
+- Move search from table headers to toolbars ([#4](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/4))
+- Upgrade evergreen-ui ([#5](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/5))
+- Improve display of monitor table data ([#7](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/7))
+- Put sort back in table headers ([#9](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/9))
+
+## :wrench: Fixes
+
+- Fix display of monitor errors ([#6](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/6))
+- Fix display of wrong monitor state ([#8](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/8))
