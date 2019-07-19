@@ -24,6 +24,8 @@
 - Fix display of monitor errors ([#6](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/6))
 - Fix display of wrong monitor state ([#8](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/merge_requests/8))
 
+---
+
 # :tada: Release 1.1.0
 
 :clipboard: [1.0.0...1.1.0](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/compare/1.0.0...1.1.0)
@@ -47,4 +49,3 @@
 
 - Fix Monitor data state issue ([PRJHYP-118](https://jira/browse/PRJHYP-118))
 - Fix archiving actions ([PRJHYP-120](https://jira/browse/PRJHYP-120))
--
