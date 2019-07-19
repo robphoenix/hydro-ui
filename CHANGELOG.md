@@ -1,5 +1,7 @@
 # :tada: Release 1.2.0
 
+:calendar: 19th July 2019
+
 :clipboard: [1.1.0...1.2.0](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/compare/1.1.0...1.2.0)
 
 :paperclip: [Tag](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/tags/1.2.0)
@@ -27,6 +29,8 @@
 ---
 
 # :tada: Release 1.1.0
+
+:calendar: 10th July 2019
 
 :clipboard: [1.0.0...1.1.0](https://for-git-prod.lb.local/forensic_monitoring/hydro-ui/compare/1.0.0...1.1.0)
 
