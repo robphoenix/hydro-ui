@@ -31,6 +31,7 @@ const AuthenticatedApp = () => {
       <MonitorsProvider>
         <Router>
           <Redirect from="/" to="/monitors/view" noThrow />
+          <Redirect from="/login" to="/monitors/view" noThrow />
           <ViewMonitors path="/monitors/view" />
           <ViewFeedTypes path="/monitors/feedtypes" />
           <AddMonitor path="/monitors/add" />
