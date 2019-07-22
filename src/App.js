@@ -5,7 +5,6 @@ import { Pane } from 'evergreen-ui'
 import { useAuth } from './context/auth-context'
 import AuthenticatedApp from './components/AuthenticatedApp'
 import UnauthenticatedApp from './components/UnauthenticatedApp'
-import Footer from './components/Footer'
 
 const App = () => {
   const { isLoggedIn, token } = useAuth()
@@ -35,9 +34,8 @@ const App = () => {
   })
 
   return (
-    <Pane>
+    <Pane height="100vh">
       {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-      <Footer />
     </Pane>
   )
 }

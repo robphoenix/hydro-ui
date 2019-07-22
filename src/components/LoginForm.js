@@ -30,8 +30,9 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Pane marginBottom={majorScale(3)}>
+      <Pane marginBottom={majorScale(4)}>
         <TextInputField
+          height={majorScale(6)}
           autoFocus
           placeholder="Username"
           label="Username"
@@ -40,6 +41,7 @@ const LoginForm = () => {
           {...getInputFieldProps(`username`)}
           isInvalid={errors.username && touched.username}
           validationMessage={touched.username && errors.username}
+          marginBottom={majorScale(5)}
         />
 
         <TextInputField

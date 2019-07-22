@@ -5,6 +5,8 @@ import LoginForm from '../components/LoginForm'
 import Logo from '../components/Logo'
 import { navigate } from '@reach/router'
 import PageHeading from '../components/PageHeading'
+import hydroPhoto from '../assets/images/hydro-photo-medium.jpg'
+import Footer from '../components/Footer'
 
 const Login = () => {
   React.useEffect(() => {
@@ -13,19 +15,36 @@ const Login = () => {
   }, [])
 
   return (
-    <Pane display="flex" justifyContent="center" marginTop={majorScale(6)}>
-      <Pane width={300}>
-        <Pane display="flex" alignItems="center" marginBottom={majorScale(8)}>
-          <Logo />
-        </Pane>
+    <Pane display="flex" height="100vh">
+      <Pane
+        flex="1"
+        backgroundImage={`url(${hydroPhoto})`}
+        backgroundSize="cover"
+      />
+      <Pane flex="1" display="flex" justifyContent="center" alignItems="center">
+        <Pane width="30%" marginBottom={majorScale(16)}>
+          <Pane display="flex" marginBottom={majorScale(8)}>
+            <Logo />
+          </Pane>
 
-        <Pane marginBottom={majorScale(4)}>
-          <PageHeading small>Login</PageHeading>
-          <Text as="p" size={500}>
-            Please enter your Bet365 credentials
-          </Text>
+          <Pane marginBottom={majorScale(4)}>
+            <PageHeading small>login</PageHeading>
+            <Text as="p" size={500}>
+              Please enter your Bet365 credentials
+            </Text>
+          </Pane>
+          <LoginForm />
+          <Pane width="100%" position="fixed" bottom="0" right="0">
+            <Pane
+              display="flex"
+              justifyContent="center"
+              width="50%"
+              marginLeft="auto"
+            >
+              <Footer />
+            </Pane>
+          </Pane>
         </Pane>
-        <LoginForm />
       </Pane>
     </Pane>
   )

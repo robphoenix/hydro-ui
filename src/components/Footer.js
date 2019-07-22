@@ -10,7 +10,7 @@ const Footer = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      padding={majorScale(4)}
+      paddingY={majorScale(4)}
       marginTop={majorScale(4)}
     >
       <Text color="muted" marginRight={majorScale(1)}>
