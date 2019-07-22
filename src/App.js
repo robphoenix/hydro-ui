@@ -37,7 +37,6 @@ const App = () => {
   return (
     <Pane height="100vh">
       {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-      <Footer />
     </Pane>
   )
 }

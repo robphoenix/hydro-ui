@@ -6,6 +6,7 @@ import Logo from '../components/Logo'
 import { navigate } from '@reach/router'
 import PageHeading from '../components/PageHeading'
 import hydroPhoto from '../assets/images/hydro-photo-medium.jpg'
+import Footer from '../components/Footer'
 
 const Login = () => {
   React.useEffect(() => {
@@ -33,6 +34,16 @@ const Login = () => {
             </Text>
           </Pane>
           <LoginForm />
+          <Pane width="100%" position="fixed" bottom="0" right="0">
+            <Pane
+              display="flex"
+              justifyContent="center"
+              width="50%"
+              marginLeft="auto"
+            >
+              <Footer />
+            </Pane>
+          </Pane>
         </Pane>
       </Pane>
     </Pane>

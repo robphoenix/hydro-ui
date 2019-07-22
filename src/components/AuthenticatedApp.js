@@ -16,6 +16,7 @@ import AddAction from '../pages/AddAction'
 import ViewActions from '../pages/ViewActions'
 import PopulateDb from '../pages/PopulateDb'
 import EditAction from '../pages/EditAction'
+import Footer from './Footer'
 
 const AuthenticatedApp = () => {
   const { initTokenRefreshInterval } = useAuth()
@@ -45,6 +46,8 @@ const AuthenticatedApp = () => {
           <NotFound default />
         </Router>
       </MonitorsProvider>
+
+      <Footer />
     </Pane>
   )
 }
