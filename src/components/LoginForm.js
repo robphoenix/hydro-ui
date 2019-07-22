@@ -32,6 +32,7 @@ const LoginForm = () => {
     <form onSubmit={handleSubmit}>
       <Pane marginBottom={majorScale(3)}>
         <TextInputField
+          height={majorScale(6)}
           autoFocus
           placeholder="Username"
           label="Username"

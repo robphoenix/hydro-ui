@@ -9,7 +9,7 @@ const PageHeading = (props) => {
       size={size}
       marginBottom={majorScale(4)}
       paddingBottom={majorScale(1)}
-      borderBottom="1px solid #D0DF69"
+      borderBottom="2px solid #D0DF69"
       fontWeight="normal"
       textTransform="capitalize"
     >
